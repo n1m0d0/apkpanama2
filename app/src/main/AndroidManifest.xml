@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="gesport.xpertise.com.gesportapk">
+
+    <uses-feature android:name="android.hardware.camera"
+        android:required="true" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+
+    <application
+        android:allowBackup="true"
+        android:hardwareAccelerated = "false"
+        android:icon="@drawable/perfecto"
+        android:label="@string/app_name"
+        android:roundIcon="@drawable/perfecto"
+        android:largeHeap = "true"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name="gesport.xpertise.com.gesportapk.MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name="gesport.xpertise.com.gesportapk.forgotPassword" />
+        <activity android:name="gesport.xpertise.com.gesportapk.events" />
+        <activity android:name="gesport.xpertise.com.gesportapk.form_event" />
+        <activity android:name="gesport.xpertise.com.gesportapk.view_event" />
+        <activity android:name="gesport.xpertise.com.gesportapk.checkout" />
+        <activity android:name="gesport.xpertise.com.gesportapk.forms"></activity>
+        <activity android:name="gesport.xpertise.com.gesportapk.Info"></activity>
+    </application>
+
+</manifest>

@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">GesPort</string>
+    <string name="login">Login</string>
+    <string name="send">Enviar</string>
+    <string name="user">Usuario</string>
+    <string name="password">Password</string>
+    <string name="forgotPassword">Forgot Password?</string>
+    <string name="dataTime">Fecha y Hora</string>
+    <string name="gps">GPS</string>
+    <string name="locationEvent">Ubicacion Suceso</string>
+    <string name="event">Suceso</string>
+    <string name="licensePlate">Placa Vehiculo</string>
+    <string name="client">Cliente</string>
+    <string name="boat">Embarcación</string>
+    <string name="typeVehicle">Tipo de Vehiculo</string>
+    <string name="reasonVisit">Motivo visita</string>
+    <string name="destination">Destino</string>
+    <string name="customsVisit">Visita aduana</string>
+    <string name="passenger">Pasajeros</string>
+    <string name="carrierCompany">Emp. Transportista</string>
+    <string name="checkOut">Registrar salida</string>
+    <string name="finalEvent">ESPECIFICACIÓN SUCESO - FINAL</string>
+    <string name="save">Guardar</string>
+    <string name="events">Eventos</string>
+</resources>

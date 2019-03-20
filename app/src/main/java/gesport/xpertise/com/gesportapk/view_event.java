@@ -382,7 +382,7 @@ public class view_event extends AppCompatActivity implements View.OnClickListene
 
     public void createEditTextMultiLinea(String descripcion) {
 
-        EditText et = new EditText(this);
+        /*EditText et = new EditText(this);
         et.setSingleLine(false);
         et.setImeOptions(EditorInfo.IME_FLAG_NO_ENTER_ACTION);
         et.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
@@ -396,7 +396,12 @@ public class view_event extends AppCompatActivity implements View.OnClickListene
         ifet[0] = new InputFilter.LengthFilter(254);
         et.setFilters(ifet);
         et.setEnabled(false);
-        llContenedor.addView(et);
+        llContenedor.addView(et);*/
+        TextView tv;
+        tv = new TextView(this);
+        tv.setText(descripcion);
+        tv.setTextAppearance(this, R.style.boldreg);
+        llContenedor.addView(tv);
 
     }
 
@@ -441,6 +446,7 @@ public class view_event extends AppCompatActivity implements View.OnClickListene
         TextView textView = new TextView(this);
         textView.setId(id);
         textView.setText(description);
+        textView.setTextAppearance(this, R.style.boldreg);
         textView.setOnClickListener(this);
         textViews.add(textView);
         llContenedor.addView(textView);

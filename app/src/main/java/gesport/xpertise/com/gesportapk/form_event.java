@@ -487,7 +487,73 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
                 /****************************************/
 
-                if (idAudio != 0) {
+                for (Iterator iterator = textViewsAudio.iterator(); iterator
+                        .hasNext();) {
+
+                    TextView textView = (TextView) iterator.next();
+                    textView.setTextColor(Color.BLACK);
+                    String obs_respuesta = textView.getText().toString().trim();
+                    String control = textView.getHint().toString().trim();
+
+                    Log.w("controlTextViewFiles", control);
+
+                    if (obs_respuesta.equals(textAudio) && control.equals(obligatorio)) {
+
+                        validar++;
+                        Log.w("sumaTextViewFiles", "" + validar);
+
+                    }
+
+                    File file = new File(textView.getText().toString().trim());
+
+                    int file_size = Integer.parseInt(String.valueOf(file.length()/1024));
+
+                    Log.w("min", "" + file_size);
+
+                    if (file_size > 2000) {
+
+                        validar++;
+                        textView.setTextColor(Color.RED);
+
+                    }
+
+                    String[] parts = textView.getText().toString().trim().split("/");
+                    String nombre = parts[parts.length - 1];
+
+                    byte[] fileArray = new byte[(int) file.length()];
+                    InputStream inputStream;
+
+                    String encodedFile = "";
+                    try {
+                        inputStream = new FileInputStream(file);
+                        inputStream.read(fileArray);
+                        encodedFile = Base64.encodeToString(fileArray, Base64.DEFAULT);
+                    } catch (Exception e) {
+                        // Manejar Error
+                    }
+
+                    if (obs_respuesta.equals(textAudio)) {
+
+                        encodedFile = "";
+
+                    }
+
+                    Log.w("File", "files" + " " + textView.getId() + "nombre" + nombre);
+                    try {
+                        JSONObject parametros = new JSONObject();
+                        parametros.put("idField", textView.getId());
+                        parametros.put("valueInputField", nombre);
+                        parametros.put("valueInputDateField", "");
+                        parametros.put("valueListField", "");
+                        parametros.put("valueFile", encodedFile);
+                        respuesta.put(parametros);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+                /*if (idAudio != 0) {
 
                     tvPathRecording.setTextColor(Color.BLACK);
                     String obs_respuesta = tvPathRecording.getText().toString().trim();
@@ -548,7 +614,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                         e.printStackTrace();
                     }
 
-                }
+                }*/
                 /****************************************/
 
                 localizar();
@@ -795,13 +861,13 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
                             case 11:
 
-                                tvRecording.setVisibility(View.VISIBLE);
+                                /*tvRecording.setVisibility(View.VISIBLE);
                                 tvRecording.setText(description);
                                 llRecording.setVisibility(View.VISIBLE);
                                 idAudio = idField;
                                 tvPathRecording.setHint(is_mandatory);
                                 /***********************/
-                                String carpeta = "geoport";
+                                /*String carpeta = "geoport";
                                 File fileAudio = new File(Environment.getExternalStorageDirectory(), carpeta);
                                 boolean isCreada = fileAudio.exists();
                                 String nameAudio = "";
@@ -818,10 +884,12 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
                                 }
 
-                                pathAudio = Environment.getExternalStorageDirectory() + File.separator + carpeta + File.separator + nameAudio;
+                                pathAudio = Environment.getExternalStorageDirectory() + File.separator + carpeta + File.separator + nameAudio;*/
                                 /**********************/
                                 /*creartextview(description);
                                 createTextviewAudio(idField,is_mandatory);*/
+
+                                createAudio(idField, description, is_mandatory);
 
                                 break;
 
@@ -1757,13 +1825,13 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
                                 /*creartextview(description);
                                 createTextviewAudio(idField,is_mandatory);*/
-                                tvRecording.setVisibility(View.VISIBLE);
+                                /*tvRecording.setVisibility(View.VISIBLE);
                                 tvRecording.setText(description);
                                 llRecording.setVisibility(View.VISIBLE);
                                 idAudio = idField;
                                 tvPathRecording.setHint(is_mandatory);
                                 /***********************/
-                                String carpeta = "geoport";
+                                /*String carpeta = "geoport";
                                 File fileAudio = new File(Environment.getExternalStorageDirectory(), carpeta);
                                 boolean isCreada = fileAudio.exists();
                                 String nameAudio = "";
@@ -1782,6 +1850,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
                                 pathAudio = Environment.getExternalStorageDirectory() + File.separator + carpeta + File.separator + nameAudio;
                                 /**********************/
+                                createAudio(idField, description, is_mandatory);
 
                                 break;
 
@@ -1918,6 +1987,115 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         }
 
         return path;
+
+    }
+
+    public void createAudio(int id, String descripcion, String requerido) {
+        final int[] option = {0};
+        final String[] pathAudio = {null};
+        final MediaRecorder[] recorder = new MediaRecorder[1];
+        final MediaPlayer[] player = new MediaPlayer[1];
+        TextView textViewAudio = new TextView(this);
+        textViewAudio.setText(descripcion);
+        textViewAudio.setTextAppearance(this, R.style.boldreg);
+        llContenedor.addView(textViewAudio);
+        LinearLayout linearLayout = new LinearLayout(this);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        linearLayout.setLayoutParams(lp);
+        linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+        linearLayout.setWeightSum(12);
+        linearLayout.setGravity(Gravity.CENTER);
+        llContenedor.addView(linearLayout);
+        final TextView textView = new TextView(this);
+        textView.setId(id);
+        textView.setText(textAudio);
+        textView.setHint(requerido);
+        textView.setTextSize(14);
+        LinearLayout.LayoutParams lpTextView = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT,2f);
+        textView.setLayoutParams(lpTextView);
+        linearLayout.addView(textView);
+        textViewsAudio.add(textView);
+        final ImageView imageView = new ImageView(this);
+        imageView.setImageResource(R.drawable.recording);
+        LinearLayout.LayoutParams lpImageView = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 150,5f);
+        imageView.setLayoutParams(lpImageView);
+        linearLayout.addView(imageView);
+        final ImageView imageView2 = new ImageView(this);
+        imageView2.setImageResource(R.drawable.play);
+        LinearLayout.LayoutParams lpImageView2 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 150,5f);
+        imageView2.setLayoutParams(lpImageView2);
+        imageView2.setVisibility(View.INVISIBLE);
+        linearLayout.addView(imageView2);
+
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.w("option", "" + option[0]);
+                switch (option[0]) {
+                    case 0:
+                        String carpeta = "geport";
+                        File fileAudio = new File(Environment.getExternalStorageDirectory(), carpeta);
+                        boolean isCreada = fileAudio.exists();
+                        String nameAudio = "";
+
+                        if(isCreada == false) {
+
+                            isCreada = fileAudio.mkdir();
+
+                        }
+
+                        if(isCreada == true) {
+
+                            nameAudio = "AudioGesport" + fecha_1 +".3gp";
+
+                        }
+
+                        pathAudio[0] = Environment.getExternalStorageDirectory() + File.separator + carpeta + File.separator + nameAudio;
+                        Log.w("seleccion", "record");
+                        recorder[0] = new MediaRecorder();
+                        recorder[0].setAudioSource(MediaRecorder.AudioSource.MIC);
+                        recorder[0].setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+                        recorder[0].setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+                        recorder[0].setOutputFile(pathAudio[0]);
+                        try {
+                            recorder[0].prepare();
+                        } catch (IOException e) {
+                        }
+                        recorder[0].start();
+                        imageView.setImageDrawable(getResources().getDrawable(R.drawable.stop));
+                        imageView2.setVisibility(View.INVISIBLE);
+                        option[0]++;
+                        break;
+                    case 1:
+                        Log.w("seleccion", "stop");
+                        recorder[0].stop();
+                        recorder[0].release();
+                        player[0] = new MediaPlayer();
+                        player[0].setOnCompletionListener(form_event.this);
+                        try {
+                            player[0].setDataSource(pathAudio[0]);
+                        } catch (IOException e) {
+                        }
+                        try {
+                            player[0].prepare();
+                        } catch (IOException e) {
+                        }
+                        imageView.setImageDrawable(getResources().getDrawable(R.drawable.recording));
+                        imageView2.setVisibility(View.VISIBLE);
+                        textView.setText(pathAudio[0]);
+                        option[0] = 0;
+                        break;
+                }
+            }
+        });
+
+        imageView2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                player[0].start();
+            }
+        });
+
 
     }
 

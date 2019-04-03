@@ -1212,7 +1212,18 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
             public void onErrorResponse(VolleyError error) {
 
                 Log.w("mio", "" + error);
-                mProgressDialog.dismiss();
+                try {
+                    Log.w("conexion", "no hay red");
+                    bd conexion = new bd(form_event.this);
+                    conexion.abrir();
+                    String answer = createAnswerJson(jsonenvio);
+                    conexion.createAnswers(userName, auth, answer);
+                    conexion.cerrar();
+                    mProgressDialog.dismiss();
+                    finish();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
             }
         }){

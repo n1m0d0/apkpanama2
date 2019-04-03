@@ -4,7 +4,8 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:weightSum="10"
-    android:padding="3dp" >
+    android:padding="3dp"
+    android:background="@color/colorSpinner">
 
     <TextView
         android:id="@+id/tvText"

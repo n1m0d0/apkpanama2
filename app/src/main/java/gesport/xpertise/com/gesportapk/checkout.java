@@ -74,6 +74,7 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
@@ -1183,7 +1184,19 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
             public void onErrorResponse(VolleyError error) {
 
                 Log.w("mio", "" + error);
-                mProgressDialog.dismiss();
+                try {
+                    Log.w("conexion", "no hay red");
+                    bd conexion = new bd(checkout.this);
+                    conexion.abrir();
+                    String answer = createAnswerJson(jsonenvio);
+                    conexion.createAnswers(userName, auth, answer);
+                    conexion.cerrar();
+                    mProgressDialog.dismiss();
+                    finish();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
 
             }
         }){
@@ -1778,6 +1791,41 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
             }
         });
 
+
+    }
+
+    public String createAnswerJson(JSONObject jsonArray) {
+
+        String path = null;
+        String carpeta = "geoport";
+        File fileJson = new File(Environment.getExternalStorageDirectory(), carpeta);
+        boolean isCreada = fileJson.exists();
+        String nombreJson = "";
+
+        if(isCreada == false) {
+
+            isCreada = fileJson.mkdir();
+
+        }
+
+        if(isCreada == true) {
+
+            nombreJson = "Answer" + fecha_1+".json";
+
+        }
+
+        path = Environment.getExternalStorageDirectory() + File.separator + carpeta + File.separator + nombreJson;
+
+
+        try {
+            FileWriter writer = new FileWriter(path);
+            writer.write(String.valueOf(jsonArray));
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return path;
 
     }
 

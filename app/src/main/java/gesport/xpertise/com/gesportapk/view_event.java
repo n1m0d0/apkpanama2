@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -443,13 +444,25 @@ public class view_event extends AppCompatActivity implements View.OnClickListene
 
     public void createTextViewpath(int id, String description) {
 
-        TextView textView = new TextView(this);
+        /*TextView textView = new TextView(this);
         textView.setId(id);
         textView.setText(description);
         textView.setTextAppearance(this, R.style.boldreg);
         textView.setOnClickListener(this);
         textViews.add(textView);
-        llContenedor.addView(textView);
+        llContenedor.addView(textView);*/
+
+        ImageView imageView = new ImageView(this);
+
+        imageView.setId(id);
+        imageView.setContentDescription(description);
+        imageView.setImageResource(R.drawable.files);
+
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(150,150);
+        imageView.setLayoutParams(lp);
+        imageView.setOnClickListener(this);
+        imageViews.add(imageView);
+        llContenedor.addView(imageView);
 
     }
 

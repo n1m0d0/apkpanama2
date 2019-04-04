@@ -1124,7 +1124,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
         iv.setId(idField);
         iv.setImageResource(R.drawable.camera);
         iv.setContentDescription(textImage + "-" + option);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(150,150);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(80,80);
         iv.setLayoutParams(lp);
         llContenedor.addView(iv);
         imageViews.add(iv);
@@ -1692,7 +1692,8 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
         final MediaPlayer[] player = new MediaPlayer[1];
         TextView textViewAudio = new TextView(this);
         textViewAudio.setText(descripcion);
-        textViewAudio.setTextAppearance(this, R.style.boldreg);
+        textViewAudio.setTextSize(14);
+        textViewAudio.setTextColor(getResources().getColor(R.color.colorBlack));
         llContenedor.addView(textViewAudio);
         LinearLayout linearLayout = new LinearLayout(this);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);

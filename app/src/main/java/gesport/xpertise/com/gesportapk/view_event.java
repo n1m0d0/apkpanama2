@@ -458,7 +458,7 @@ public class view_event extends AppCompatActivity implements View.OnClickListene
         imageView.setContentDescription(description);
         imageView.setImageResource(R.drawable.files);
 
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(150,150);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(80,80);
         imageView.setLayoutParams(lp);
         imageView.setOnClickListener(this);
         imageViews.add(imageView);

@@ -13,6 +13,7 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
@@ -152,6 +153,8 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
     int idAudio = 0;
     int option = 0;
     String fullName;
+
+    ArrayList<obj_attributes> objAttributes = new ArrayList<obj_attributes>();
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
@@ -388,9 +391,18 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                     }
 
                     Log.w("controlImageView", control);
-
-                    imageView.buildDrawingCache();
-                    Bitmap bitmap = imageView.getDrawingCache();
+                    /**********/
+                    Bitmap bitmap = null;
+                    for (Iterator iterator2 = objAttributes.iterator(); iterator2
+                            .hasNext();) {
+                        obj_attributes properties = (obj_attributes) iterator2.next();
+                        if (imageView.getId() == properties.getId()) {
+                            bitmap = properties.getImage();
+                        }
+                    }
+                    /**********/
+                    /*imageView.buildDrawingCache();
+                    Bitmap bitmap = imageView.getDrawingCache();*/
 
                     ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
                     bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
@@ -757,8 +769,8 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                         int idparameter = form.getInt("IDPARAMETER");
                         int input_max = form.getInt("INPUT_MAX");
                         String input_regx = form.getString("INPUT_REGEX");
-                        //int input_datemin = form.getInt("INPUT_DATEMIN");
-                        //int input_datemax = form.getInt("INPUT_DATEMAX");
+                        int photo_resolution_w = form.getInt("PHOTO_RESOLUTION_W");
+                        int photo_resolution_h = form.getInt("PHOTO_RESOLUTION_H");
                         //String photo_resolution = form.getString("PHOTO_RESOLUTION");
                         int file_size = form.getInt("FILE_SIZE");
                         int reg_begin = form.getInt("REG_BEGIN");
@@ -829,7 +841,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                             case 6:
 
                                 creartextview(description);
-                                createImageView(idField, is_mandatory);
+                                createImageView(idField, is_mandatory, photo_resolution_w, photo_resolution_h);
 
                                 break;
 
@@ -1151,7 +1163,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
     // Crear imageview en el contenedor
 
-    public void createImageView(int idField, String option){
+    public void createImageView(int idField, String option, int w, int h){
 
         ImageView iv = new ImageView(this);
         iv.setId(idField);
@@ -1161,6 +1173,14 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         iv.setLayoutParams(lp);
         llContenedor.addView(iv);
         imageViews.add(iv);
+
+        if(w > 0 && h > 0) {
+            objAttributes.add(new obj_attributes(idField, w, h, null));
+        } else {
+            w = 400;
+            h = 400;
+            objAttributes.add(new obj_attributes(idField, w, h, null));
+        }
 
         iv.setOnClickListener(this);
 
@@ -1428,6 +1448,33 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                     iv.setLayoutParams(lp);
 
                     iv.setImageBitmap(bmp);
+
+                    for (Iterator iterator2 = objAttributes.iterator(); iterator2
+                            .hasNext();) {
+                        obj_attributes properties = (obj_attributes) iterator2.next();
+                        if (opcion == properties.getId()) {
+                            int width = bmp.getWidth();
+                            int height = bmp.getHeight();
+                            int newWidth = properties.w;
+                            int newHeight = properties.h;
+
+                            // calculamos el escalado de la imagen destino
+                            float scaleWidth = ((float) newWidth) / width;
+                            float scaleHeight = ((float) newHeight) / height;
+
+                            // para poder manipular la imagen
+                            // debemos crear una matriz
+
+                            Matrix matrix = new Matrix();
+                            // resize the Bitmap
+                            matrix.postScale(scaleWidth, scaleHeight);
+
+                            // volvemos a crear la imagen con los nuevos valores
+                            Bitmap resizedBitmap = Bitmap.createBitmap(bmp, 0, 0,
+                                    width, height, matrix, true);
+                            properties.setImage(resizedBitmap);
+                        }
+                    }
 
                     break;
 
@@ -1730,8 +1777,8 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                         int idparameter = form.getInt("IDPARAMETER");
                         int input_max = form.getInt("INPUT_MAX");
                         String input_regx = form.getString("INPUT_REGEX");
-                        //int input_datemin = form.getInt("INPUT_DATEMIN");
-                        //int input_datemax = form.getInt("INPUT_DATEMAX");
+                        int photo_resolution_w = form.getInt("PHOTO_RESOLUTION_W");
+                        int photo_resolution_h = form.getInt("PHOTO_RESOLUTION_H");
                         //String photo_resolution = form.getString("PHOTO_RESOLUTION");
                         int file_size = form.getInt("FILE_SIZE");
                         int reg_begin = form.getInt("REG_BEGIN");
@@ -1802,7 +1849,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                             case 6:
 
                                 creartextview(description);
-                                createImageView(idField, is_mandatory);
+                                createImageView(idField, is_mandatory, photo_resolution_w, photo_resolution_h);
 
                                 break;
 

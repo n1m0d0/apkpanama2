@@ -14,6 +14,7 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
@@ -155,6 +156,8 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
     int idAudio = 0;
     int option = 0;
     String fullName;
+
+    ArrayList<obj_attributes> objAttributes = new ArrayList<obj_attributes>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -364,7 +367,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
                 }
 
 
-                for (Iterator iterator = imageViews.iterator(); iterator
+                /*for (Iterator iterator = imageViews.iterator(); iterator
                         .hasNext();) {
 
                     ImageView imageView = (ImageView) iterator.next();
@@ -386,6 +389,64 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
 
                     imageView.buildDrawingCache();
                     Bitmap bitmap = imageView.getDrawingCache();
+
+                    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+                    byte[] byteArray = byteArrayOutputStream .toByteArray();
+
+                    String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
+
+                    if (description.equals(textImage)) {
+
+                        encoded ="";
+
+                    }
+
+                    Log.w("Imagen", "imageView" + " " + imageView.getId() + " " + encoded);
+                    try {
+                        JSONObject parametros = new JSONObject();
+                        parametros.put("idField", imageView.getId());
+                        parametros.put("valueInputField", "");
+                        parametros.put("valueInputDateField", "");
+                        parametros.put("valueListField", "");
+                        parametros.put("valueFile", encoded);
+                        respuesta.put(parametros);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }*/
+                for (Iterator iterator = imageViews.iterator(); iterator
+                        .hasNext();) {
+
+                    ImageView imageView = (ImageView) iterator.next();
+
+
+                    String[] parts = imageView.getContentDescription().toString().trim().split("-");
+                    String description = parts[0];
+                    String control = parts[parts.length - 1];
+
+                    if (description.equals(textImage) && control.equals(obligatorio))
+                    {
+
+                        validar++;
+                        Log.w("sumaImageView", "" + validar);
+
+                    }
+
+                    Log.w("controlImageView", control);
+                    /**********/
+                    Bitmap bitmap = null;
+                    for (Iterator iterator2 = objAttributes.iterator(); iterator2
+                            .hasNext();) {
+                        obj_attributes properties = (obj_attributes) iterator2.next();
+                        if (imageView.getId() == properties.getId()) {
+                            bitmap = properties.getImage();
+                        }
+                    }
+                    /**********/
+                    /*imageView.buildDrawingCache();
+                    Bitmap bitmap = imageView.getDrawingCache();*/
 
                     ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
                     bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
@@ -726,8 +787,8 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
                         int idparameter = form.getInt("IDPARAMETER");
                         int input_max = form.getInt("INPUT_MAX");
                         String input_regx = form.getString("INPUT_REGEX");
-                        //int input_datemin = form.getInt("INPUT_DATEMIN");
-                        //int input_datemax = form.getInt("INPUT_DATEMAX");
+                        int photo_resolution_w = form.getInt("PHOTO_RESOLUTION_W");
+                        int photo_resolution_h = form.getInt("PHOTO_RESOLUTION_H");
                         //String photo_resolution = form.getString("PHOTO_RESOLUTION");
                         int file_size = form.getInt("FILE_SIZE");
                         int reg_begin = form.getInt("REG_BEGIN");
@@ -798,7 +859,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
                             case 6:
 
                                 creartextview(description);
-                                createImageView(idField, is_mandatory);
+                                createImageView(idField, is_mandatory, photo_resolution_w, photo_resolution_h);
 
                                 break;
 
@@ -1118,7 +1179,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
 
     // Crear imageview en el contenedor
 
-    public void createImageView(int idField, String option){
+    public void createImageView(int idField, String option, int w, int h){
 
         ImageView iv = new ImageView(this);
         iv.setId(idField);
@@ -1128,6 +1189,14 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
         iv.setLayoutParams(lp);
         llContenedor.addView(iv);
         imageViews.add(iv);
+
+        if(w > 0 && h > 0) {
+            objAttributes.add(new obj_attributes(idField, w, h, null));
+        } else {
+            w = 400;
+            h = 400;
+            objAttributes.add(new obj_attributes(idField, w, h, null));
+        }
 
         iv.setOnClickListener(this);
 
@@ -1400,6 +1469,33 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
                     iv.setLayoutParams(lp);
 
                     iv.setImageBitmap(bmp);
+
+                    for (Iterator iterator2 = objAttributes.iterator(); iterator2
+                            .hasNext();) {
+                        obj_attributes properties = (obj_attributes) iterator2.next();
+                        if (opcion == properties.getId()) {
+                            int width = bmp.getWidth();
+                            int height = bmp.getHeight();
+                            int newWidth = properties.w;
+                            int newHeight = properties.h;
+
+                            // calculamos el escalado de la imagen destino
+                            float scaleWidth = ((float) newWidth) / width;
+                            float scaleHeight = ((float) newHeight) / height;
+
+                            // para poder manipular la imagen
+                            // debemos crear una matriz
+
+                            Matrix matrix = new Matrix();
+                            // resize the Bitmap
+                            matrix.postScale(scaleWidth, scaleHeight);
+
+                            // volvemos a crear la imagen con los nuevos valores
+                            Bitmap resizedBitmap = Bitmap.createBitmap(bmp, 0, 0,
+                                    width, height, matrix, true);
+                            properties.setImage(resizedBitmap);
+                        }
+                    }
 
                     break;
 

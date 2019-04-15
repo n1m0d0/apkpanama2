@@ -403,16 +403,17 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                     /**********/
                     /*imageView.buildDrawingCache();
                     Bitmap bitmap = imageView.getDrawingCache();*/
+                    String encoded = "";
+                    if (bitmap != null) {
+                        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+                        byte[] byteArray = byteArrayOutputStream.toByteArray();
 
-                    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-                    byte[] byteArray = byteArrayOutputStream .toByteArray();
-
-                    String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
-
+                        encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
+                    }
                     if (description.equals(textImage)) {
 
-                        encoded ="";
+                        encoded = "";
 
                     }
 
@@ -2153,7 +2154,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                         }
                         imageView.setImageDrawable(getResources().getDrawable(R.drawable.recording));
                         imageView2.setVisibility(View.VISIBLE);
-                        textView.setHint(pathAudio[0]);
+                        textView.setText(pathAudio[0]);
                         option[0] = 0;
                         break;
                 }

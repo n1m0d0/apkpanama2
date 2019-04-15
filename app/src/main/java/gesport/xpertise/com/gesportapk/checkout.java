@@ -1886,7 +1886,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
                         }
                         imageView.setImageDrawable(getResources().getDrawable(R.drawable.recording));
                         imageView2.setVisibility(View.VISIBLE);
-                        textView.setHint(pathAudio[0]);
+                        textView.setText(pathAudio[0]);
                         option[0] = 0;
                         break;
                 }

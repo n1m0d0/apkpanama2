@@ -447,13 +447,14 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
                     /**********/
                     /*imageView.buildDrawingCache();
                     Bitmap bitmap = imageView.getDrawingCache();*/
+                    String encoded = "";
+                    if (bitmap != null) {
+                        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+                        byte[] byteArray = byteArrayOutputStream.toByteArray();
 
-                    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-                    byte[] byteArray = byteArrayOutputStream .toByteArray();
-
-                    String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
-
+                        encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
+                    }
                     if (description.equals(textImage)) {
 
                         encoded ="";

@@ -1798,6 +1798,16 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
         linearLayout.setWeightSum(12);
         linearLayout.setGravity(Gravity.CENTER);
         llContenedor.addView(linearLayout);
+        /**********************/
+        final TextView textView1 = new TextView(this);
+        textView1.setId(id);
+        textView1.setText(textAudio);
+        textView1.setHint(requerido);
+        textView1.setTextSize(14);
+        LinearLayout.LayoutParams lpTextView1 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT,2f);
+        textView1.setLayoutParams(lpTextView1);
+        linearLayout.addView(textView1);
+        /**********************/
         final TextView textView = new TextView(this);
         textView.setId(id);
         textView.setText(textAudio);
@@ -1807,6 +1817,8 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
         textView.setLayoutParams(lpTextView);
         linearLayout.addView(textView);
         textViewsAudio.add(textView);
+        //viaibilidad
+        textView.setVisibility(View.GONE);
         final ImageView imageView = new ImageView(this);
         imageView.setImageResource(R.drawable.recording);
         LinearLayout.LayoutParams lpImageView = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 150,5f);
@@ -1874,7 +1886,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
                         }
                         imageView.setImageDrawable(getResources().getDrawable(R.drawable.recording));
                         imageView2.setVisibility(View.VISIBLE);
-                        textView.setText(pathAudio[0]);
+                        textView.setHint(pathAudio[0]);
                         option[0] = 0;
                         break;
                 }
@@ -1887,7 +1899,6 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
                 player[0].start();
             }
         });
-
 
     }
 

@@ -7,9 +7,12 @@ import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.media.MediaPlayer;
+import android.media.MediaRecorder;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputFilter;
@@ -41,12 +44,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-public class view_event extends AppCompatActivity implements View.OnClickListener {
+public class view_event extends AppCompatActivity implements View.OnClickListener, MediaPlayer.OnCompletionListener {
 
     LinearLayout llContenedor;
     Button btnCheckOut;
@@ -303,6 +308,12 @@ public class view_event extends AppCompatActivity implements View.OnClickListene
 
                                     break;
 
+                                case 11:
+
+                                    createAudio(description, valueInputField);
+
+                                    break;
+
                             }
 
 
@@ -484,6 +495,66 @@ public class view_event extends AppCompatActivity implements View.OnClickListene
         }
         return connected;
     }
+    /*************************/
+    public void createAudio(String descripcion, final String audio) {
+        TextView textViewOption = new TextView(this);
+        textViewOption.setText(descripcion);
+        textViewOption.setTextSize(14);
+        textViewOption.setTextColor(getResources().getColor(R.color.colorBlack));
+        llContenedor.addView(textViewOption);
+        LinearLayout linearLayout = new LinearLayout(this);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        linearLayout.setLayoutParams(lp);
+        linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+        linearLayout.setWeightSum(12);
+        linearLayout.setGravity(Gravity.CENTER);
+        llContenedor.addView(linearLayout);
+        final TextView textViewAudio = new TextView(this);
+        textViewAudio.setText("Haga clic para reproducir el audio");
+        textViewAudio.setTextSize(14);
+        LinearLayout.LayoutParams lpTextView = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT,2f);
+        textViewAudio.setLayoutParams(lpTextView);
+        linearLayout.addView(textViewAudio);
+        final ImageView imageViewPlay = new ImageView(this);
+        imageViewPlay.setImageResource(R.drawable.play);
+        LinearLayout.LayoutParams lpaudioo = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 150, 5f);
+        imageViewPlay.setLayoutParams(lpaudioo);
+        linearLayout.addView(imageViewPlay);
+        final ImageView imageViewStop = new ImageView(this);
+        imageViewStop.setImageResource(R.drawable.stop);
+        imageViewStop.setLayoutParams(lpaudioo);
+        imageViewStop.setVisibility(View.INVISIBLE);
+        linearLayout.addView(imageViewStop);
+        final MediaPlayer[] mp = {new MediaPlayer()};
+        imageViewPlay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mp[0] = new MediaPlayer();
+                try {
+                    mp[0].setDataSource(audio);
+                    mp[0].prepare();
+                    mp[0].start();
+                    textViewAudio.setText("Haga clic para detener el audio");
+                    imageViewStop.setVisibility(View.VISIBLE);
+                    imageViewPlay.setVisibility(View.INVISIBLE);
+                } catch (IOException e) {
+                    Log.e("LOG", ""+e);
+                }
+            }
+        });
+        imageViewStop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mp[0].stop();
+                mp[0].release();
+                textViewAudio.setText("Haga clic para reproducir el audio");
+                imageViewPlay.setVisibility(View.VISIBLE);
+                imageViewStop.setVisibility(View.INVISIBLE);
+            }
+        });
+    }
+
+    /*************************/
 
     @Override
     public void onBackPressed(){
@@ -497,4 +568,8 @@ public class view_event extends AppCompatActivity implements View.OnClickListene
 
     }
 
+    @Override
+    public void onCompletion(MediaPlayer mp) {
+
+    }
 }

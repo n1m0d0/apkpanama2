@@ -509,12 +509,6 @@ public class view_event extends AppCompatActivity implements View.OnClickListene
         linearLayout.setWeightSum(12);
         linearLayout.setGravity(Gravity.CENTER);
         llContenedor.addView(linearLayout);
-        final TextView textViewAudio = new TextView(this);
-        textViewAudio.setText("Haga clic para reproducir el audio");
-        textViewAudio.setTextSize(14);
-        LinearLayout.LayoutParams lpTextView = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT,2f);
-        textViewAudio.setLayoutParams(lpTextView);
-        linearLayout.addView(textViewAudio);
         final ImageView imageViewPlay = new ImageView(this);
         imageViewPlay.setImageResource(R.drawable.play);
         LinearLayout.LayoutParams lpaudioo = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 150, 5f);
@@ -523,8 +517,15 @@ public class view_event extends AppCompatActivity implements View.OnClickListene
         final ImageView imageViewStop = new ImageView(this);
         imageViewStop.setImageResource(R.drawable.stop);
         imageViewStop.setLayoutParams(lpaudioo);
-        imageViewStop.setVisibility(View.INVISIBLE);
         linearLayout.addView(imageViewStop);
+        imageViewStop.setVisibility(View.INVISIBLE);
+        final TextView textViewAudio = new TextView(this);
+        textViewAudio.setText("Haga clic para reproducir el audio");
+        textViewAudio.setTextSize(14);
+        LinearLayout.LayoutParams lpTextView = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT,2f);
+        textViewAudio.setLayoutParams(lpTextView);
+        linearLayout.addView(textViewAudio);
+        textViewAudio.setVisibility(View.INVISIBLE);
         final MediaPlayer[] mp = {new MediaPlayer()};
         imageViewPlay.setOnClickListener(new View.OnClickListener() {
             @Override

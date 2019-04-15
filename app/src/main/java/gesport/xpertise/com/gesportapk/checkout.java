@@ -1799,16 +1799,6 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
         linearLayout.setWeightSum(12);
         linearLayout.setGravity(Gravity.CENTER);
         llContenedor.addView(linearLayout);
-        /**********************/
-        final TextView textView1 = new TextView(this);
-        textView1.setId(id);
-        textView1.setText(textAudio);
-        textView1.setHint(requerido);
-        textView1.setTextSize(14);
-        LinearLayout.LayoutParams lpTextView1 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT,2f);
-        textView1.setLayoutParams(lpTextView1);
-        linearLayout.addView(textView1);
-        /**********************/
         final TextView textView = new TextView(this);
         textView.setId(id);
         textView.setText(textAudio);
@@ -1831,6 +1821,17 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
         imageView2.setLayoutParams(lpImageView2);
         imageView2.setVisibility(View.INVISIBLE);
         linearLayout.addView(imageView2);
+        /**********************/
+        final TextView textView1 = new TextView(this);
+        textView1.setId(id);
+        textView1.setText(textAudio);
+        textView1.setHint(requerido);
+        textView1.setTextSize(14);
+        LinearLayout.LayoutParams lpTextView1 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT,2f);
+        textView1.setLayoutParams(lpTextView1);
+        linearLayout.addView(textView1);
+        textView1.setVisibility(View.INVISIBLE);
+        /**********************/
 
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override

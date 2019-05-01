@@ -58,7 +58,7 @@ public class view_event extends AppCompatActivity implements View.OnClickListene
     String auth;
     String userName;
     String idEvent;
-    String url = "https://test.portcolon2000.site/api/openEvent/";
+    String url = "https://www.portcolon2000.site/api/openEvent/";
     ProgressDialog mProgressDialog;
     RequestQueue mRequestQueue;
     JsonArrayRequest mJsonArrayRequest;

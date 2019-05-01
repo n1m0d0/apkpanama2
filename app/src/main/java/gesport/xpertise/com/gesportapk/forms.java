@@ -49,7 +49,7 @@ public class forms extends AppCompatActivity implements Response.Listener<JSONAr
     ProgressDialog mProgressDialog;
     RequestQueue mRequestQueue;
     JsonArrayRequest mJsonArrayRequest;
-    String url = "https://test.portcolon2000.site/api/parForm";
+    String url = "https://www.portcolon2000.site/api/parForm";
     Intent ir;
 
     int idForm;

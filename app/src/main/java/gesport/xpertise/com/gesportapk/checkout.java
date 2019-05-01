@@ -113,9 +113,9 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
     private final String ruta_imagen = camara_raiz + "misFotos";
     String path;
 
-    String url = "https://test.portcolon2000.site/api/parFormFields/";
-    String url2 = "https://test.portcolon2000.site/api/saveEvent";
-    String urlParametros = "https://test.portcolon2000.site/api/parGeneral/";
+    String url = "https://www.portcolon2000.site/api/parFormFields/";
+    String url2 = "https://www.portcolon2000.site/api/saveEvent";
+    String urlParametros = "https://www.portcolon2000.site/api/parGeneral/";
     String urlParametros2;
     Intent ir;
     Toast msj;

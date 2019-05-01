@@ -30,7 +30,7 @@ public class bd {
     private static final String user = "user";
     private static final String answers = "answers";
     private static final String mysession = "mysession";
-    private static final int VERSION_BD = 14;
+    private static final int VERSION_BD = 15;
 
     private BDHelper nHelper;
     private final Context nContexto;
@@ -71,6 +71,9 @@ public class bd {
             onCreate(db);
 
             db.execSQL("DROP TABLE IF EXISTS " + answers);
+            onCreate(db);
+
+            db.execSQL("DROP TABLE IF EXISTS " + mysession);
             onCreate(db);
         }
 

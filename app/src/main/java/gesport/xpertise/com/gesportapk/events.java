@@ -63,7 +63,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
     ProgressDialog mProgressDialog;
     RequestQueue mRequestQueue;
     JsonArrayRequest mJsonArrayRequest;
-    String url = "https://test.portcolon2000.site/api/lastEvents";
+    String url = "https://www.portcolon2000.site/api/lastEvents";
     Intent ir;
     int idForm;
     int idEvent;
@@ -76,7 +76,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
     String colorForm;
     String idIconForm;
     adapter_events adapter;
-    String direccion = "https://test.portcolon2000.site/api/saveEvent";
+    String direccion = "https://www.portcolon2000.site/api/saveEvent";
     String certificado = "";
     String idOffline;
     JsonObjectRequest mJsonObjectRequest;

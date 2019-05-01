@@ -115,8 +115,8 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
     private final String ruta_imagen = camara_raiz + "misFotos";
 
 
-    String url = "https://test.portcolon2000.site/api/parFormFields/";
-    String url2 = "https://test.portcolon2000.site/api/saveEvent";
+    String url = "https://www.portcolon2000.site/api/parFormFields/";
+    String url2 = "https://www.portcolon2000.site/api/saveEvent";
 
     Intent ir;
     Toast msj;

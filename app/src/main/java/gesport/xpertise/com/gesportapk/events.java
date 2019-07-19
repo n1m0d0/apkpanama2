@@ -63,7 +63,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
     ProgressDialog mProgressDialog;
     RequestQueue mRequestQueue;
     JsonArrayRequest mJsonArrayRequest;
-    String url = "https://www.portcolon2000.site/api/lastEvents";
+    String url = "https://test.portcolon2000.site/api/lastEvents";
     Intent ir;
     int idForm;
     int idEvent;

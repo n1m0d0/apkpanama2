@@ -31,6 +31,7 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputFilter;
@@ -113,9 +114,9 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
     private final String ruta_imagen = camara_raiz + "misFotos";
     String path;
 
-    String url = "https://www.portcolon2000.site/api/parFormFields/";
-    String url2 = "https://www.portcolon2000.site/api/saveEvent";
-    String urlParametros = "https://www.portcolon2000.site/api/parGeneral/";
+    String url = "https://test.portcolon2000.site/api/parFormFields/";
+    String url2 = "https://test.portcolon2000.site/api/saveEvent";
+    String urlParametros = "https://test.portcolon2000.site/api/parGeneral/";
     String urlParametros2;
     Intent ir;
     Toast msj;
@@ -158,6 +159,8 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
     String fullName;
 
     ArrayList<obj_attributes> objAttributes = new ArrayList<obj_attributes>();
+
+    String currentPhotoPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -1417,6 +1420,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
         boolean isCreada = fileImagen.exists();
         String nombreImagen = "";
 
+
         if(isCreada == false) {
 
             isCreada = fileImagen.mkdir();
@@ -1431,11 +1435,63 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
 
         path = Environment.getExternalStorageDirectory() + File.separator + ruta_imagen + File.separator + nombreImagen;
 
-        File imagen =  new File(path);*/
+        File imagen =  new File(path);
+
+        output = Uri.fromFile(imagen);
+        if (Build.VERSION.SDK_INT >=  Build.VERSION_CODES.N) {
+            output = Uri.parse(path);
+        } else{
+            output = Uri.fromFile(new File(path));
+        }*/
+
+        /*String carpeta = "geoport";
+        File fileJson = new File(Environment.getExternalStorageDirectory(), carpeta);
+        boolean isCreada = fileJson.exists();
+        String nombreImg = "";
+
+        if(isCreada == false) {
+
+            isCreada = fileJson.mkdir();
+
+        }
+
+        if(isCreada == true) {
+
+            nombreImg = "img" + (System.currentTimeMillis()/1000) + ".json";
+
+        }
+
+        path = Environment.getExternalStorageDirectory() + File.separator + carpeta + File.separator + nombreImg;
+
+        File imagen =  new File(path);
+
+        output = FileProvider.getUriForFile(getApplicationContext(), getPackageName() + ".provider", imagen);
+
 
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        //intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(imagen));
-        startActivityForResult(intent, codigoCamera);
+        //intent.putExtra(MediaStore.EXTRA_OUTPUT, output);
+        startActivityForResult(intent, codigoCamera);*/
+
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+                ex.printStackTrace();
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(this, "gesport.xpertise.com.gesportapk.fileprovider", photoFile);
+                //Uri photoURI = FileProvider.getUriForFile(getApplicationContext(), getPackageName() + ".fileprovider", photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePictureIntent, codigoCamera);
+            }
+        }
+
 
 
     }
@@ -1450,9 +1506,35 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
 
                 case codigoCamera:
 
-                    Bundle ext = data.getExtras();
-                    bmp = (Bitmap) ext.get("data");
+                    /*Bundle ext = data.getExtras();
+                    bmp = (Bitmap) ext.get("data");*/
+                    ImageView iv = findViewById(opcion);
 
+                    String[] parts = iv.getContentDescription().toString().trim().split("-");
+                    String description = parts[0] + "captura";
+                    String control = parts[parts.length - 1];
+
+                    iv.setContentDescription(description + "-" + control);
+                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(400,400);
+                    iv.setLayoutParams(lp);
+
+                    Log.w("Img_src", currentPhotoPath);
+                    //iv.setImageURI(Uri.parse(currentPhotoPath));
+
+                    Uri imageUri = Uri.parse(currentPhotoPath);
+                    try {
+                        bmp = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                    bmp.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+
+                    iv.setImageBitmap(bmp);
+
+                    /***********************************/
+                    /*
                     ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
                     bmp.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
                     byte[] byteArray = byteArrayOutputStream .toByteArray();
@@ -1469,7 +1551,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
                     LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(400,400);
                     iv.setLayoutParams(lp);
 
-                    iv.setImageBitmap(bmp);
+                    iv.setImageBitmap(bmp);*/
 
                     for (Iterator iterator2 = objAttributes.iterator(); iterator2
                             .hasNext();) {
@@ -1938,6 +2020,25 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
         return path;
 
     }
+
+    /*****************/
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        currentPhotoPath = "file://" + image.getAbsolutePath();
+        return image;
+    }
+
+    /*****************/
 
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {

@@ -36,7 +36,7 @@ public class forgotPassword extends AppCompatActivity implements View.OnClickLis
     RequestQueue mRequestQueue;
     JsonObjectRequest mJsonObjectRequest;
     JSONObject userName;
-    String url = "https://www.portcolon2000.site/api/forgotPass";
+    String url = "https://test.portcolon2000.site/api/forgotPass";
     Intent ir;
     int code;
     @Override

@@ -67,12 +67,12 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
     ProgressDialog mProgressDialog;
     RequestQueue mRequestQueue;
     JsonObjectRequest mJsonObjectRequest;
-    String url = "https://www.portcolon2000.site/api/authUser";
+    String url = "https://test.portcolon2000.site/api/authUser";
     String credentials;
     String auth;
     int code;
     String fullName;
-    String direccion = "https://www.portcolon2000.site/api/saveEvent";
+    String direccion = "https://test.portcolon2000.site/api/saveEvent";
     String certificado = "";
     String idOffline;
     @Override

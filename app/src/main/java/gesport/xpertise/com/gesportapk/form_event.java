@@ -6,12 +6,15 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.PorterDuff;
@@ -21,6 +24,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
+import android.media.MediaScannerConnection;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -155,6 +159,9 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
     String fullName;
 
     ArrayList<obj_attributes> objAttributes = new ArrayList<obj_attributes>();
+
+    Uri output;
+    String path;
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
@@ -1396,6 +1403,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         boolean isCreada = fileImagen.exists();
         String nombreImagen = "";
 
+
         if(isCreada == false) {
 
             isCreada = fileImagen.mkdir();
@@ -1410,10 +1418,17 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
         path = Environment.getExternalStorageDirectory() + File.separator + ruta_imagen + File.separator + nombreImagen;
 
-        File imagen =  new File(path);*/
+        File imagen =  new File(path);
+
+        output = Uri.fromFile(imagen);
+        if (Build.VERSION.SDK_INT >=  Build.VERSION_CODES.N) {
+            output = Uri.parse(path);
+        } else{
+            output = Uri.fromFile(new File(path));
+        }*/
 
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        //intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(imagen));
+        //intent.putExtra(MediaStore.EXTRA_OUTPUT, output);
         startActivityForResult(intent, codigoCamera);
 
 
@@ -1431,6 +1446,17 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
                     Bundle ext = data.getExtras();
                     bmp = (Bitmap) ext.get("data");
+
+                    /*Bitmap bit = null;
+                    try {
+
+                        ContentResolver cr = this.getContentResolver();
+                        bit = MediaStore.Images.Media.getBitmap(cr, output);
+                        bit = Bitmap.createBitmap(bit, 0, 0, bit.getWidth(), bit.getHeight());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }*/
+
 
                     ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
                     bmp.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
@@ -1473,7 +1499,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                             // volvemos a crear la imagen con los nuevos valores
                             Bitmap resizedBitmap = Bitmap.createBitmap(bmp, 0, 0,
                                     width, height, matrix, true);
-                            properties.setImage(resizedBitmap);
+                            properties.setImage(bmp);
                         }
                     }
 
@@ -2170,6 +2196,9 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         });
 
     }
+
+    /*****************/
+    /*****************/
 
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {

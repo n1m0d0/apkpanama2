@@ -48,7 +48,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class events extends AppCompatActivity implements Response.Listener<JSONArray>, Response.ErrorListener {
+public class events extends AppCompatActivity implements Response.Listener<JSONObject>, Response.ErrorListener {
 
     TextView tvPending;
     EditText etSearch;
@@ -62,8 +62,8 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
     String userName;
     ProgressDialog mProgressDialog;
     RequestQueue mRequestQueue;
-    JsonArrayRequest mJsonArrayRequest;
-    String url = "https://test.portcolon2000.site/api/lastEvents";
+    JsonObjectRequest mJsonArrayRequest;
+    String url = "https://test.portcolon2000.site/api/lastEventsV2";
     Intent ir;
     int idForm;
     int idEvent;
@@ -76,7 +76,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
     String colorForm;
     String idIconForm;
     adapter_events adapter;
-    String direccion = "https://www.portcolon2000.site/api/saveEvent";
+    String direccion = "https://test.portcolon2000.site/api/saveEvent";
     String certificado = "";
     String idOffline;
     JsonObjectRequest mJsonObjectRequest;
@@ -104,7 +104,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
 
         //funcionn para llenar el array de itemEvents y mostrarlo en el ListView
 
-        bd verifica =  new bd(this);
+        bd verifica = new bd(this);
         try {
             verifica.abrir();
             Cursor cursor = verifica.searchActive();
@@ -118,7 +118,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
             e.printStackTrace();
         }
 
-        if(compruebaConexion(this)) {
+        if (compruebaConexion(this)) {
 
             cargarEventos();
 
@@ -200,7 +200,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        switch (id){
+        switch (id) {
             case R.id.closeSession:
 
                 try {
@@ -214,12 +214,12 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
                 return true;
             case R.id.sincronizar:
 
-                if(compruebaConexion(this)) {
+                if (compruebaConexion(this)) {
 
                     enviarFormularios();
 
                     Handler handler = new Handler();
-                    mProgressDialog =  new ProgressDialog(this);
+                    mProgressDialog = new ProgressDialog(this);
                     mProgressDialog.setMessage("Cargando...");
                     mProgressDialog.show();
                     handler.postDelayed(new Runnable() {
@@ -257,15 +257,15 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
         }
     }
 
-    private void cargarEventos(){
+    private void cargarEventos() {
 
-        mProgressDialog =  new ProgressDialog(this);
+        mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setMessage("Cargando...");
         mProgressDialog.show();
 
         mRequestQueue = Volley.newRequestQueue(this);
 
-        mJsonArrayRequest = new JsonArrayRequest(Request.Method.GET,url,null, this, this){
+        mJsonArrayRequest = new JsonObjectRequest(Request.Method.GET, url, null, this, this) {
 
             @Override
             public Map getHeaders() throws AuthFailureError {
@@ -280,8 +280,9 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
 
     }
 
+
     @Override
-    public void onResponse(JSONArray response) {
+    public void onResponse(JSONObject response) {
 
         /*msj = Toast.makeText(this, "" + response, Toast.LENGTH_LONG);
         msj.show();*/
@@ -295,7 +296,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
             e.printStackTrace();
         }
 
-        try{
+        /*try{
 
             for(int i=0;i<response.length();i++) {
 
@@ -326,6 +327,64 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
             msj = Toast.makeText(this, "No se tiene datos registrados", Toast.LENGTH_LONG);
             msj.show();
 
+        }*/
+
+        try {
+            JSONArray formulario = response.getJSONArray("forms");
+            JSONArray eventitos = response.optJSONArray("events");
+
+            bd conexion = new bd(events.this);
+            conexion.abrir();
+            conexion.deleteForm();
+
+            for (int s = 0; s < formulario.length(); s++) {
+
+                JSONObject formularioObj = formulario.getJSONObject(s);
+
+                idForm = formularioObj.getInt("idForm");
+                colorForm = formularioObj.getString("colorForm");
+                idIconForm = formularioObj.getString("idIconForm");
+
+                conexion.createForm(idForm, colorForm, idIconForm);
+
+            }
+            for (int a = 0; a < eventitos.length(); a++) {
+
+                JSONObject eventitosObj = eventitos.getJSONObject(a);
+
+                int idForm2 = eventitosObj.getInt("idForm");
+                idEvent = eventitosObj.getInt("idEvent");
+                keyValue = eventitosObj.getString("keyValue");
+                dateEventBegin = eventitosObj.getString("dateEventBegin");
+                dateEventEnd = eventitosObj.getString("dateEventEnd");
+                personNumber = eventitosObj.getInt("personNumber");
+                containerNumber = eventitosObj.getInt("containerNumber");
+                eventState = eventitosObj.getInt("eventState");
+
+                Cursor atributos = conexion.searchForm(idForm2);
+                atributos.moveToNext();
+                String colorForm2 = atributos.getString(1);
+                String idIconForm2 = atributos.getString(2);
+
+                Log.w("color", colorForm2);
+                Log.w("icono", idIconForm2);
+
+                itemEvents.add(new obj_events(idEvent, keyValue, dateEventBegin, dateEventEnd, idForm2, personNumber, containerNumber, eventState, colorForm2, idIconForm2));
+                itemEvents2.add(new obj_events(idEvent, keyValue, dateEventBegin, dateEventEnd, idForm2, personNumber, containerNumber, eventState, colorForm2, idIconForm2));
+
+
+            }
+
+            adapter = new adapter_events(events.this, itemEvents);
+            lvEvents.setAdapter(adapter);
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+            msj = Toast.makeText(this, "No se tiene datos registrados", Toast.LENGTH_LONG);
+            msj.show();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
     }
@@ -344,9 +403,9 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
 
         Log.w("buscar", texzo);
         itemEvents.clear();
-        for(int i = 0; i < itemEvents2.size(); i++) {
+        for (int i = 0; i < itemEvents2.size(); i++) {
 
-            if(itemEvents2.get(i).getVariable().toLowerCase().contains(texzo.toLowerCase())) {
+            if (itemEvents2.get(i).getVariable().toLowerCase().contains(texzo.toLowerCase())) {
 
                 itemEvents.add(itemEvents2.get(i));
 
@@ -370,7 +429,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
 
             } else {
 
-                try{
+                /*try{
 
                     JSONArray response = new JSONArray(events);
 
@@ -401,6 +460,63 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
 
                     e.printStackTrace();
 
+                }*/
+
+                try {
+
+                    JSONObject response = new JSONObject(events);
+
+                    JSONArray formulario = response.getJSONArray("forms");
+                    JSONArray eventitos = response.optJSONArray("events");
+
+                    bd conexion = new bd(events.this);
+                    conexion.abrir();
+                    conexion.deleteForm();
+
+                    for (int s = 0; s < formulario.length(); s++) {
+
+                        JSONObject formularioObj = formulario.getJSONObject(s);
+
+                        idForm = formularioObj.getInt("idForm");
+                        colorForm = formularioObj.getString("colorForm");
+                        idIconForm = formularioObj.getString("idIconForm");
+
+                        conexion.createForm(idForm, colorForm, idIconForm);
+
+                    }
+                    for (int a = 0; a < eventitos.length(); a++) {
+
+                        JSONObject eventitosObj = eventitos.getJSONObject(a);
+
+                        int idForm2 = eventitosObj.getInt("idForm");
+                        idEvent = eventitosObj.getInt("idEvent");
+                        keyValue = eventitosObj.getString("keyValue");
+                        dateEventBegin = eventitosObj.getString("dateEventBegin");
+                        dateEventEnd = eventitosObj.getString("dateEventEnd");
+                        personNumber = eventitosObj.getInt("personNumber");
+                        containerNumber = eventitosObj.getInt("containerNumber");
+                        eventState = eventitosObj.getInt("eventState");
+
+                        Cursor atributos = conexion.searchForm(idForm2);
+                        atributos.moveToNext();
+                        String colorForm2 = atributos.getString(1);
+                        String idIconForm2 = atributos.getString(2);
+
+                        Log.w("color", colorForm2);
+                        Log.w("icono", idIconForm2);
+
+                        itemEvents.add(new obj_events(idEvent, keyValue, dateEventBegin, dateEventEnd, idForm2, personNumber, containerNumber, eventState, colorForm2, idIconForm2));
+                        itemEvents2.add(new obj_events(idEvent, keyValue, dateEventBegin, dateEventEnd, idForm2, personNumber, containerNumber, eventState, colorForm2, idIconForm2));
+
+
+                    }
+
+                    adapter = new adapter_events(events.this, itemEvents);
+                    lvEvents.setAdapter(adapter);
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
 
             }
@@ -432,7 +548,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
         return connected;
     }
 
-    public void createJson(JSONArray jsonArray) {
+    public void createJson(JSONObject jsonArray) {
 
         String path = null;
         String carpeta = "geoport";
@@ -440,13 +556,13 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
         boolean isCreada = fileJson.exists();
         String nombreJson = "";
 
-        if(isCreada == false) {
+        if (isCreada == false) {
 
             isCreada = fileJson.mkdir();
 
         }
 
-        if(isCreada == true) {
+        if (isCreada == true) {
 
             nombreJson = "events.json";
 
@@ -465,7 +581,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
 
     }
 
-    public String readJsonFile (String path) {
+    public String readJsonFile(String path) {
 
         Log.w("ver", path);
 
@@ -501,9 +617,9 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
 
     }
 
-    private void enviarFormularios(){
+    private void enviarFormularios() {
 
-        mProgressDialog =  new ProgressDialog(this);
+        mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setMessage("Cargando...");
         mProgressDialog.setCancelable(false);
         mProgressDialog.show();
@@ -556,7 +672,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
                             Log.w("mioerror", "" + error);
 
                         }
-                    }){
+                    }) {
 
                         @Override
                         public Map getHeaders() throws AuthFailureError {
@@ -583,7 +699,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
 
     }
 
-    public String readJsonFileAnswer (String path) {
+    public String readJsonFileAnswer(String path) {
 
         Log.w("ver", path);
 
@@ -606,5 +722,4 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
 
         return jsonAnswer;
     }
-
 }

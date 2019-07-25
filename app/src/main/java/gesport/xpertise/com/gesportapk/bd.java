@@ -15,7 +15,7 @@ public class bd {
     private static final String codeUser = "codeUser";
     private static final String fullName = "fullName";
     // TABLA REGISTRO
-    private static final String idAnswers= "_id";
+    private static final String idAnswers = "_id";
     private static final String nameUserAnswers = "nameUserAnswers";
     private static final String certificateAnswers = "certificateAnswers";
     private static final String answersJson = "answersJson";
@@ -25,11 +25,17 @@ public class bd {
     private static final String nameUserSession = "nameUserSession";
     private static final String stateSession = "stateSession";
 
+    // TABLA FORMULARIOS
+    private static final String idForm = "_id";
+    private static final String colorForm = "colorForm";
+    private static final String idIconForm = "idIconForm";
+
     // BASE DE DATOS TABLAS
     private static final String BD = "BD_GEO";
     private static final String user = "user";
     private static final String answers = "answers";
     private static final String mysession = "mysession";
+    private static final String form = "form";
     private static final int VERSION_BD = 15;
 
     private BDHelper nHelper;
@@ -55,11 +61,15 @@ public class bd {
                     + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " + answersJson
                     + " TEXT NOT NULL, " + nameUserAnswers
                     + " TEXT NOT NULL, " + certificateAnswers
-                    + " TEXT NOT NULL, "  + stateAnswers + " TEXT NOT NULL);");
+                    + " TEXT NOT NULL, " + stateAnswers + " TEXT NOT NULL);");
 
             db.execSQL("CREATE TABLE " + mysession + "(" + idSession
                     + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " + nameUserSession
                     + " TEXT NOT NULL, " + stateSession + " TEXT NOT NULL);");
+
+            db.execSQL("CREATE TABLE " + form + "(" + idForm
+                    + " INTEGER PRIMARY KEY NOT NULL, " + colorForm
+                    + " TEXT NOT NULL, " + idIconForm + " TEXT NOT NULL);");
 
         }
 
@@ -74,6 +84,9 @@ public class bd {
             onCreate(db);
 
             db.execSQL("DROP TABLE IF EXISTS " + mysession);
+            onCreate(db);
+
+            db.execSQL("DROP TABLE IF EXISTS " + form);
             onCreate(db);
         }
 
@@ -207,4 +220,44 @@ public class bd {
 
     }
 
+    // Form
+    // Crear Forms
+    public long createForm(int idForm, String colorForm, String idIconForm)
+            throws SQLException {
+        // TODO Auto-generated method stub
+
+        ContentValues cv = new ContentValues();
+        cv.put(this.idForm, idForm);
+        cv.put(this.colorForm, colorForm);
+        cv.put(this.idIconForm, idIconForm);
+        return nBD.insert(form, null, cv);
+
+    }
+
+    // Elimminar Forms
+    public long deleteForm()
+            throws SQLException {
+        // TODO Auto-generated method stub
+        return nBD.delete(form, null, null);
+
+    }
+
+    // Buscar Form
+    public Cursor searchForms() throws SQLException {
+
+        String selectQuery = "SELECT * FROM " + form;
+        Cursor cursor = nBD.rawQuery(selectQuery, null);
+        return cursor;
+
+    }
+
+    // Buscar Form
+    public Cursor searchForm(int idForm) throws SQLException {
+
+        String selectQuery = "SELECT * FROM " + form + " WHERE "
+                + this.idForm + "='" + idForm + "'";
+        Cursor cursor = nBD.rawQuery(selectQuery, null);
+        return cursor;
+
+    }
 }

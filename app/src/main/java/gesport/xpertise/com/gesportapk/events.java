@@ -395,7 +395,8 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
         mProgressDialog.dismiss();
         /*msj = Toast.makeText(this, "Ocurrio un Error: " + error, Toast.LENGTH_LONG);
         msj.show();*/
-        Log.w("respuesta", "" + error);
+        cargarEventosOffline();
+        Log.w("respuestaError", "" + error);
 
     }
 

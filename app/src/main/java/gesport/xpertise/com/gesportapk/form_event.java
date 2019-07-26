@@ -934,10 +934,12 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
 
         }, new Response.ErrorListener() {
+            @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
             @Override
             public void onErrorResponse(VolleyError error) {
 
                 mProgressDialog.dismiss();
+                cargarFormularioOffline();
 
             }
         }){

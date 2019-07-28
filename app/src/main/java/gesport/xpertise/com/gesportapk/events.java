@@ -63,7 +63,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
     ProgressDialog mProgressDialog;
     RequestQueue mRequestQueue;
     JsonObjectRequest mJsonArrayRequest;
-    String url = "https://test.portcolon2000.site/api/lastEventsV2";
+    String url;
     Intent ir;
     int idForm;
     int idEvent;
@@ -76,7 +76,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
     String colorForm;
     String idIconForm;
     adapter_events adapter;
-    String direccion = "https://test.portcolon2000.site/api/saveEvent";
+    String direccion;
     String certificado = "";
     String idOffline;
     JsonObjectRequest mJsonObjectRequest;
@@ -90,6 +90,9 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_events);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+        url = getString(R.string.servidor) + "/api/lastEventsV2";
+        direccion = getString(R.string.servidor) + "/api/saveEvent";
 
         tvPending = findViewById(R.id.tvPending);
         lvEvents = findViewById(R.id.lvEvents);

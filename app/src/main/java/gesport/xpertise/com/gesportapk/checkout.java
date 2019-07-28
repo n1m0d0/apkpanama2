@@ -114,9 +114,9 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
     private final String ruta_imagen = camara_raiz + "misFotos";
     String path;
 
-    String url = "https://test.portcolon2000.site/api/parFormFields/";
-    String url2 = "https://test.portcolon2000.site/api/saveEvent";
-    String urlParametros = "https://test.portcolon2000.site/api/parGeneral/";
+    String url;
+    String url2;
+    String urlParametros;
     String urlParametros2;
     Intent ir;
     Toast msj;
@@ -168,6 +168,10 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_checkout);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+        url = getString(R.string.servidor) + "/api/parFormFields/";
+        url2 = getString(R.string.servidor) + "/api/saveEvent";
+        urlParametros = getString(R.string.servidor) + "/api/parGeneral/";
 
         llContenedor = findViewById(R.id.llContenedor);
         llRecording = findViewById(R.id.llRecording);

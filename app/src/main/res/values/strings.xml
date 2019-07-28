@@ -22,4 +22,6 @@
     <string name="finalEvent">ESPECIFICACIÓN SUCESO - FINAL</string>
     <string name="save">Guardar</string>
     <string name="events">Eventos</string>
+
+    <string name="servidor">https://test.portcolon2000.site</string>
 </resources>

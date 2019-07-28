@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -67,12 +68,12 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
     ProgressDialog mProgressDialog;
     RequestQueue mRequestQueue;
     JsonObjectRequest mJsonObjectRequest;
-    String url = "https://test.portcolon2000.site/api/authUser";
+    String url;
     String credentials;
     String auth;
     int code;
     String fullName;
-    String direccion = "https://test.portcolon2000.site/api/saveEvent";
+    String direccion;
     String certificado = "";
     String idOffline;
     @Override
@@ -81,6 +82,9 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+        url = getString(R.string.servidor) + "/api/authUser";
+        direccion = getString(R.string.servidor) + "/api/saveEvent";
 
         etUser = findViewById(R.id.etUser);
         etPassword = findViewById(R.id.etPassword);

@@ -122,8 +122,8 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
     private final String ruta_imagen = camara_raiz + "misFotos";
 
 
-    String url = "https://test.portcolon2000.site/api/parFormFields/";
-    String url2 = "https://test.portcolon2000.site/api/saveEvent";
+    String url;
+    String url2;
 
     Intent ir;
     Toast msj;
@@ -173,6 +173,9 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_form_event);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+        url = getString(R.string.servidor) + "/api/parFormFields/";
+        url2 = getString(R.string.servidor) + "/api/saveEvent";
 
         llContenedor = findViewById(R.id.llContenedor);
         llRecording = findViewById(R.id.llRecording);

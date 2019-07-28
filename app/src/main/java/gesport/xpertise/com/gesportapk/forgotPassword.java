@@ -36,7 +36,7 @@ public class forgotPassword extends AppCompatActivity implements View.OnClickLis
     RequestQueue mRequestQueue;
     JsonObjectRequest mJsonObjectRequest;
     JSONObject userName;
-    String url = "https://test.portcolon2000.site/api/forgotPass";
+    String url;
     Intent ir;
     int code;
     @Override
@@ -45,6 +45,8 @@ public class forgotPassword extends AppCompatActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forgot_password);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+        url = getString(R.string.servidor) + "/api/forgotPass";
 
         etUser = findViewById(R.id.etUser);
 

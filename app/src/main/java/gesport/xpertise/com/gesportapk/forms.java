@@ -49,7 +49,7 @@ public class forms extends AppCompatActivity implements Response.Listener<JSONAr
     ProgressDialog mProgressDialog;
     RequestQueue mRequestQueue;
     JsonArrayRequest mJsonArrayRequest;
-    String url = "https://test.portcolon2000.site/api/parForm";
+    String url;
     Intent ir;
 
     int idForm;
@@ -66,6 +66,8 @@ public class forms extends AppCompatActivity implements Response.Listener<JSONAr
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forms);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+        url = getString(R.string.servidor) + "/api/parForm";
 
         gvForms = findViewById(R.id.gvForms);
 

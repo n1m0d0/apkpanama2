@@ -1519,8 +1519,8 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                         e.printStackTrace();
                     }
 
-                    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                    bmp.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+                    /*ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                    bmp.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);*/
 
                     iv.setImageBitmap(bmp);
 
@@ -1570,7 +1570,6 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                             properties.setImage(resizedBitmap);
                         }
                     }
-
                     break;
 
                 case codigoFile:

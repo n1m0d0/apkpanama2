@@ -1532,8 +1532,8 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
                         e.printStackTrace();
                     }
 
-                    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                    bmp.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+                    /*ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                    bmp.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);*/
 
                     iv.setImageBitmap(bmp);
 

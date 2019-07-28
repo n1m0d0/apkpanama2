@@ -36,7 +36,7 @@ public class bd {
     private static final String answers = "answers";
     private static final String mysession = "mysession";
     private static final String form = "form";
-    private static final int VERSION_BD = 15;
+    private static final int VERSION_BD = 16;
 
     private BDHelper nHelper;
     private final Context nContexto;

@@ -58,7 +58,7 @@ public class view_event extends AppCompatActivity implements View.OnClickListene
     String auth;
     String userName;
     String idEvent;
-    String url = "https://test.portcolon2000.site/api/openEvent/";
+    String url;
     ProgressDialog mProgressDialog;
     RequestQueue mRequestQueue;
     JsonArrayRequest mJsonArrayRequest;
@@ -77,6 +77,8 @@ public class view_event extends AppCompatActivity implements View.OnClickListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_event);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+        url = getString(R.string.servidor) + "/api/openEvent/";
 
         llContenedor = findViewById(R.id.llContenedor);
         btnCheckOut = findViewById(R.id.btnCheckOut);

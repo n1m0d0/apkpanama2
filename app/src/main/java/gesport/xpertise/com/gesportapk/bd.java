@@ -36,7 +36,7 @@ public class bd {
     private static final String answers = "answers";
     private static final String mysession = "mysession";
     private static final String form = "form";
-    private static final int VERSION_BD = 16;
+    private static final int VERSION_BD = 20;
 
     private BDHelper nHelper;
     private final Context nContexto;
@@ -77,6 +77,12 @@ public class bd {
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
             // TODO Auto-generated method stub
 
+            if(oldVersion < 20){
+                db.execSQL("CREATE TABLE " + form + "(" + idForm
+                        + " INTEGER PRIMARY KEY NOT NULL, " + colorForm
+                        + " TEXT NOT NULL, " + idIconForm + " TEXT NOT NULL);");
+            }
+
             db.execSQL("DROP TABLE IF EXISTS " + user);
             onCreate(db);
 
@@ -88,6 +94,7 @@ public class bd {
 
             db.execSQL("DROP TABLE IF EXISTS " + form);
             onCreate(db);
+
         }
 
     }

@@ -48,7 +48,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class events extends AppCompatActivity implements Response.Listener<JSONArray>, Response.ErrorListener {
+public class events extends AppCompatActivity implements Response.Listener<JSONObject>, Response.ErrorListener {
 
     TextView tvPending;
     EditText etSearch;
@@ -62,7 +62,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
     String userName;
     ProgressDialog mProgressDialog;
     RequestQueue mRequestQueue;
-    JsonArrayRequest mJsonArrayRequest;
+    JsonObjectRequest mJsonArrayRequest;
     String url;
     Intent ir;
     int idForm;
@@ -91,7 +91,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
         setContentView(R.layout.activity_events);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-        url = getString(R.string.servidor) + "/api/lastEvents";
+        url = getString(R.string.servidor) + "/api/lastEventsV2";
         direccion = getString(R.string.servidor) + "/api/saveEvent";
 
         tvPending = findViewById(R.id.tvPending);
@@ -268,7 +268,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
 
         mRequestQueue = Volley.newRequestQueue(this);
 
-        mJsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null, this, this) {
+        mJsonArrayRequest = new JsonObjectRequest(Request.Method.GET, url, null, this, this) {
 
             @Override
             public Map getHeaders() throws AuthFailureError {
@@ -285,7 +285,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
 
 
     @Override
-    public void onResponse(JSONArray response) {
+    public void onResponse(JSONObject response) {
 
         /*msj = Toast.makeText(this, "" + response, Toast.LENGTH_LONG);
         msj.show();*/
@@ -299,7 +299,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
             e.printStackTrace();
         }
 
-        try{
+        /*try{
 
             for(int i=0;i<response.length();i++) {
 
@@ -330,9 +330,9 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
             msj = Toast.makeText(this, "No se tiene datos registrados", Toast.LENGTH_LONG);
             msj.show();
 
-        }
+        }*/
 
-        /*try {
+        try {
             JSONArray formulario = response.getJSONArray("forms");
             JSONArray eventitos = response.optJSONArray("events");
 
@@ -349,6 +349,8 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
                 idIconForm = formularioObj.getString("idIconForm");
 
                 conexion.createForm(idForm, colorForm, idIconForm);
+
+                Log.w("contadorForm", "" + s);
 
             }
             for (int a = 0; a < eventitos.length(); a++) {
@@ -388,7 +390,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
             msj.show();
         } catch (Exception e) {
             e.printStackTrace();
-        }*/
+        }
 
     }
 
@@ -433,7 +435,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
 
             } else {
 
-                try{
+                /*try{
 
                     JSONArray response = new JSONArray(events);
 
@@ -464,9 +466,9 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
 
                     e.printStackTrace();
 
-                }
+                }*/
 
-                /*try {
+                try {
 
                     JSONObject response = new JSONObject(events);
 
@@ -521,7 +523,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
 
                 } catch (JSONException e) {
                     e.printStackTrace();
-                }*/
+                }
 
             }
 
@@ -552,7 +554,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONA
         return connected;
     }
 
-    public void createJson(JSONArray jsonArray) {
+    public void createJson(JSONObject jsonArray) {
 
         String path = null;
         String carpeta = "geoport";

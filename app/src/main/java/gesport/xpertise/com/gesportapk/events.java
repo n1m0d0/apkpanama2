@@ -48,7 +48,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class events extends AppCompatActivity implements Response.Listener<JSONObject>, Response.ErrorListener {
+public class events extends AppCompatActivity implements Response.Listener<JSONArray>, Response.ErrorListener {
 
     TextView tvPending;
     EditText etSearch;
@@ -62,7 +62,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
     String userName;
     ProgressDialog mProgressDialog;
     RequestQueue mRequestQueue;
-    JsonObjectRequest mJsonArrayRequest;
+    JsonArrayRequest mJsonArrayRequest;
     String url;
     Intent ir;
     int idForm;
@@ -91,7 +91,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
         setContentView(R.layout.activity_events);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-        url = getString(R.string.servidor) + "/api/lastEventsV2";
+        url = getString(R.string.servidor) + "/api/lastEvents";
         direccion = getString(R.string.servidor) + "/api/saveEvent";
 
         tvPending = findViewById(R.id.tvPending);
@@ -268,7 +268,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
 
         mRequestQueue = Volley.newRequestQueue(this);
 
-        mJsonArrayRequest = new JsonObjectRequest(Request.Method.GET, url, null, this, this) {
+        mJsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null, this, this) {
 
             @Override
             public Map getHeaders() throws AuthFailureError {
@@ -285,7 +285,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
 
 
     @Override
-    public void onResponse(JSONObject response) {
+    public void onResponse(JSONArray response) {
 
         /*msj = Toast.makeText(this, "" + response, Toast.LENGTH_LONG);
         msj.show();*/
@@ -299,7 +299,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
             e.printStackTrace();
         }
 
-        /*try{
+        try{
 
             for(int i=0;i<response.length();i++) {
 
@@ -330,9 +330,9 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
             msj = Toast.makeText(this, "No se tiene datos registrados", Toast.LENGTH_LONG);
             msj.show();
 
-        }*/
+        }
 
-        try {
+        /*try {
             JSONArray formulario = response.getJSONArray("forms");
             JSONArray eventitos = response.optJSONArray("events");
 
@@ -388,7 +388,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
             msj.show();
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
 
     }
 
@@ -433,7 +433,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
 
             } else {
 
-                /*try{
+                try{
 
                     JSONArray response = new JSONArray(events);
 
@@ -464,9 +464,9 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
 
                     e.printStackTrace();
 
-                }*/
+                }
 
-                try {
+                /*try {
 
                     JSONObject response = new JSONObject(events);
 
@@ -521,7 +521,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
 
                 } catch (JSONException e) {
                     e.printStackTrace();
-                }
+                }*/
 
             }
 
@@ -552,7 +552,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
         return connected;
     }
 
-    public void createJson(JSONObject jsonArray) {
+    public void createJson(JSONArray jsonArray) {
 
         String path = null;
         String carpeta = "geoport";

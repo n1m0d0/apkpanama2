@@ -83,7 +83,7 @@ public class bd {
                         + " TEXT NOT NULL, " + idIconForm + " TEXT NOT NULL);");
             }
 
-            db.execSQL("DROP TABLE IF EXISTS " + user);
+            /*db.execSQL("DROP TABLE IF EXISTS " + user);
             onCreate(db);
 
             db.execSQL("DROP TABLE IF EXISTS " + answers);
@@ -93,7 +93,7 @@ public class bd {
             onCreate(db);
 
             db.execSQL("DROP TABLE IF EXISTS " + form);
-            onCreate(db);
+            onCreate(db);*/
 
         }
 

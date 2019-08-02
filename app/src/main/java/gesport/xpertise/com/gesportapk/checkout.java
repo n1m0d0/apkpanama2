@@ -22,6 +22,8 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -697,7 +699,29 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
 
                 if (validar == 0) {
 
-                    enviarformulario();
+                    //enviarformulario();
+                    /***********************/
+                    if(compruebaConexion(checkout.this)) {
+                        enviarformulario();
+                    } else {
+                        try {
+                            Log.w("conexion", "no hay red");
+                            bd conexion = new bd(checkout.this);
+                            conexion.abrir();
+                            String answer = createAnswerJson(jsonenvio);
+                            conexion.createAnswers(userName, auth, answer);
+                            conexion.cerrar();
+                            ir = new Intent(checkout.this, events.class);
+                            ir.putExtra("auth", auth);
+                            ir.putExtra("userName", userName);
+                            ir.putExtra("fullName", fullName);
+                            startActivity(ir);
+                            finish();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    /***********************/
 
                 } else {
 
@@ -1269,6 +1293,11 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
                     conexion.createAnswers(userName, auth, answer);
                     conexion.cerrar();
                     mProgressDialog.dismiss();
+                    ir = new Intent(checkout.this, events.class);
+                    ir.putExtra("auth", auth);
+                    ir.putExtra("userName", userName);
+                    ir.putExtra("fullName", fullName);
+                    startActivity(ir);
                     finish();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -2043,6 +2072,27 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
     }
 
     /*****************/
+
+    /**********Comprueba Conexion**********/
+    public static boolean compruebaConexion(Context context) {
+
+        boolean connected = false;
+
+        ConnectivityManager connec = (ConnectivityManager) context
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        // Recupera todas las redes (tanto móviles como wifi)
+        NetworkInfo[] redes = connec.getAllNetworkInfo();
+
+        for (int i = 0; i < redes.length; i++) {
+            // Si alguna red tiene conexión, se devuelve true
+            if (redes[i].getState() == NetworkInfo.State.CONNECTED) {
+                connected = true;
+            }
+        }
+        return connected;
+    }
+    /********************/
 
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {

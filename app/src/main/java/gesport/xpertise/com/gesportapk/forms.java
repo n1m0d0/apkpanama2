@@ -14,6 +14,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -40,7 +41,8 @@ import java.util.Map;
 
 public class forms extends AppCompatActivity implements Response.Listener<JSONArray>, Response.ErrorListener {
 
-    GridView gvForms;
+    //GridView gvForms;
+    ListView listView;
     String id_form;
     ArrayList<obj_form> itemForms = new ArrayList<obj_form>();
     Toast msj;
@@ -64,12 +66,13 @@ public class forms extends AppCompatActivity implements Response.Listener<JSONAr
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_forms);
+        setContentView(R.layout.forms);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         url = getString(R.string.servidor) + "/api/parForm";
 
-        gvForms = findViewById(R.id.gvForms);
+        //gvForms = findViewById(R.id.gvForms);
+        listView = findViewById(R.id.lvForms);
 
         Bundle parametros = this.getIntent().getExtras();
         auth = parametros.getString("auth");
@@ -87,7 +90,7 @@ public class forms extends AppCompatActivity implements Response.Listener<JSONAr
         }
 
         //funcionalidad a la lista
-        gvForms.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        /*gvForms.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
@@ -95,8 +98,7 @@ public class forms extends AppCompatActivity implements Response.Listener<JSONAr
 
                 // recuperamos el id
                 id_form = "" + elegido.getId();
-                /*msj = Toast.makeText(forms.this, "Formulario elegido elegido: " + id_form, Toast.LENGTH_LONG);
-                msj.show();*/
+
                 // llamar a la funcion para ver el formulario
                 ir = new Intent(forms.this, form_event.class);
                 ir.putExtra("auth", auth);
@@ -104,6 +106,27 @@ public class forms extends AppCompatActivity implements Response.Listener<JSONAr
                 ir.putExtra("idForm", id_form);
                 ir.putExtra("fullName", fullName);
                 startActivity(ir);
+
+            }
+        });*/
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                obj_form elegido = (obj_form) parent.getItemAtPosition(position);
+
+                // recuperamos el id
+                id_form = "" + elegido.getId();
+
+                // llamar a la funcion para ver el formulario
+                ir = new Intent(forms.this, form_event.class);
+                ir.putExtra("auth", auth);
+                ir.putExtra("userName", userName);
+                ir.putExtra("idForm", id_form);
+                ir.putExtra("fullName", fullName);
+                startActivity(ir);
+
 
             }
         });
@@ -164,7 +187,7 @@ public class forms extends AppCompatActivity implements Response.Listener<JSONAr
             }
 
             adapter_forms adapter = new adapter_forms(forms.this, itemForms);
-            gvForms.setAdapter(adapter);
+            listView.setAdapter(adapter);
 
         }catch (JSONException e) {
 
@@ -234,7 +257,7 @@ public class forms extends AppCompatActivity implements Response.Listener<JSONAr
                     }
 
                     adapter_forms adapter = new adapter_forms(forms.this, itemForms);
-                    gvForms.setAdapter(adapter);
+                    listView.setAdapter(adapter);
 
                 }catch (JSONException e) {
 

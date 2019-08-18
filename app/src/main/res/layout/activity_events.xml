@@ -5,17 +5,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="1dp"
+    android:background="@color/colorBody"
     tools:context="gesport.xpertise.com.gesportapk.events"
     android:focusableInTouchMode="true"
     >
     <ListView
         android:paddingTop="65dp"
+        android:layout_marginRight="30dp"
         android:id="@+id/lvEvents"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:dividerHeight="10.0sp"
-        android:background="@color/colorWhite"
         android:divider="@android:color/transparent"
+        android:background="@color/colorBody"
         />
 
 
@@ -24,12 +26,14 @@
         android:id="@+id/tvPending"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Sucesos registrados"
-        android:textAppearance="@style/boldreg"
+        android:text="SUCESOS REGISTRADOS"
+        android:textAppearance="@style/colorTitle"
         />
     <EditText android:id="@+id/etSearch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/separation"
+        android:layout_marginRight="@dimen/separation"
         android:hint="Buscar"/>
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fbAdd"

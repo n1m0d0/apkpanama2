@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="@dimen/separation"
-    android:layout_margin="@dimen/separation"
+    android:background="@color/colorBody"
     tools:context="gesport.xpertise.com.gesportapk.forms">
 
     <GridView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -17,6 +17,7 @@
         android:verticalSpacing="10dp"
         android:horizontalSpacing="10dp"
         android:stretchMode="columnWidth"
+        android:padding="@dimen/separation"
         android:gravity="center"/>
 
 </LinearLayout>

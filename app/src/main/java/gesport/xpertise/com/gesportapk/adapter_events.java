@@ -5,6 +5,13 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.OvalShape;
+import android.graphics.drawable.shapes.RoundRectShape;
+import android.os.Build;
 import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -58,26 +65,73 @@ public class adapter_events extends BaseAdapter {
         obj_events item = items.get(position);
 
         LinearLayout ll0001 = vi.findViewById(R.id.ll0001);
-        ll0001.setBackgroundColor(Color.parseColor(item.colorForm));
+        //ll0001.setBackgroundColor(Color.parseColor(item.colorForm));
 
-            TextView id = vi.findViewById(R.id.tvIdEvent);
-            id.setText(""+item.getId());
+        RoundRectShape roundRectShape = new RoundRectShape(new float[]{
+                0, 0, 360, 360,
+                360, 360, 0, 0}, null, null);
+        ShapeDrawable shapeDrawable = new ShapeDrawable(roundRectShape);
+        shapeDrawable.getPaint().setColor(Color.parseColor(item.colorForm));
+        shapeDrawable.setPadding(10, 10, 10, 10);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            ll0001.setBackground(shapeDrawable);
+        } else {
+            ll0001.setBackgroundColor(Color.parseColor(item.colorForm));
+        }
 
-            TextView values = vi.findViewById(R.id.tvKeyValue);
-            values.setText(item.getVariable());
+        TextView id = vi.findViewById(R.id.tvIdEvent);
+        id.setText("" + item.getId());
 
-            TextView startDate = vi.findViewById(R.id.tvDateEventBegin);
-            startDate.setText(item.getFecha_inicio());
+        TextView values = vi.findViewById(R.id.tvKeyValue);
+        values.setText(item.getVariable());
 
-            TextView endDate = vi.findViewById(R.id.tvDateEventEnd);
-            endDate.setText(item.getFecha_fin());
+        TextView startDate = vi.findViewById(R.id.tvDateEventBegin);
+        startDate.setText(item.getFecha_inicio());
 
-            ImageView ivImage = vi.findViewById(R.id.iv0001);
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            byte[] imageBytes = baos.toByteArray();
-            imageBytes = Base64.decode(item.getIdIconForm(), Base64.DEFAULT);
-            Bitmap decodedImage = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+        TextView endDate = vi.findViewById(R.id.tvDateEventEnd);
+        endDate.setText(item.getFecha_fin());
+
+        ImageView ivImage = vi.findViewById(R.id.iv0001);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        byte[] imageBytes = baos.toByteArray();
+        imageBytes = Base64.decode(item.getIdIconForm(), Base64.DEFAULT);
+        Bitmap decodedImage = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+
+        /*ShapeDrawable sd = new ShapeDrawable(new OvalShape());
+        sd.setIntrinsicHeight(100);
+        sd.setIntrinsicWidth(100);
+        sd.getPaint().setColor(Color.parseColor("#00ff00"));
+        ivImage.setPadding(50, 50, 50, 50);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            ivImage.setBackground(sd);
             ivImage.setImageBitmap(decodedImage);
+        } else {
+            ivImage.setImageBitmap(decodedImage);
+        }*/
+
+        ShapeDrawable biggerCircle= new ShapeDrawable( new OvalShape());
+        biggerCircle.setIntrinsicHeight( 60 );
+        biggerCircle.setIntrinsicWidth( 60);
+        biggerCircle.setBounds(new Rect(0, 0, 60, 60));
+        biggerCircle.getPaint().setColor(Color.parseColor(item.colorForm));
+        biggerCircle.setPadding(30,30,30,30);
+
+        ShapeDrawable smallerCircle= new ShapeDrawable( new OvalShape());
+        smallerCircle.setIntrinsicHeight( 10 );
+        smallerCircle.setIntrinsicWidth( 10);
+        smallerCircle.setBounds(new Rect(0, 0, 10, 10));
+        smallerCircle.getPaint().setColor(Color.WHITE);
+
+        smallerCircle.setPadding(10,10,10,10);
+        Drawable[] d = {smallerCircle,biggerCircle};
+        LayerDrawable composite1 = new LayerDrawable(d);
+        //ivImage.setPadding(100, 100, 100, 100);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            ivImage.setBackground(composite1);
+            ivImage.setImageBitmap(decodedImage);
+        } else {
+            ivImage.setImageBitmap(decodedImage);
+        }
 
         return vi;
     }

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll0001"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal"
-    android:gravity="center"
     android:background="@drawable/rounded_cornerlist"
-    android:id="@+id/ll0001">
+    android:gravity="center"
+    android:orientation="horizontal">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -25,38 +25,36 @@
             android:id="@+id/tvKeyValue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/bold"
-            android:text="123456" />
+            android:text="123456"
+            android:textAppearance="@style/bold" />
 
         <TextView
             android:id="@+id/tvDateEventBegin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorWhite"
-            android:text="234567" />
+            android:text="234567"
+            android:textColor="@color/colorWhite" />
 
         <TextView
-            android:textColor="@color/colorWhite"
             android:id="@+id/tvDateEventEnd"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="3456789" />
+            android:text="3456789"
+            android:textColor="@color/colorWhite" />
     </LinearLayout>
 
-    <LinearLayout
+
+    <ImageView
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="35dp"
+        android:layout_marginRight="5dp"
+        android:id="@+id/iv0001"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
+        android:layout_height="60dp"
         android:layout_weight="8"
         android:gravity="center"
-        android:orientation="vertical">
+        android:src="@drawable/password" />
 
-            <ImageView
-                android:id="@+id/iv0001"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:gravity="center"
-                android:src="@drawable/password" />
-
-    </LinearLayout>
 
 </LinearLayout>

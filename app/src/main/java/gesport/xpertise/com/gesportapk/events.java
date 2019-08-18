@@ -81,7 +81,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
     String idOffline;
     JsonObjectRequest mJsonObjectRequest;
 
-    String listText = "Sucesos registrados";
+    String listText = "SUCESOS REGISTRADOS";
     String fullName;
 
     @Override
@@ -98,6 +98,8 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
         lvEvents = findViewById(R.id.lvEvents);
         fbAdd = findViewById(R.id.fbAdd);
         etSearch = findViewById(R.id.etSearch);
+        etSearch.setBackgroundResource(R.drawable.customedittext);
+        etSearch.setPadding(30,20,30,20);
 
 
         Bundle parametros = this.getIntent().getExtras();
@@ -115,7 +117,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
                 tvPending.setText(listText);
             } else {
                 int cantidad = cursor.getCount();
-                tvPending.setText(listText + "           " + cantidad + "Pendiente(s)");
+                tvPending.setText(listText + "       " + cantidad + "Pendiente(s)");
             }
         } catch (Exception e) {
             e.printStackTrace();

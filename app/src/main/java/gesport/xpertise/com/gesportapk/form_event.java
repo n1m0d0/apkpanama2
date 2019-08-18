@@ -1,6 +1,7 @@
 package gesport.xpertise.com.gesportapk;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -755,6 +756,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         mRequestQueue = Volley.newRequestQueue(this);
 
         mJsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
+            @TargetApi(Build.VERSION_CODES.M)
             @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
             @Override
             public void onResponse(JSONArray response) {
@@ -973,7 +975,8 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         LinearLayout.LayoutParams lastTxtParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         lastTxtParams.setMargins(0, 30, 0, 0);
         tv.setLayoutParams(lastTxtParams);
-        tv.setTextColor(getResources().getColor(R.color.colorBlack));
+        //tv.setTextColor(getResources().getColor(R.color.colorBlack));
+        tv.setTextAppearance(this, R.style.colorText);
         llContenedor.addView(tv);
 
     }
@@ -985,7 +988,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         TextView tv;
         tv = new TextView(this);
         tv.setText(texto);
-        tv.setTextAppearance(this, R.style.boldreg);
+        tv.setTextAppearance(this, R.style.colorTitle);
         llContenedor.addView(tv);
 
     }
@@ -998,8 +1001,13 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         EditText et = new EditText(this);
         et.setInputType(InputType.TYPE_CLASS_TEXT);
         et.setTextSize(14);
+        et.setTextColor(getResources().getColor(R.color.colorTextVariable));
         et.setHint(opcion);
         et.setId(id_opcion);
+        /***************/
+        et.setBackgroundResource(R.drawable.customedittext);
+        et.setPadding(30,20,30,20);
+        /***************/
         InputFilter[] ifet = new InputFilter[1];
         ifet[0] = new InputFilter.LengthFilter(descripcion);
         et.setFilters(ifet);
@@ -1023,8 +1031,13 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         EditText et = new EditText(this);
         et.setSingleLine(false);
         et.setTextSize(14);
+        et.setTextColor(getResources().getColor(R.color.colorTextVariable));
         et.setImeOptions(EditorInfo.IME_FLAG_NO_ENTER_ACTION);
         et.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+        /***************/
+        et.setBackgroundResource(R.drawable.customedittext);
+        et.setPadding(30,20,30,20);
+        /***************/
         et.setLines(1);
         et.setMaxLines(10);
         et.setVerticalScrollBarEnabled(true);
@@ -1185,7 +1198,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         iv.setId(idField);
         iv.setImageResource(R.drawable.camera);
         iv.setContentDescription(textImage + "-" + option);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(80,80);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(180,180);
         iv.setLayoutParams(lp);
         llContenedor.addView(iv);
         imageViews.add(iv);
@@ -1732,7 +1745,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         mMonth = mcurrentDate.get(Calendar.MONTH);
         mDay  =mcurrentDate.get(Calendar.DAY_OF_MONTH);
 
-        DatePickerDialog mdatePickerDialog = new DatePickerDialog(form_event.this, R.style.DialogTheme, new DatePickerDialog.OnDateSetListener() {
+        DatePickerDialog mdatePickerDialog = new DatePickerDialog(form_event.this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
 
@@ -1758,7 +1771,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         mHour = mcurrentDate.get(Calendar.HOUR_OF_DAY);
         mMinute = mcurrentDate.get(Calendar.MINUTE);
 
-        TimePickerDialog mTimePickerDialog = new TimePickerDialog(form_event.this, R.style.DialogTheme, new TimePickerDialog.OnTimeSetListener() {
+        TimePickerDialog mTimePickerDialog = new TimePickerDialog(form_event.this, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 
@@ -1842,6 +1855,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
     }
 
+    @TargetApi(Build.VERSION_CODES.M)
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     public void cargarFormularioOffline() {
 
@@ -2142,6 +2156,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     public void createAudio(int id, String descripcion, String requerido) {
         final int[] option = {0};
         final String[] pathAudio = {null};
@@ -2150,7 +2165,8 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         TextView textViewAudio = new TextView(this);
         textViewAudio.setText(descripcion);
         textViewAudio.setTextSize(14);
-        textViewAudio.setTextColor(getResources().getColor(R.color.colorBlack));
+        //textViewAudio.setTextColor(getResources().getColor(R.color.colorBlack));
+        textViewAudio.setTextAppearance(R.style.colorText);
         llContenedor.addView(textViewAudio);
         LinearLayout linearLayout = new LinearLayout(this);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);

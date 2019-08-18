@@ -365,7 +365,8 @@ public class view_event extends AppCompatActivity implements View.OnClickListene
         LinearLayout.LayoutParams lastTxtParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         lastTxtParams.setMargins(0, 30, 0, 0);
         textView.setLayoutParams(lastTxtParams);
-        textView.setTextColor(getResources().getColor(R.color.colorBlack));
+        //textView.setTextColor(getResources().getColor(R.color.colorBlack));
+        textView.setTextAppearance(this, R.style.colorText);
         llContenedor.addView(textView);
 
     }
@@ -375,7 +376,7 @@ public class view_event extends AppCompatActivity implements View.OnClickListene
         TextView tv;
         tv = new TextView(this);
         tv.setText(texto);
-        tv.setTextAppearance(this, R.style.boldreg);
+        tv.setTextAppearance(this, R.style.colorTitle);
         llContenedor.addView(tv);
 
     }
@@ -389,7 +390,8 @@ public class view_event extends AppCompatActivity implements View.OnClickListene
         TextView tv;
         tv = new TextView(this);
         tv.setText(description);
-        tv.setTextAppearance(this, R.style.boldreg);
+        //tv.setTextAppearance(this, R.style.boldreg);
+        tv.setTextColor(getResources().getColor(R.color.colorTextVariable));
         llContenedor.addView(tv);
 
     }
@@ -471,7 +473,7 @@ public class view_event extends AppCompatActivity implements View.OnClickListene
         imageView.setContentDescription(description);
         imageView.setImageResource(R.drawable.files);
 
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(80,80);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(180,180);
         imageView.setLayoutParams(lp);
         imageView.setOnClickListener(this);
         imageViews.add(imageView);

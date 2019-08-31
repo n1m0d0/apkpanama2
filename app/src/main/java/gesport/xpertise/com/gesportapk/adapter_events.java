@@ -114,7 +114,7 @@ public class adapter_events extends BaseAdapter {
         biggerCircle.setIntrinsicWidth( 60);
         biggerCircle.setBounds(new Rect(0, 0, 60, 60));
         biggerCircle.getPaint().setColor(Color.parseColor(item.colorForm));
-        biggerCircle.setPadding(30,30,30,30);
+        biggerCircle.setPadding(15,15,15,15);
 
         ShapeDrawable smallerCircle= new ShapeDrawable( new OvalShape());
         smallerCircle.setIntrinsicHeight( 10 );
@@ -122,7 +122,7 @@ public class adapter_events extends BaseAdapter {
         smallerCircle.setBounds(new Rect(0, 0, 10, 10));
         smallerCircle.getPaint().setColor(Color.WHITE);
 
-        smallerCircle.setPadding(10,10,10,10);
+        smallerCircle.setPadding(5,5,5,5);
         Drawable[] d = {smallerCircle,biggerCircle};
         LayerDrawable composite1 = new LayerDrawable(d);
         //ivImage.setPadding(100, 100, 100, 100);

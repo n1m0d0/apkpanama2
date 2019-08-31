@@ -22,6 +22,7 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
@@ -467,7 +468,36 @@ public class view_event extends AppCompatActivity implements View.OnClickListene
         textViews.add(textView);
         llContenedor.addView(textView);*/
 
-        ImageView imageView = new ImageView(this);
+        /***********************/
+        LinearLayout llImg = new LinearLayout(this);
+        LinearLayout.LayoutParams paramsImg = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        llImg.setLayoutParams(paramsImg);
+        llImg.setOrientation(LinearLayout.HORIZONTAL);
+        llImg.setWeightSum(12);
+        llContenedor.addView(llImg);
+
+        ImageView iv = new ImageView(this);
+        iv.setId(id);
+        iv.setImageResource(R.drawable.files);
+        iv.setContentDescription(description);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,150, 5f);
+        iv.setLayoutParams(lp);
+        llImg.addView(iv);
+        iv.setOnClickListener(this);
+        imageViews.add(iv);
+
+        LinearLayout llImg2 = new LinearLayout(this);
+        LinearLayout.LayoutParams paramsImg2 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT,5f);
+        llImg2.setLayoutParams(paramsImg2);
+        llImg.addView(llImg2);
+
+        LinearLayout llImg3 = new LinearLayout(this);
+        LinearLayout.LayoutParams paramsImg3 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT,2f);
+        llImg3.setLayoutParams(paramsImg3);
+        llImg.addView(llImg3);
+        /*************************/
+
+        /*ImageView imageView = new ImageView(this);
 
         imageView.setId(id);
         imageView.setContentDescription(description);
@@ -477,7 +507,7 @@ public class view_event extends AppCompatActivity implements View.OnClickListene
         imageView.setLayoutParams(lp);
         imageView.setOnClickListener(this);
         imageViews.add(imageView);
-        llContenedor.addView(imageView);
+        llContenedor.addView(imageView);*/
 
     }
 

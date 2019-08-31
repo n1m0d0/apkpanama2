@@ -76,7 +76,7 @@ public class forgotPassword extends AppCompatActivity implements View.OnClickLis
 
                 if (etUser.getText().toString().trim().equalsIgnoreCase("")) {
 
-                    msj = Toast.makeText(this, "debe coompletar los datos", Toast.LENGTH_LONG);
+                    msj = Toast.makeText(this, "Complete el campo de correo electrónico", Toast.LENGTH_LONG);
                     msj.show();
 
                 }else {

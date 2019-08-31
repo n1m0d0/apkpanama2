@@ -36,7 +36,7 @@ public class Info extends AppCompatActivity {
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
-        user.setText("Usuario:" + "\n" + userName);
+        user.setText("Usuario: " + userName);
         version = findViewById(R.id.version);
         version.setText("Version " +versionGes);
     }

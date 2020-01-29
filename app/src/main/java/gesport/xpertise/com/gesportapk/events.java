@@ -258,6 +258,16 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
 
                 return true;
 
+            case R.id.preReg:
+                //llamar a la actividad de pre-reg
+                ir = new Intent(this, preReg.class);
+                ir.putExtra("auth", auth);
+                ir.putExtra("userName", userName);
+                ir.putExtra("fullName", fullName);
+                startActivity(ir);
+                finish();
+                return  true;
+
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -339,7 +349,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
 
         try {
             JSONArray formulario = response.getJSONArray("forms");
-            JSONArray eventitos = response.optJSONArray("events");
+            JSONArray eventitos = response.getJSONArray("events");
 
             bd conexion = new bd(events.this);
             conexion.abrir();

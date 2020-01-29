@@ -2,22 +2,30 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/nameUser"
+    <item
+        android:id="@+id/nameUser"
         android:title="Default"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="ifRoom" />
 
-    <item android:id="@+id/iconoUser"
+    <item
+        android:id="@+id/iconoUser"
         android:icon="@drawable/user"
         android:title="Default"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="ifRoom" />
 
-    <item  android:id="@+id/sincronizar"
-        android:title="Sincronizar datos"/>
+    <item
+        android:id="@+id/sincronizar"
+        android:title="Sincronizar datos" />
 
-    <item  android:id="@+id/info"
-        android:title="Informacion"/>
+    <item
+        android:id="@+id/info"
+        android:title="Informacion" />
 
-    <item  android:id="@+id/closeSession"
-        android:title="Cerrar sesion"/>
+    <item
+        android:id="@+id/closeSession"
+        android:title="Cerrar sesion" />
 
+    <item
+        android:id="@+id/preReg"
+        android:title="Pre-Registro" />
 </menu>

@@ -24,7 +24,8 @@
         android:roundIcon="@drawable/perfecto"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".preReg"></activity>
+        <activity android:name=".listPreReg"></activity>
+        <activity android:name=".preReg" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

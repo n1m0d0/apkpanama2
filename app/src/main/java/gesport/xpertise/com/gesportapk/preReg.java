@@ -74,16 +74,16 @@ public class preReg extends AppCompatActivity {
                 obj_preReg elegido = (obj_preReg) adapterView.getItemAtPosition(i);
 
                 // recuperamos el id
-                Toast msj = Toast.makeText(preReg.this, "Evento elegido: " + elegido.getId(), Toast.LENGTH_LONG);
-                msj.show();
+                //Toast msj = Toast.makeText(preReg.this, "Evento elegido: " + elegido.getId(), Toast.LENGTH_LONG);
+                //msj.show();
                 // llamar a la funcion para ver el evento
-                /*ir = new Intent(preReg.this, view_event.class);
+                ir = new Intent(preReg.this, listPreReg.class);
                 ir.putExtra("auth", auth);
                 ir.putExtra("userName", userName);
-                ir.putExtra("idEvent", elegido.getId());
+                ir.putExtra("idFromPreReg", elegido.getId());
                 ir.putExtra("fullName", fullName);
                 startActivity(ir);
-                finish();*/
+                finish();
             }
         });
     }
@@ -263,5 +263,16 @@ public class preReg extends AppCompatActivity {
             e.printStackTrace();
 
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+        ir = new Intent(preReg.this,events.class);
+        ir.putExtra("auth", auth);
+        ir.putExtra("userName", userName);
+        ir.putExtra("fullName", fullName);
+        startActivity(ir);
+        finish();
     }
 }

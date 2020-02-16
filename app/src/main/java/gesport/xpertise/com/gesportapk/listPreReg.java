@@ -106,8 +106,8 @@ public class listPreReg extends AppCompatActivity {
                 obj_listPreReg elegido = (obj_listPreReg) adapterView.getItemAtPosition(i);
 
                 // recuperamos el id
-                Toast msj = Toast.makeText(listPreReg.this, "Evento elegido: " + elegido.getId(), Toast.LENGTH_LONG);
-                msj.show();
+                //Toast msj = Toast.makeText(listPreReg.this, "Evento elegido: " + elegido.getId(), Toast.LENGTH_LONG);
+                //msj.show();
                 // llamar a la funcion para ver el evento
                 /*ir = new Intent(listPreReg.this, listPreReg.class);
                 ir.putExtra("auth", auth);
@@ -119,6 +119,19 @@ public class listPreReg extends AppCompatActivity {
             }
         });
 
+
+        fabAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ir = new Intent(listPreReg.this, parFormFielsPre.class);
+                ir.putExtra("auth", auth);
+                ir.putExtra("userName", userName);
+                ir.putExtra("fullName", fullName);
+                ir.putExtra("idFromPreReg", idFromPreReg);
+                startActivity(ir);
+                finish();
+            }
+        });
     }
 
     public void list() {

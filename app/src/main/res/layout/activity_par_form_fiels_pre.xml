@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorBody"
+    android:orientation="vertical"
+    tools:context="gesport.xpertise.com.gesportapk.form_event">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="20dp"
+
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/separation"
+            android:orientation="vertical"
+            android:padding="@dimen/separation">
+
+            <LinearLayout
+                android:id="@+id/llContenedor"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvRecording"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:id="@+id/llRecording"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                android:weightSum="12">
+
+                <TextView
+                    android:id="@+id/tvPathRecording"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:text="Haga clic para grabar el audio" />
+
+                <ImageView
+                    android:id="@+id/ivRecording"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_weight="5"
+                    android:src="@drawable/recording" />
+
+                <ImageView
+                    android:id="@+id/ivPlaying"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_weight="5"
+                    android:src="@drawable/play"
+                    android:visibility="invisible" />
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btnSave"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="35dp"
+                android:background="@drawable/custonbutton"
+                android:text="@string/save"
+                android:textColor="@color/colorWhite" />
+
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

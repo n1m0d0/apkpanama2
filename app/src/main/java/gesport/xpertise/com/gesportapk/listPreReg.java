@@ -3,6 +3,7 @@ package gesport.xpertise.com.gesportapk;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Environment;
@@ -63,6 +64,7 @@ public class listPreReg extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_pre_reg);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         etSearch = findViewById(R.id.etSearch);
         lvPreReg = findViewById(R.id.lvPreReg);
@@ -109,13 +111,13 @@ public class listPreReg extends AppCompatActivity {
                 //Toast msj = Toast.makeText(listPreReg.this, "Evento elegido: " + elegido.getId(), Toast.LENGTH_LONG);
                 //msj.show();
                 // llamar a la funcion para ver el evento
-                /*ir = new Intent(listPreReg.this, listPreReg.class);
+                ir = new Intent(listPreReg.this, detailPre.class);
                 ir.putExtra("auth", auth);
                 ir.putExtra("userName", userName);
-                ir.putExtra("idFromPreReg", elegido.getId());
+                ir.putExtra("idRegPre", elegido.getId());
                 ir.putExtra("fullName", fullName);
                 startActivity(ir);
-                finish();*/
+                finish();
             }
         });
 

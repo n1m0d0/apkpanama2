@@ -24,7 +24,8 @@
         android:roundIcon="@drawable/perfecto"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".parFormFielsPre"></activity>
+        <activity android:name=".detailPre"></activity>
+        <activity android:name=".parFormFielsPre" />
         <activity android:name=".listPreReg" />
         <activity android:name=".preReg" />
         <activity android:name=".MainActivity">

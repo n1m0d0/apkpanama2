@@ -164,7 +164,7 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_form_event);
+        setContentView(R.layout.activity_par_form_fiels_pre);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         url = getString(R.string.servidor) + "/api/parFormFieldsPre/";
@@ -910,6 +910,9 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
 
                                 createAudio(idField, description, is_mandatory);
 
+                                break;
+
+                            case 12:
                                 break;
 
                             default:
@@ -2027,6 +2030,9 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
                                 /**********************/
                                 createAudio(idField, description, is_mandatory);
 
+                                break;
+
+                            case 12:
                                 break;
 
                             default:

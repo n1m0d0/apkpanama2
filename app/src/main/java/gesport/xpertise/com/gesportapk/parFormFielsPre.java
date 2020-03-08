@@ -4,17 +4,22 @@ import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.PorterDuff;
+import android.hardware.usb.UsbDevice;
+import android.hardware.usb.UsbManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -90,6 +95,10 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import SecuGen.FDxSDKPro.JSGFPLib;
+import SecuGen.FDxSDKPro.SGAutoOnEventNotifier;
+import SecuGen.FDxSDKPro.SGFDxDeviceName;
+
 import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
@@ -103,7 +112,7 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
     LinearLayout llContenedor, llRecording;
     Button btnSave;
     ImageView ivRecording, ivPlaying;
-    TextView tvRecording ,tvPathRecording;
+    TextView tvRecording, tvPathRecording;
     ProgressDialog mProgressDialog;
     RequestQueue mRequestQueue;
     JsonArrayRequest mJsonArrayRequest;
@@ -158,6 +167,28 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
 
     String currentPhotoPath;
 
+    // biometrico
+    long error;
+
+    private boolean mLed;
+    private boolean mAutoOnEnabled;
+    private SGAutoOnEventNotifier autoOn;
+    HexConversion conversion;
+
+    private static final String TAG = "MIRZA";
+
+
+    private PendingIntent mPermissionIntent;
+    private IntentFilter filter;
+
+    private JSGFPLib sgfplib;
+    FingerPrintReader fingerPrintReader1;
+
+    TextView tvFinger;
+    ImageView ivFinger;
+    Button btnCapture;
+    int idFinger;
+    String fingerCapture = "";
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
@@ -175,7 +206,7 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
         btnSave = findViewById(R.id.btnSave);
         ivRecording = findViewById(R.id.ivRecording);
         ivPlaying = findViewById(R.id.ivPlaying);
-        tvRecording =  findViewById(R.id.tvRecording);
+        tvRecording = findViewById(R.id.tvRecording);
         tvRecording.setTextSize(14);
         tvRecording.setTextColor(getResources().getColor(R.color.colorBlack));
         tvPathRecording = findViewById(R.id.tvPathRecording);
@@ -183,11 +214,20 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
         tvPathRecording.setText(textAudio);
         tvPathRecording.setHint("");
 
+        tvFinger = findViewById(R.id.tvFinger);
+        ivFinger = findViewById(R.id.ivFinger);
+        btnCapture = findViewById(R.id.btnCapture);
+
         Bundle parametros = this.getIntent().getExtras();
         auth = parametros.getString("auth");
         userName = parametros.getString("userName");
         fullName = parametros.getString("fullName");
         idFromPreReg = parametros.getInt("idFromPreReg");
+
+        //biometrico
+        conversion = new HexConversion();
+        usbPermission();
+        //biometrico
 
         hand.removeCallbacks(actualizar);
         hand.postDelayed(actualizar, 100);
@@ -196,7 +236,7 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
 
         url = url + idFromPreReg;
 
-        if(compruebaConexion(this)) {
+        if (compruebaConexion(this)) {
 
             cargarFormulario();
 
@@ -219,11 +259,11 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
 
                 int counterEditText = 0;
                 for (Iterator iterator = editTexts.iterator(); iterator
-                        .hasNext();) {
+                        .hasNext(); ) {
 
                     EditText editText = (EditText) iterator.next();
                     String obs_respuesta = editText.getText().toString().trim();
-                    String control =  editText.getHint().toString().trim();
+                    String control = editText.getHint().toString().trim();
                     editText.setTextColor(Color.BLACK);
                     String regEx = stringsRegEx.get(counterEditText);
 
@@ -237,7 +277,7 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
                         Log.w("sumaEditText", "" + validar);
 
                     } else {
-                        if(!obs_respuesta.equals("")) {
+                        if (!obs_respuesta.equals("")) {
                             if (!regEx.equals("")) {
                                 if (!validarRegEx(obs_respuesta, regEx)) {
                                     validar++;
@@ -267,7 +307,7 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
                 }
 
                 for (Iterator iterator = textViewsDate.iterator(); iterator
-                        .hasNext();) {
+                        .hasNext(); ) {
 
                     TextView textView = (TextView) iterator.next();
                     String obs_respuesta = textView.getText().toString().trim();
@@ -298,7 +338,7 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
                 }
 
                 for (Iterator iterator = textViewsHour.iterator(); iterator
-                        .hasNext();) {
+                        .hasNext(); ) {
 
                     TextView textView = (TextView) iterator.next();
                     String obs_respuesta = textView.getText().toString().trim();
@@ -329,7 +369,7 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
                 }
 
                 for (Iterator iterator = spinners.iterator(); iterator
-                        .hasNext();) {
+                        .hasNext(); ) {
 
                     Spinner spinner = (Spinner) iterator.next();
 
@@ -357,7 +397,7 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
                 }
 
                 for (Iterator iterator = switches.iterator(); iterator
-                        .hasNext();) {
+                        .hasNext(); ) {
 
                     Switch s = (Switch) iterator.next();
 
@@ -378,7 +418,7 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
 
 
                 for (Iterator iterator = imageViews.iterator(); iterator
-                        .hasNext();) {
+                        .hasNext(); ) {
 
                     ImageView imageView = (ImageView) iterator.next();
 
@@ -387,8 +427,7 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
                     String description = parts[0];
                     String control = parts[parts.length - 1];
 
-                    if (description.equals(textImage) && control.equals(obligatorio))
-                    {
+                    if (description.equals(textImage) && control.equals(obligatorio)) {
 
                         validar++;
                         Log.w("sumaImageView", "" + validar);
@@ -399,7 +438,7 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
                     /**********/
                     Bitmap bitmap = null;
                     for (Iterator iterator2 = objAttributes.iterator(); iterator2
-                            .hasNext();) {
+                            .hasNext(); ) {
                         obj_attributes properties = (obj_attributes) iterator2.next();
                         if (imageView.getId() == properties.getId()) {
                             bitmap = properties.getImage();
@@ -438,7 +477,7 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
                 }
 
                 for (Iterator iterator = textViewsFiles.iterator(); iterator
-                        .hasNext();) {
+                        .hasNext(); ) {
 
                     TextView textView = (TextView) iterator.next();
                     textView.setTextColor(Color.BLACK);
@@ -456,7 +495,7 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
 
                     File file = new File(textView.getText().toString().trim());
 
-                    int file_size = Integer.parseInt(String.valueOf(file.length()/1024));
+                    int file_size = Integer.parseInt(String.valueOf(file.length() / 1024));
 
                     Log.w("min", "" + file_size);
 
@@ -506,7 +545,7 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
                 /****************************************/
 
                 for (Iterator iterator = textViewsAudio.iterator(); iterator
-                        .hasNext();) {
+                        .hasNext(); ) {
 
                     TextView textView = (TextView) iterator.next();
                     textView.setTextColor(Color.BLACK);
@@ -524,7 +563,7 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
 
                     File file = new File(textView.getText().toString().trim());
 
-                    int file_size = Integer.parseInt(String.valueOf(file.length()/1024));
+                    int file_size = Integer.parseInt(String.valueOf(file.length() / 1024));
 
                     Log.w("min", "" + file_size);
 
@@ -635,14 +674,31 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
                 }*/
                 /****************************************/
 
+                /**********************/
+
+                if (fingerCapture.equals("")){
+                    validar++;
+                } else {
+                    try {
+                        JSONObject parametros = new JSONObject();
+                        parametros.put("idField", idFinger);
+                        parametros.put("valueInputField", "huella" + idFinger);
+                        parametros.put("valueInputDateField", "");
+                        parametros.put("valueListField", "");
+                        parametros.put("valueFile", fingerCapture);
+                        respuesta.put(parametros);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                /*********************/
+
                 localizar();
 
                 //Log.w("json", "" + respuesta);
                 try {
-                    jsonenvio.put("idEvent", "0");
-                    jsonenvio.put("idEventDependency", "0");
-                    jsonenvio.put("dateEvent", fecha_2);
-                    jsonenvio.put("posGeo", mLocation);
+                    jsonenvio.put("dateRegPre", fecha_2);
                     jsonenvio.put("idForm", idFromPreReg);
                     jsonenvio.put("P", respuesta);
 
@@ -653,7 +709,7 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
 
                 if (validar == 0) {
 
-                    if(compruebaConexion(parFormFielsPre.this)) {
+                    if (compruebaConexion(parFormFielsPre.this)) {
 
                         enviarformulario();
 
@@ -735,11 +791,34 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
             }
         });
 
+        btnCapture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                runOnUiThread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        // TODO Auto-generated method stub
+                        fingerPrintReader1.readFingerPrint();
+                        ivFinger.setImageBitmap(fingerPrintReader1
+                                .toGrayscale(fingerPrintReader1.getFPBitMap()));
+
+                        byte[] abc = fingerPrintReader1.getHexTemplate();
+                        String Temp = conversion.getHexString(abc);
+                        Log.d(TAG, "Template" + Temp);
+                        
+                        fingerCapture = Base64.encodeToString(abc, Base64.DEFAULT);
+
+                    }
+                });
+            }
+        });
+
     }
 
-    private void cargarFormulario(){
+    private void cargarFormulario() {
 
-        mProgressDialog =  new ProgressDialog(this);
+        mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setMessage("Cargando...");
         mProgressDialog.setCancelable(false);
         mProgressDialog.show();
@@ -855,7 +934,7 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
                             case 7:
 
                                 creartextview(description);
-                                createTextviewFile(idField,is_mandatory);
+                                createTextviewFile(idField, is_mandatory);
 
                                 break;
 
@@ -913,6 +992,8 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
                                 break;
 
                             case 12:
+                                idFinger = idField;
+                                tvFinger.setText(description);
                                 break;
 
                             default:
@@ -941,7 +1022,7 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
                 cargarFormularioOffline();
 
             }
-        }){
+        }) {
 
             @Override
             public Map getHeaders() throws AuthFailureError {
@@ -1000,15 +1081,15 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
         et.setId(id_opcion);
         /***************/
         et.setBackgroundResource(R.drawable.customedittext);
-        et.setPadding(30,20,30,20);
+        et.setPadding(30, 20, 30, 20);
         /***************/
         InputFilter[] ifet = new InputFilter[1];
         ifet[0] = new InputFilter.LengthFilter(descripcion);
         et.setFilters(ifet);
 
-        String [][] reemplazos = { {"(", "{"}, {")", "}"}, {"<", "["}, {">", "]"}, {"¿", "("}, {"?", ")"}};
+        String[][] reemplazos = {{"(", "{"}, {")", "}"}, {"<", "["}, {">", "]"}, {"¿", "("}, {"?", ")"}};
         String cadena = regEx;
-        for(String[] reemplazar: reemplazos ) {
+        for (String[] reemplazar : reemplazos) {
             cadena = cadena.replace(reemplazar[0], reemplazar[1]);
         }
 
@@ -1030,7 +1111,7 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
         et.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
         /***************/
         et.setBackgroundResource(R.drawable.customedittext);
-        et.setPadding(30,20,30,20);
+        et.setPadding(30, 20, 30, 20);
         /***************/
         et.setLines(1);
         et.setMaxLines(10);
@@ -1091,7 +1172,7 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
         Log.w("RadioButton", "" + items);
 
         for (Iterator iterator = items.iterator(); iterator
-                .hasNext();) {
+                .hasNext(); ) {
 
             Log.w("RadioButton", "llegue aqui2");
 
@@ -1114,7 +1195,7 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
     }
 
     // crear ToggleButton
-    public void createToggleButton(int idField){
+    public void createToggleButton(int idField) {
 
         ToggleButton tb = new ToggleButton(this);
         tb.setId(idField);
@@ -1127,7 +1208,7 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
 
     // crear Switch
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-    public void createSwitch(int idField, String description){
+    public void createSwitch(int idField, String description) {
 
 
         Switch s = new Switch(this);
@@ -1164,7 +1245,7 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
 
     // crear un spinner en el contenedor
 
-    public void createSpinner(int idField, ArrayList<obj_params> aux, int idParametro){
+    public void createSpinner(int idField, ArrayList<obj_params> aux, int idParametro) {
 
         Spinner sp = new Spinner(this);
         sp.setId(idField);
@@ -1186,7 +1267,7 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
 
     // Crear imageview en el contenedor
 
-    public void createImageView(int idField, String option, int w, int h){
+    public void createImageView(int idField, String option, int w, int h) {
 
         LinearLayout llImg = new LinearLayout(this);
         LinearLayout.LayoutParams paramsImg = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -1199,23 +1280,23 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
         iv.setId(idField);
         iv.setImageResource(R.drawable.camera);
         iv.setContentDescription(textImage + "-" + option);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,150, 5f);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 150, 5f);
         iv.setLayoutParams(lp);
         llImg.addView(iv);
 
         LinearLayout llImg2 = new LinearLayout(this);
-        LinearLayout.LayoutParams paramsImg2 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT,5f);
+        LinearLayout.LayoutParams paramsImg2 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 5f);
         llImg2.setLayoutParams(paramsImg2);
         llImg.addView(llImg2);
 
         LinearLayout llImg3 = new LinearLayout(this);
-        LinearLayout.LayoutParams paramsImg3 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT,2f);
+        LinearLayout.LayoutParams paramsImg3 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 2f);
         llImg3.setLayoutParams(paramsImg3);
         llImg.addView(llImg3);
 
         imageViews.add(iv);
 
-        if(w > 0 && h > 0) {
+        if (w > 0 && h > 0) {
             objAttributes.add(new obj_attributes(idField, w, h, null));
         } else {
             w = 400;
@@ -1241,7 +1322,7 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
 
     }
 
-    private void enviarformulario(){
+    private void enviarformulario() {
 
         Log.w("url", url2);
 
@@ -1249,7 +1330,7 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
 
         RequestQueue mRequestQueue2;
 
-        mProgressDialog =  new ProgressDialog(this);
+        mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setMessage("Cargando...");
         mProgressDialog.setCancelable(false);
         mProgressDialog.show();
@@ -1264,6 +1345,11 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
                 /*msj = Toast.makeText(form_event.this, "" + response, Toast.LENGTH_LONG);
                 msj.show();*/
                 mProgressDialog.dismiss();
+                ir = new Intent(parFormFielsPre.this, preReg.class);
+                ir.putExtra("auth", auth);
+                ir.putExtra("userName", userName);
+                ir.putExtra("fullName", fullName);
+                startActivity(ir);
                 finish();
 
             }
@@ -1287,7 +1373,7 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
                 }
 
             }
-        }){
+        }) {
 
             @Override
             public Map getHeaders() throws AuthFailureError {
@@ -1316,12 +1402,12 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
         boolean uploadFile = false;
         boolean recordingAudio = false;
 
-        for(Iterator iterator = imageViews.iterator(); iterator
-                .hasNext();) {
+        for (Iterator iterator = imageViews.iterator(); iterator
+                .hasNext(); ) {
 
             ImageView imageView = (ImageView) iterator.next();
 
-            if(imageView.getId() == opcion) {
+            if (imageView.getId() == opcion) {
 
                 usarCamara = true;
 
@@ -1333,11 +1419,11 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
         }
 
         for (Iterator iterator = textViewsDate.iterator(); iterator
-                .hasNext();) {
+                .hasNext(); ) {
 
             TextView textView = (TextView) iterator.next();
 
-            if(textView.getId() == opcion) {
+            if (textView.getId() == opcion) {
 
                 date = true;
 
@@ -1346,11 +1432,11 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
         }
 
         for (Iterator iterator = textViewsHour.iterator(); iterator
-                .hasNext();) {
+                .hasNext(); ) {
 
             TextView textView = (TextView) iterator.next();
 
-            if(textView.getId() == opcion) {
+            if (textView.getId() == opcion) {
 
                 getHour();
 
@@ -1359,11 +1445,11 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
         }
 
         for (Iterator iterator = textViewsFiles.iterator(); iterator
-                .hasNext();) {
+                .hasNext(); ) {
 
             TextView textView = (TextView) iterator.next();
 
-            if(textView.getId() == opcion) {
+            if (textView.getId() == opcion) {
 
                 uploadFile = true;
 
@@ -1376,18 +1462,18 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
         /*****************************/
 
         for (Iterator iterator = switches.iterator(); iterator
-                .hasNext();) {
+                .hasNext(); ) {
 
             Switch s = (Switch) iterator.next();
 
-            if(s.getId() == opcion) {
+            if (s.getId() == opcion) {
 
-                if(s.isChecked()) {
+                if (s.isChecked()) {
 
                     s.getThumbDrawable().setColorFilter(Color.parseColor("#2F3887"), PorterDuff.Mode.MULTIPLY);
                     s.getTrackDrawable().setColorFilter(Color.parseColor("#2F3887"), PorterDuff.Mode.MULTIPLY);
 
-                }else {
+                } else {
 
                     s.getThumbDrawable().setColorFilter(Color.parseColor("#3f8155"), PorterDuff.Mode.MULTIPLY);
                     s.getTrackDrawable().setColorFilter(Color.parseColor("#3f8155"), PorterDuff.Mode.MULTIPLY);
@@ -1398,19 +1484,19 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
 
         }
 
-        if (date){
+        if (date) {
 
             getDate();
 
         }
 
-        if(usarCamara) {
+        if (usarCamara) {
 
             tomarFotografia();
 
         }
 
-        if(uploadFile) {
+        if (uploadFile) {
 
             recoverDataFile();
 
@@ -1509,13 +1595,12 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
         }
 
 
-
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data){
-        super.onActivityResult(requestCode,resultCode,data);
-        if (resultCode== RESULT_OK){
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
 
 
             switch (requestCode) {
@@ -1531,7 +1616,7 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
                     String control = parts[parts.length - 1];
 
                     iv.setContentDescription(description + "-" + control);
-                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(400,400);
+                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(400, 400);
                     iv.setLayoutParams(lp);
 
                     Log.w("Img_src", currentPhotoPath);
@@ -1570,7 +1655,7 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
                     iv.setImageBitmap(bmp);*/
 
                     for (Iterator iterator2 = objAttributes.iterator(); iterator2
-                            .hasNext();) {
+                            .hasNext(); ) {
                         obj_attributes properties = (obj_attributes) iterator2.next();
                         if (opcion == properties.getId()) {
                             int width = bmp.getWidth();
@@ -1624,30 +1709,27 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
             iv.setImageBitmap(bitmap);*/
 
 
-
-
         }
     }
 
-    private boolean validarPermisos(){
+    private boolean validarPermisos() {
 
-        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-
-            return true;
-
-        }
-        if((checkSelfPermission(CAMERA) == PackageManager.PERMISSION_GRANTED) && (checkSelfPermission(WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)){
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
 
             return true;
 
         }
+        if ((checkSelfPermission(CAMERA) == PackageManager.PERMISSION_GRANTED) && (checkSelfPermission(WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
 
-        if ((shouldShowRequestPermissionRationale(CAMERA))||(shouldShowRequestPermissionRationale(WRITE_EXTERNAL_STORAGE))) {
+            return true;
+
+        }
+
+        if ((shouldShowRequestPermissionRationale(CAMERA)) || (shouldShowRequestPermissionRationale(WRITE_EXTERNAL_STORAGE))) {
 
             cargardialogo();
 
-        }
-        else {
+        } else {
 
             requestPermissions(new String[]{WRITE_EXTERNAL_STORAGE, CAMERA}, 100);
 
@@ -1657,7 +1739,7 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
 
     }
 
-    private void cargardialogo(){
+    private void cargardialogo() {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(parFormFielsPre.this);
         builder.setTitle("Permisos Desactivados");
@@ -1681,10 +1763,9 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        if(requestCode == 100) {
+        if (requestCode == 100) {
 
-            if(grantResults.length == 2 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-
+            if (grantResults.length == 2 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
 
 
             } else {
@@ -1697,7 +1778,7 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
 
     }
 
-    private void cargardialogo2(){
+    private void cargardialogo2() {
 
         final CharSequence[] op = {"si", "no"};
         final AlertDialog.Builder builder = new AlertDialog.Builder(parFormFielsPre.this);
@@ -1706,16 +1787,15 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-                if(op[which].equals("si")){
+                if (op[which].equals("si")) {
 
                     Intent intent = new Intent();
                     intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
                     Uri uri = Uri.fromParts("package", getPackageName(), null);
-                    intent .setData(uri);
+                    intent.setData(uri);
                     startActivity(intent);
 
-                }
-                else {
+                } else {
 
                     msj = Toast.makeText(parFormFielsPre.this, "los permisos no fueron aceptados", Toast.LENGTH_LONG);
                     msj.show();
@@ -1749,13 +1829,13 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
     };
 
     //alert dialog para obtener fecha
-    public void getDate(){
+    public void getDate() {
 
         int mYear, mMonth, mDay;
         Calendar mcurrentDate = Calendar.getInstance();
         mYear = mcurrentDate.get(Calendar.YEAR);
         mMonth = mcurrentDate.get(Calendar.MONTH);
-        mDay  =mcurrentDate.get(Calendar.DAY_OF_MONTH);
+        mDay = mcurrentDate.get(Calendar.DAY_OF_MONTH);
 
         DatePickerDialog mdatePickerDialog = new DatePickerDialog(parFormFielsPre.this, new DatePickerDialog.OnDateSetListener() {
             @Override
@@ -1769,14 +1849,14 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
                 textView.setText(fecha);
 
             }
-        },mYear,mMonth,mDay);
+        }, mYear, mMonth, mDay);
         mdatePickerDialog.setTitle("Selecione la fecha");
         mdatePickerDialog.show();
 
     }
 
     //alert dialog para obtener hora
-    public void getHour(){
+    public void getHour() {
 
         int mHour, mMinute;
         Calendar mcurrentDate = Calendar.getInstance();
@@ -1788,7 +1868,7 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 
                 TextView textView = new TextView(parFormFielsPre.this);
-                textView =  findViewById(opcion);
+                textView = findViewById(opcion);
                 textView.setText(hourOfDay + ":" + minute);
                 Log.w("Hora", hourOfDay + ":" + minute);
 
@@ -1800,7 +1880,7 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
 
     }
 
-    public void completarDatos(){
+    public void completarDatos() {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Importante");
@@ -1818,7 +1898,7 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
 
     }
 
-    public void localizar () {
+    public void localizar() {
 
         LocationManager lm;
         LocationListener datos;
@@ -1976,7 +2056,7 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
                             case 7:
 
                                 creartextview(description);
-                                createTextviewFile(idField,is_mandatory);
+                                createTextviewFile(idField, is_mandatory);
 
                                 break;
 
@@ -2033,6 +2113,8 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
                                 break;
 
                             case 12:
+                                idFinger = idField;
+                                tvFinger.setText(description);
                                 break;
 
                             default:
@@ -2087,13 +2169,13 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
         boolean isCreada = fileJson.exists();
         String nombreJson = "";
 
-        if(isCreada == false) {
+        if (isCreada == false) {
 
             isCreada = fileJson.mkdir();
 
         }
 
-        if(isCreada == true) {
+        if (isCreada == true) {
 
             nombreJson = "formPre" + idFromPreReg + ".json";
 
@@ -2112,7 +2194,7 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
 
     }
 
-    public String readJsonFile (String path) {
+    public String readJsonFile(String path) {
 
         Log.w("ver", path);
 
@@ -2144,15 +2226,15 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
         boolean isCreada = fileJson.exists();
         String nombreJson = "";
 
-        if(isCreada == false) {
+        if (isCreada == false) {
 
             isCreada = fileJson.mkdir();
 
         }
 
-        if(isCreada == true) {
+        if (isCreada == true) {
 
-            nombreJson = "AnswerPre" + fecha_1+".json";
+            nombreJson = "AnswerPre" + fecha_1 + ".json";
 
         }
 
@@ -2195,7 +2277,7 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
         textView.setText(textAudio);
         textView.setHint(requerido);
         textView.setTextSize(14);
-        LinearLayout.LayoutParams lpTextView = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT,2f);
+        LinearLayout.LayoutParams lpTextView = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 2f);
         textView.setLayoutParams(lpTextView);
         linearLayout.addView(textView);
         textViewsAudio.add(textView);
@@ -2203,12 +2285,12 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
         textView.setVisibility(View.GONE);
         final ImageView imageView = new ImageView(this);
         imageView.setImageResource(R.drawable.recording);
-        LinearLayout.LayoutParams lpImageView = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 150,5f);
+        LinearLayout.LayoutParams lpImageView = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 150, 5f);
         imageView.setLayoutParams(lpImageView);
         linearLayout.addView(imageView);
         final ImageView imageView2 = new ImageView(this);
         imageView2.setImageResource(R.drawable.play);
-        LinearLayout.LayoutParams lpImageView2 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 150,5f);
+        LinearLayout.LayoutParams lpImageView2 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 150, 5f);
         imageView2.setLayoutParams(lpImageView2);
         imageView2.setVisibility(View.INVISIBLE);
         linearLayout.addView(imageView2);
@@ -2218,7 +2300,7 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
         textView1.setText(textAudio);
         textView1.setHint(requerido);
         textView1.setTextSize(14);
-        LinearLayout.LayoutParams lpTextView1 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT,2f);
+        LinearLayout.LayoutParams lpTextView1 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 2f);
         textView1.setLayoutParams(lpTextView1);
         linearLayout.addView(textView1);
         textView1.setVisibility(View.INVISIBLE);
@@ -2235,15 +2317,15 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
                         boolean isCreada = fileAudio.exists();
                         String nameAudio = "";
 
-                        if(isCreada == false) {
+                        if (isCreada == false) {
 
                             isCreada = fileAudio.mkdir();
 
                         }
 
-                        if(isCreada == true) {
+                        if (isCreada == true) {
 
-                            nameAudio = "AudioGesport" + fecha_1 +".3gp";
+                            nameAudio = "AudioGesport" + fecha_1 + ".3gp";
 
                         }
 
@@ -2328,5 +2410,56 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
         startActivity(ir);
         finish();
     }
+
+
+    //biometrico
+    private void usbPermission() {
+        mPermissionIntent = PendingIntent.getBroadcast(this, 0, new Intent(
+                ACTION_USB_PERMISSION), 0);
+        filter = new IntentFilter(ACTION_USB_PERMISSION);
+        registerReceiver(mUsbReceiver, filter);
+        sgfplib = new JSGFPLib(
+                (UsbManager) getSystemService(Context.USB_SERVICE));
+        mLed = false;
+        mAutoOnEnabled = false;
+        error = sgfplib.Init(SGFDxDeviceName.SG_DEV_AUTO);
+        UsbDevice usbDevice = sgfplib.GetUsbDevice();
+        sgfplib.GetUsbManager().requestPermission(usbDevice, mPermissionIntent);
+        error = sgfplib.OpenDevice(0);
+        SecuGen.FDxSDKPro.SGDeviceInfoParam deviceInfo = new SecuGen.FDxSDKPro.SGDeviceInfoParam();
+        // error = sgfplib.GetDeviceInfo(deviceInfo);
+
+        fingerPrintReader1 = new FingerPrintReader(ivFinger,
+                sgfplib);
+    }
+
+    // USB Device Attach Permission
+    private static final String ACTION_USB_PERMISSION = "com.android.example.USB_PERMISSION";
+    private final BroadcastReceiver mUsbReceiver = new BroadcastReceiver() {
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (ACTION_USB_PERMISSION.equals(action)) {
+                synchronized (this) {
+                    UsbDevice device = (UsbDevice) intent
+                            .getParcelableExtra(UsbManager.EXTRA_DEVICE);
+                    if (intent.getBooleanExtra(
+                            UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
+                        if (device != null) {
+
+                            Log.d(TAG, "Vender DI" + device.getVendorId());
+
+                            Log.d(TAG, "Producat ID " + device.getProductId());
+
+                        } else
+                            Log.e(TAG,
+                                    "mUsbReceiver.onReceive() Device is null");
+                    } else
+                        Log.e(TAG,
+                                "mUsbReceiver.onReceive() permission denied for device "
+                                        + device);
+                }
+            }
+        }
+    };
 
 }

@@ -638,7 +638,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
 
     }
 
-    private void enviarFormularios() {
+    /*private void enviarFormularios() {
 
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setMessage("Cargando...");
@@ -718,7 +718,112 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
 
         mProgressDialog.dismiss();
 
+    }*/
+    private void enviarFormularios() {
+
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setMessage("Cargando...");
+        mProgressDialog.setCancelable(false);
+        mProgressDialog.show();
+
+        try {
+            final bd conexion = new bd(this);
+            conexion.abrir();
+            final Cursor offline = conexion.searchActive();
+            if (!offline.moveToFirst() == false) {
+
+                offline.moveToFirst();
+                while (!offline.isAfterLast()) {
+
+                    mRequestQueue = Volley.newRequestQueue(this);
+
+                    idOffline = offline.getString(0);
+                    String jsonAnswers = offline.getString(1);
+                    String user = offline.getString(2);
+                    certificado = offline.getString(3);
+
+                    Log.w("data", certificado + " " + idOffline);
+
+                    String dataJson = readJsonFileAnswer(jsonAnswers);
+
+                    JSONObject respuesta = new JSONObject(dataJson);
+
+                    Log.w("data", " " + respuesta);
+
+                    probar(respuesta, idOffline);
+
+                    offline.moveToNext();
+                }
+                conexion.cerrar();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            mProgressDialog.dismiss();
+        }
+
+        mProgressDialog.dismiss();
+
     }
+
+    /***********/
+    public void probar (JSONObject respuesta, final String idBD) {
+        mJsonObjectRequest = new JsonObjectRequest(Request.Method.POST, direccion, respuesta, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+
+                Log.w("mio", "" + response);
+
+                //conexion.updateAnswers(idOffline);
+                Log.w("id", idBD);
+                bd conexion2 = new bd(events.this);
+                try {
+                    conexion2.abrir();
+                    conexion2.updateMyAnswers(idBD);
+                    conexion2.cerrar();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                bd verifica = new bd(events.this);
+                try {
+                    verifica.abrir();
+                    Cursor cursor = verifica.searchActive();
+                    if (cursor.moveToFirst() == false) {
+                        tvPending.setText(listText);
+                    } else {
+                        int cantidad = cursor.getCount();
+                        tvPending.setText(listText + "       " + cantidad + "Pendiente(s)");
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+                Log.w("mioerror", "" + error);
+
+            }
+        }) {
+
+            @Override
+            public Map getHeaders() throws AuthFailureError {
+                HashMap headers = new HashMap();
+                headers.put("Authorization", certificado); //authentication
+                return headers;
+            }
+
+        };
+
+        	mJsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(50000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+        mRequestQueue.add(mJsonObjectRequest);
+    }
+    /***********/
+
 
     public String readJsonFileAnswer(String path) {
 

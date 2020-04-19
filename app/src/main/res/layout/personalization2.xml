@@ -11,8 +11,7 @@
         android:src="@mipmap/ic_launcher_round"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:background="@drawable/circle"
-        />
+        android:background="@drawable/circle" />
 
     <TextView
         android:id="@+id/tvDescription"

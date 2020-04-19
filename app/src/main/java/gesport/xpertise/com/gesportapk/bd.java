@@ -77,7 +77,7 @@ public class bd {
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
             // TODO Auto-generated method stub
 
-            if(oldVersion < 20){
+            if (oldVersion < 20) {
                 db.execSQL("CREATE TABLE " + form + "(" + idForm
                         + " INTEGER PRIMARY KEY NOT NULL, " + colorForm
                         + " TEXT NOT NULL, " + idIconForm + " TEXT NOT NULL);");

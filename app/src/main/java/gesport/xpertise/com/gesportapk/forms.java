@@ -79,7 +79,7 @@ public class forms extends AppCompatActivity implements Response.Listener<JSONAr
         userName = parametros.getString("userName");
         fullName = parametros.getString("fullName");
 
-        if(compruebaConexion(this)) {
+        if (compruebaConexion(this)) {
 
             cargarFormularios();
 
@@ -133,15 +133,15 @@ public class forms extends AppCompatActivity implements Response.Listener<JSONAr
 
     }
 
-    private void cargarFormularios(){
+    private void cargarFormularios() {
 
-        mProgressDialog =  new ProgressDialog(this);
+        mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setMessage("Cargando...");
         mProgressDialog.show();
 
         mRequestQueue = Volley.newRequestQueue(this);
 
-        mJsonArrayRequest = new JsonArrayRequest(Request.Method.GET,url,null, this, this){
+        mJsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null, this, this) {
 
             @Override
             public Map getHeaders() throws AuthFailureError {
@@ -169,9 +169,9 @@ public class forms extends AppCompatActivity implements Response.Listener<JSONAr
             e.printStackTrace();
         }
 
-        try{
+        try {
 
-            for(int i=0;i<response.length();i++) {
+            for (int i = 0; i < response.length(); i++) {
 
                 JSONObject form = response.getJSONObject(i);
 
@@ -189,7 +189,7 @@ public class forms extends AppCompatActivity implements Response.Listener<JSONAr
             adapter_forms adapter = new adapter_forms(forms.this, itemForms);
             listView.setAdapter(adapter);
 
-        }catch (JSONException e) {
+        } catch (JSONException e) {
 
             e.printStackTrace();
             msj = Toast.makeText(this, "No hay datos para mostrar", Toast.LENGTH_LONG);
@@ -214,7 +214,7 @@ public class forms extends AppCompatActivity implements Response.Listener<JSONAr
     }
 
     @Override
-    public void onBackPressed(){
+    public void onBackPressed() {
 
         ir = new Intent(forms.this, events.class);
         ir.putExtra("auth", auth);
@@ -237,11 +237,11 @@ public class forms extends AppCompatActivity implements Response.Listener<JSONAr
 
             } else {
 
-                try{
+                try {
 
                     JSONArray response = new JSONArray(forms);
 
-                    for(int i=0;i<response.length();i++) {
+                    for (int i = 0; i < response.length(); i++) {
 
                         JSONObject form = response.getJSONObject(i);
 
@@ -259,7 +259,7 @@ public class forms extends AppCompatActivity implements Response.Listener<JSONAr
                     adapter_forms adapter = new adapter_forms(forms.this, itemForms);
                     listView.setAdapter(adapter);
 
-                }catch (JSONException e) {
+                } catch (JSONException e) {
 
                     e.printStackTrace();
                     Log.w("respuesta", "" + e);
@@ -303,13 +303,13 @@ public class forms extends AppCompatActivity implements Response.Listener<JSONAr
         boolean isCreada = fileJson.exists();
         String nombreJson = "";
 
-        if(isCreada == false) {
+        if (isCreada == false) {
 
             isCreada = fileJson.mkdir();
 
         }
 
-        if(isCreada == true) {
+        if (isCreada == true) {
 
             nombreJson = "forms.json";
 
@@ -328,7 +328,7 @@ public class forms extends AppCompatActivity implements Response.Listener<JSONAr
 
     }
 
-    public String readJsonFile (String path) {
+    public String readJsonFile(String path) {
 
         Log.w("ver", path);
 

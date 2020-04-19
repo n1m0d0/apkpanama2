@@ -12,7 +12,7 @@
         android:layout_height="60dp"
         android:background="@color/colorPrimary"
         android:src="@drawable/user"
-        android:layout_weight="8"/>
+        android:layout_weight="8" />
 
     <LinearLayout
         android:id="@+id/llContainer"
@@ -31,7 +31,6 @@
             android:layout_height="wrap_content" />
 
     </LinearLayout>
-
 
 
 </LinearLayout>

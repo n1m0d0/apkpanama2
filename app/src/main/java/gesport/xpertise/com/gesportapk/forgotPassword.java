@@ -39,6 +39,7 @@ public class forgotPassword extends AppCompatActivity implements View.OnClickLis
     String url;
     Intent ir;
     int code;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -58,6 +59,7 @@ public class forgotPassword extends AppCompatActivity implements View.OnClickLis
         userName = parametros.getString("userName"); */
 
     }
+
     public void logo(View v) {
 
         Uri uri = Uri.parse("https://www.portcolon2000.com/");
@@ -79,15 +81,14 @@ public class forgotPassword extends AppCompatActivity implements View.OnClickLis
                     msj = Toast.makeText(this, "Complete el campo de correo electrónico", Toast.LENGTH_LONG);
                     msj.show();
 
-                }else {
+                } else {
 
                     if (!validarEmail(etUser.getText().toString())) {
 
-                        msj = Toast.makeText(this,"la direcion de correo no es valida", Toast.LENGTH_LONG);
+                        msj = Toast.makeText(this, "la direcion de correo no es valida", Toast.LENGTH_LONG);
                         msj.show();
 
-                    }
-                    else {
+                    } else {
 
                         //llamar a la funcion forgotPassword
 
@@ -160,7 +161,7 @@ public class forgotPassword extends AppCompatActivity implements View.OnClickLis
             e.printStackTrace();
         }
 
-        if(code == 0) {
+        if (code == 0) {
 
             msj = Toast.makeText(this, "Se envio un correo!!" + response, Toast.LENGTH_LONG);
             msj.show();

@@ -5,12 +5,15 @@ import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
+import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -20,6 +23,8 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
+import android.hardware.usb.UsbDevice;
+import android.hardware.usb.UsbManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -47,6 +52,7 @@ import android.text.method.ScrollingMovementMethod;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -99,6 +105,10 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import SecuGen.FDxSDKPro.JSGFPLib;
+import SecuGen.FDxSDKPro.SGAutoOnEventNotifier;
+import SecuGen.FDxSDKPro.SGFDxDeviceName;
+
 import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
@@ -112,10 +122,10 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
     LinearLayout llContenedor, llRecording;
     Button btnSave;
     ImageView ivRecording, ivPlaying;
-    TextView tvRecording ,tvPathRecording;
+    TextView tvRecording, tvPathRecording;
     ProgressDialog mProgressDialog;
     RequestQueue mRequestQueue;
-    JsonArrayRequest mJsonArrayRequest;
+    JsonObjectRequest myJsonObjectRequest;
 
     final int codigoCamera = 20;
     final int codigoFile = 10;
@@ -167,6 +177,29 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
     String currentPhotoPath;
 
+    ArrayList<obj_auth> auths = new ArrayList<obj_auth>();
+
+    // biometrico
+    long error;
+
+    private boolean mLed;
+    private boolean mAutoOnEnabled;
+    private SGAutoOnEventNotifier autoOn;
+    HexConversion conversion;
+
+    private static final String TAG = "MIRZA";
+
+
+    private PendingIntent mPermissionIntent;
+    private IntentFilter filter;
+
+    private JSGFPLib sgfplib;
+    FingerPrintReader fingerPrintReader1;
+
+    int idFinger;
+    String fingerCapture = "";
+
+    ImageView ivFinger;
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
@@ -184,7 +217,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         btnSave = findViewById(R.id.btnSave);
         ivRecording = findViewById(R.id.ivRecording);
         ivPlaying = findViewById(R.id.ivPlaying);
-        tvRecording =  findViewById(R.id.tvRecording);
+        tvRecording = findViewById(R.id.tvRecording);
         tvRecording.setTextSize(14);
         tvRecording.setTextColor(getResources().getColor(R.color.colorBlack));
         tvPathRecording = findViewById(R.id.tvPathRecording);
@@ -199,6 +232,9 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         fullName = parametros.getString("fullName");
         Log.w("fullname", fullName);
 
+        conversion = new HexConversion();
+        //usbPermission();
+
         hand.removeCallbacks(actualizar);
         hand.postDelayed(actualizar, 100);
 
@@ -206,7 +242,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
         url = url + idForm;
 
-        if(compruebaConexion(this)) {
+        if (compruebaConexion(this)) {
 
             cargarFormulario();
 
@@ -229,11 +265,11 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
                 int counterEditText = 0;
                 for (Iterator iterator = editTexts.iterator(); iterator
-                        .hasNext();) {
+                        .hasNext(); ) {
 
                     EditText editText = (EditText) iterator.next();
                     String obs_respuesta = editText.getText().toString().trim();
-                    String control =  editText.getHint().toString().trim();
+                    String control = editText.getHint().toString().trim();
                     editText.setTextColor(Color.BLACK);
                     String regEx = stringsRegEx.get(counterEditText);
 
@@ -247,7 +283,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                         Log.w("sumaEditText", "" + validar);
 
                     } else {
-                        if(!obs_respuesta.equals("")) {
+                        if (!obs_respuesta.equals("")) {
                             if (!regEx.equals("")) {
                                 if (!validarRegEx(obs_respuesta, regEx)) {
                                     validar++;
@@ -277,7 +313,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                 }
 
                 for (Iterator iterator = textViewsDate.iterator(); iterator
-                        .hasNext();) {
+                        .hasNext(); ) {
 
                     TextView textView = (TextView) iterator.next();
                     String obs_respuesta = textView.getText().toString().trim();
@@ -308,7 +344,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                 }
 
                 for (Iterator iterator = textViewsHour.iterator(); iterator
-                        .hasNext();) {
+                        .hasNext(); ) {
 
                     TextView textView = (TextView) iterator.next();
                     String obs_respuesta = textView.getText().toString().trim();
@@ -339,7 +375,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                 }
 
                 for (Iterator iterator = spinners.iterator(); iterator
-                        .hasNext();) {
+                        .hasNext(); ) {
 
                     Spinner spinner = (Spinner) iterator.next();
 
@@ -367,7 +403,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                 }
 
                 for (Iterator iterator = switches.iterator(); iterator
-                        .hasNext();) {
+                        .hasNext(); ) {
 
                     Switch s = (Switch) iterator.next();
 
@@ -388,7 +424,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
 
                 for (Iterator iterator = imageViews.iterator(); iterator
-                        .hasNext();) {
+                        .hasNext(); ) {
 
                     ImageView imageView = (ImageView) iterator.next();
 
@@ -397,8 +433,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                     String description = parts[0];
                     String control = parts[parts.length - 1];
 
-                    if (description.equals(textImage) && control.equals(obligatorio))
-                    {
+                    if (description.equals(textImage) && control.equals(obligatorio)) {
 
                         validar++;
                         Log.w("sumaImageView", "" + validar);
@@ -409,7 +444,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                     /**********/
                     Bitmap bitmap = null;
                     for (Iterator iterator2 = objAttributes.iterator(); iterator2
-                            .hasNext();) {
+                            .hasNext(); ) {
                         obj_attributes properties = (obj_attributes) iterator2.next();
                         if (imageView.getId() == properties.getId()) {
                             bitmap = properties.getImage();
@@ -448,7 +483,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                 }
 
                 for (Iterator iterator = textViewsFiles.iterator(); iterator
-                        .hasNext();) {
+                        .hasNext(); ) {
 
                     TextView textView = (TextView) iterator.next();
                     textView.setTextColor(Color.BLACK);
@@ -466,7 +501,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
                     File file = new File(textView.getText().toString().trim());
 
-                    int file_size = Integer.parseInt(String.valueOf(file.length()/1024));
+                    int file_size = Integer.parseInt(String.valueOf(file.length() / 1024));
 
                     Log.w("min", "" + file_size);
 
@@ -516,7 +551,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                 /****************************************/
 
                 for (Iterator iterator = textViewsAudio.iterator(); iterator
-                        .hasNext();) {
+                        .hasNext(); ) {
 
                     TextView textView = (TextView) iterator.next();
                     textView.setTextColor(Color.BLACK);
@@ -534,7 +569,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
                     File file = new File(textView.getText().toString().trim());
 
-                    int file_size = Integer.parseInt(String.valueOf(file.length()/1024));
+                    int file_size = Integer.parseInt(String.valueOf(file.length() / 1024));
 
                     Log.w("min", "" + file_size);
 
@@ -581,68 +616,6 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
                 }
 
-                /*if (idAudio != 0) {
-
-                    tvPathRecording.setTextColor(Color.BLACK);
-                    String obs_respuesta = tvPathRecording.getText().toString().trim();
-                    String control = tvPathRecording.getHint().toString().trim();
-
-                    Log.w("controlTextViewFiles", control);
-
-                    if (obs_respuesta.equals(textAudio) && control.equals(obligatorio)) {
-
-                        validar++;
-                        Log.w("sumaTextViewFiles", "" + validar);
-
-                    }
-
-                    File file = new File(tvPathRecording.getText().toString().trim());
-
-                    int file_size = Integer.parseInt(String.valueOf(file.length() / 1024));
-
-                    Log.w("min", "" + file_size);
-
-                    if (file_size > 2000) {
-
-                        validar++;
-                        tvPathRecording.setTextColor(Color.RED);
-
-                    }
-
-                    String[] parts = tvPathRecording.getText().toString().trim().split("/");
-                    String nombre = parts[parts.length - 1];
-
-                    byte[] fileArray = new byte[(int) file.length()];
-                    InputStream inputStream;
-
-                    String encodedFile = "";
-                    try {
-                        inputStream = new FileInputStream(file);
-                        inputStream.read(fileArray);
-                        encodedFile = Base64.encodeToString(fileArray, Base64.DEFAULT);
-                    } catch (Exception e) {
-                        // Manejar Error
-                    }
-
-                    if (obs_respuesta.equals(textAudio)) {
-
-                        encodedFile = "";
-
-                    }
-
-                    try {
-                        JSONObject parametros = new JSONObject();
-                        parametros.put("idField", idAudio);
-                        parametros.put("valueInputField", nombre);
-                        parametros.put("valueInputDateField", "");
-                        parametros.put("valueListField", "");
-                        parametros.put("valueFile", encodedFile);
-                        respuesta.put(parametros);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                }*/
                 /****************************************/
 
                 localizar();
@@ -663,7 +636,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
                 if (validar == 0) {
 
-                    if(compruebaConexion(form_event.this)) {
+                    if (compruebaConexion(form_event.this)) {
 
                         enviarformulario();
 
@@ -747,20 +720,20 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
     }
 
-    private void cargarFormulario(){
+    private void cargarFormulario() {
 
-        mProgressDialog =  new ProgressDialog(this);
+        mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setMessage("Cargando...");
         mProgressDialog.setCancelable(false);
         mProgressDialog.show();
 
         mRequestQueue = Volley.newRequestQueue(this);
 
-        mJsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
+        myJsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @TargetApi(Build.VERSION_CODES.M)
             @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
             @Override
-            public void onResponse(JSONArray response) {
+            public void onResponse(JSONObject response) {
 
                 Log.w("respuesta", "" + response);
 
@@ -774,9 +747,23 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
                 try {
 
-                    for (int i = 0; i < response.length(); i++) {
+                    int auth = response.getInt("AUTH");
+                    if (auth == 1) {
 
-                        JSONObject form = response.getJSONObject(i);
+                        JSONArray fingerContent = response.getJSONArray("ENTITY_AUTH");
+                        for (int j = 0; j < fingerContent.length(); j++) {
+                            JSONObject fpData = fingerContent.getJSONObject(j);
+                            auths.add(new obj_auth(fpData.getInt("IDAUTH"), fpData.getString("BINARYFP"), fpData.getString("DESCFP")));
+                            Log.w("fpData", fpData.toString());
+                        }
+                        dialogFinger().show();
+                    }
+
+                    JSONArray fields = response.getJSONArray("FIELDS");
+
+                    for (int i = 0; i < fields.length(); i++) {
+
+                        JSONObject form = fields.getJSONObject(i);
 
                         idField = form.getInt("IDFIELD");
                         String name = form.getString("NAME");
@@ -865,7 +852,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                             case 7:
 
                                 creartextview(description);
-                                createTextviewFile(idField,is_mandatory);
+                                createTextviewFile(idField, is_mandatory);
 
                                 break;
 
@@ -889,34 +876,6 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                                 break;
 
                             case 11:
-
-                                /*tvRecording.setVisibility(View.VISIBLE);
-                                tvRecording.setText(description);
-                                llRecording.setVisibility(View.VISIBLE);
-                                idAudio = idField;
-                                tvPathRecording.setHint(is_mandatory);
-                                /***********************/
-                                /*String carpeta = "geoport";
-                                File fileAudio = new File(Environment.getExternalStorageDirectory(), carpeta);
-                                boolean isCreada = fileAudio.exists();
-                                String nameAudio = "";
-
-                                if(isCreada == false) {
-
-                                    isCreada = fileAudio.mkdir();
-
-                                }
-
-                                if(isCreada == true) {
-
-                                    nameAudio = "AudioGesport" + fecha_1 +".3gp";
-
-                                }
-
-                                pathAudio = Environment.getExternalStorageDirectory() + File.separator + carpeta + File.separator + nameAudio;*/
-                                /**********************/
-                                /*creartextview(description);
-                                createTextviewAudio(idField,is_mandatory);*/
 
                                 createAudio(idField, description, is_mandatory);
 
@@ -948,7 +907,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                 cargarFormularioOffline();
 
             }
-        }){
+        }) {
 
             @Override
             public Map getHeaders() throws AuthFailureError {
@@ -961,7 +920,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
         };
 
-        mRequestQueue.add(mJsonArrayRequest);
+        mRequestQueue.add(myJsonObjectRequest);
 
     }
 
@@ -1007,15 +966,15 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         et.setId(id_opcion);
         /***************/
         et.setBackgroundResource(R.drawable.customedittext);
-        et.setPadding(30,20,30,20);
+        et.setPadding(30, 20, 30, 20);
         /***************/
         InputFilter[] ifet = new InputFilter[1];
         ifet[0] = new InputFilter.LengthFilter(descripcion);
         et.setFilters(ifet);
 
-        String [][] reemplazos = { {"(", "{"}, {")", "}"}, {"<", "["}, {">", "]"}, {"¿", "("}, {"?", ")"}};
+        String[][] reemplazos = {{"(", "{"}, {")", "}"}, {"<", "["}, {">", "]"}, {"¿", "("}, {"?", ")"}};
         String cadena = regEx;
-        for(String[] reemplazar: reemplazos ) {
+        for (String[] reemplazar : reemplazos) {
             cadena = cadena.replace(reemplazar[0], reemplazar[1]);
         }
 
@@ -1037,7 +996,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         et.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
         /***************/
         et.setBackgroundResource(R.drawable.customedittext);
-        et.setPadding(30,20,30,20);
+        et.setPadding(30, 20, 30, 20);
         /***************/
         et.setLines(1);
         et.setMaxLines(10);
@@ -1098,7 +1057,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         Log.w("RadioButton", "" + items);
 
         for (Iterator iterator = items.iterator(); iterator
-                .hasNext();) {
+                .hasNext(); ) {
 
             Log.w("RadioButton", "llegue aqui2");
 
@@ -1121,7 +1080,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
     }
 
     // crear ToggleButton
-    public void createToggleButton(int idField){
+    public void createToggleButton(int idField) {
 
         ToggleButton tb = new ToggleButton(this);
         tb.setId(idField);
@@ -1134,7 +1093,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
     // crear Switch
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-    public void createSwitch(int idField, String description){
+    public void createSwitch(int idField, String description) {
 
 
         Switch s = new Switch(this);
@@ -1171,7 +1130,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
     // crear un spinner en el contenedor
 
-    public void createSpinner(int idField, ArrayList<obj_params> aux, int idParametro){
+    public void createSpinner(int idField, ArrayList<obj_params> aux, int idParametro) {
 
         Spinner sp = new Spinner(this);
         sp.setId(idField);
@@ -1193,7 +1152,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
     // Crear imageview en el contenedor
 
-    public void createImageView(int idField, String option, int w, int h){
+    public void createImageView(int idField, String option, int w, int h) {
 
         LinearLayout llImg = new LinearLayout(this);
         LinearLayout.LayoutParams paramsImg = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -1206,23 +1165,23 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         iv.setId(idField);
         iv.setImageResource(R.drawable.camera);
         iv.setContentDescription(textImage + "-" + option);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,150, 5f);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 150, 5f);
         iv.setLayoutParams(lp);
         llImg.addView(iv);
 
         LinearLayout llImg2 = new LinearLayout(this);
-        LinearLayout.LayoutParams paramsImg2 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT,5f);
+        LinearLayout.LayoutParams paramsImg2 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 5f);
         llImg2.setLayoutParams(paramsImg2);
         llImg.addView(llImg2);
 
         LinearLayout llImg3 = new LinearLayout(this);
-        LinearLayout.LayoutParams paramsImg3 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT,2f);
+        LinearLayout.LayoutParams paramsImg3 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 2f);
         llImg3.setLayoutParams(paramsImg3);
         llImg.addView(llImg3);
 
         imageViews.add(iv);
 
-        if(w > 0 && h > 0) {
+        if (w > 0 && h > 0) {
             objAttributes.add(new obj_attributes(idField, w, h, null));
         } else {
             w = 400;
@@ -1248,7 +1207,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
     }
 
-    private void enviarformulario(){
+    private void enviarformulario() {
 
         Log.w("url", url2);
 
@@ -1256,7 +1215,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
         RequestQueue mRequestQueue2;
 
-        mProgressDialog =  new ProgressDialog(this);
+        mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setMessage("Cargando...");
         mProgressDialog.setCancelable(false);
         mProgressDialog.show();
@@ -1294,7 +1253,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                 }
 
             }
-        }){
+        }) {
 
             @Override
             public Map getHeaders() throws AuthFailureError {
@@ -1323,12 +1282,12 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         boolean uploadFile = false;
         boolean recordingAudio = false;
 
-        for(Iterator iterator = imageViews.iterator(); iterator
-                .hasNext();) {
+        for (Iterator iterator = imageViews.iterator(); iterator
+                .hasNext(); ) {
 
             ImageView imageView = (ImageView) iterator.next();
 
-            if(imageView.getId() == opcion) {
+            if (imageView.getId() == opcion) {
 
                 usarCamara = true;
 
@@ -1340,11 +1299,11 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         }
 
         for (Iterator iterator = textViewsDate.iterator(); iterator
-                .hasNext();) {
+                .hasNext(); ) {
 
             TextView textView = (TextView) iterator.next();
 
-            if(textView.getId() == opcion) {
+            if (textView.getId() == opcion) {
 
                 date = true;
 
@@ -1353,11 +1312,11 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         }
 
         for (Iterator iterator = textViewsHour.iterator(); iterator
-                .hasNext();) {
+                .hasNext(); ) {
 
             TextView textView = (TextView) iterator.next();
 
-            if(textView.getId() == opcion) {
+            if (textView.getId() == opcion) {
 
                 getHour();
 
@@ -1366,11 +1325,11 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         }
 
         for (Iterator iterator = textViewsFiles.iterator(); iterator
-                .hasNext();) {
+                .hasNext(); ) {
 
             TextView textView = (TextView) iterator.next();
 
-            if(textView.getId() == opcion) {
+            if (textView.getId() == opcion) {
 
                 uploadFile = true;
 
@@ -1383,18 +1342,18 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         /*****************************/
 
         for (Iterator iterator = switches.iterator(); iterator
-                .hasNext();) {
+                .hasNext(); ) {
 
             Switch s = (Switch) iterator.next();
 
-            if(s.getId() == opcion) {
+            if (s.getId() == opcion) {
 
-                if(s.isChecked()) {
+                if (s.isChecked()) {
 
                     s.getThumbDrawable().setColorFilter(Color.parseColor("#2F3887"), PorterDuff.Mode.MULTIPLY);
                     s.getTrackDrawable().setColorFilter(Color.parseColor("#2F3887"), PorterDuff.Mode.MULTIPLY);
 
-                }else {
+                } else {
 
                     s.getThumbDrawable().setColorFilter(Color.parseColor("#3f8155"), PorterDuff.Mode.MULTIPLY);
                     s.getTrackDrawable().setColorFilter(Color.parseColor("#3f8155"), PorterDuff.Mode.MULTIPLY);
@@ -1405,19 +1364,19 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
         }
 
-        if (date){
+        if (date) {
 
             getDate();
 
         }
 
-        if(usarCamara) {
+        if (usarCamara) {
 
             tomarFotografia();
 
         }
 
-        if(uploadFile) {
+        if (uploadFile) {
 
             recoverDataFile();
 
@@ -1439,61 +1398,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
     // camara
     private void tomarFotografia() {
 
-        /*File fileImagen = new File(Environment.getExternalStorageDirectory(), ruta_imagen);
-        boolean isCreada = fileImagen.exists();
-        String nombreImagen = "";
 
-
-        if(isCreada == false) {
-
-            isCreada = fileImagen.mkdir();
-
-        }
-
-        if(isCreada == true) {
-
-            nombreImagen = (System.currentTimeMillis()/1000) + ".jpg";
-
-        }
-
-        path = Environment.getExternalStorageDirectory() + File.separator + ruta_imagen + File.separator + nombreImagen;
-
-        File imagen =  new File(path);
-
-        output = Uri.fromFile(imagen);
-        if (Build.VERSION.SDK_INT >=  Build.VERSION_CODES.N) {
-            output = Uri.parse(path);
-        } else{
-            output = Uri.fromFile(new File(path));
-        }*/
-
-        /*String carpeta = "geoport";
-        File fileJson = new File(Environment.getExternalStorageDirectory(), carpeta);
-        boolean isCreada = fileJson.exists();
-        String nombreImg = "";
-
-        if(isCreada == false) {
-
-            isCreada = fileJson.mkdir();
-
-        }
-
-        if(isCreada == true) {
-
-            nombreImg = "img" + (System.currentTimeMillis()/1000) + ".json";
-
-        }
-
-        path = Environment.getExternalStorageDirectory() + File.separator + carpeta + File.separator + nombreImg;
-
-        File imagen =  new File(path);
-
-        output = FileProvider.getUriForFile(getApplicationContext(), getPackageName() + ".provider", imagen);
-
-
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        //intent.putExtra(MediaStore.EXTRA_OUTPUT, output);
-        startActivityForResult(intent, codigoCamera);*/
 
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
@@ -1516,13 +1421,12 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         }
 
 
-
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data){
-        super.onActivityResult(requestCode,resultCode,data);
-        if (resultCode== RESULT_OK){
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
 
 
             switch (requestCode) {
@@ -1538,7 +1442,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                     String control = parts[parts.length - 1];
 
                     iv.setContentDescription(description + "-" + control);
-                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(400,400);
+                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(400, 400);
                     iv.setLayoutParams(lp);
 
                     Log.w("Img_src", currentPhotoPath);
@@ -1551,33 +1455,14 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                         e.printStackTrace();
                     }
 
-                    /*ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                    bmp.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);*/
 
                     iv.setImageBitmap(bmp);
 
                     /***********************************/
-                    /*
-                    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                    bmp.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-                    byte[] byteArray = byteArrayOutputStream .toByteArray();
 
-                    String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
-
-                    ImageView iv = findViewById(opcion);
-
-                    String[] parts = iv.getContentDescription().toString().trim().split("-");
-                    String description = parts[0] + "captura";
-                    String control = parts[parts.length - 1];
-
-                    iv.setContentDescription(description + "-" + control);
-                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(400,400);
-                    iv.setLayoutParams(lp);
-
-                    iv.setImageBitmap(bmp);*/
 
                     for (Iterator iterator2 = objAttributes.iterator(); iterator2
-                            .hasNext();) {
+                            .hasNext(); ) {
                         obj_attributes properties = (obj_attributes) iterator2.next();
                         if (opcion == properties.getId()) {
                             int width = bmp.getWidth();
@@ -1617,44 +1502,29 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
             }
 
-            /*MediaScannerConnection.scanFile(this, new String[]{path}, null, new MediaScannerConnection.OnScanCompletedListener() {
-                @Override
-                public void onScanCompleted(String path, Uri uri) {
-
-                    Log.i("Ruta de almacenamiento", "path: " + path);
-
-                }
-            });
-
-            Bitmap bitmap = BitmapFactory.decodeFile(path);
-            ImageView iv = findViewById(opcion);
-            iv.setImageBitmap(bitmap);*/
-
-
 
 
         }
     }
 
-    private boolean validarPermisos(){
+    private boolean validarPermisos() {
 
-        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-
-            return true;
-
-        }
-        if((checkSelfPermission(CAMERA) == PackageManager.PERMISSION_GRANTED) && (checkSelfPermission(WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)){
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
 
             return true;
 
         }
+        if ((checkSelfPermission(CAMERA) == PackageManager.PERMISSION_GRANTED) && (checkSelfPermission(WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
 
-        if ((shouldShowRequestPermissionRationale(CAMERA))||(shouldShowRequestPermissionRationale(WRITE_EXTERNAL_STORAGE))) {
+            return true;
+
+        }
+
+        if ((shouldShowRequestPermissionRationale(CAMERA)) || (shouldShowRequestPermissionRationale(WRITE_EXTERNAL_STORAGE))) {
 
             cargardialogo();
 
-        }
-        else {
+        } else {
 
             requestPermissions(new String[]{WRITE_EXTERNAL_STORAGE, CAMERA}, 100);
 
@@ -1664,7 +1534,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
     }
 
-    private void cargardialogo(){
+    private void cargardialogo() {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(form_event.this);
         builder.setTitle("Permisos Desactivados");
@@ -1688,10 +1558,9 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        if(requestCode == 100) {
+        if (requestCode == 100) {
 
-            if(grantResults.length == 2 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-
+            if (grantResults.length == 2 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
 
 
             } else {
@@ -1704,7 +1573,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
     }
 
-    private void cargardialogo2(){
+    private void cargardialogo2() {
 
         final CharSequence[] op = {"si", "no"};
         final AlertDialog.Builder builder = new AlertDialog.Builder(form_event.this);
@@ -1713,16 +1582,15 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-                if(op[which].equals("si")){
+                if (op[which].equals("si")) {
 
                     Intent intent = new Intent();
                     intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
                     Uri uri = Uri.fromParts("package", getPackageName(), null);
-                    intent .setData(uri);
+                    intent.setData(uri);
                     startActivity(intent);
 
-                }
-                else {
+                } else {
 
                     msj = Toast.makeText(form_event.this, "los permisos no fueron aceptados", Toast.LENGTH_LONG);
                     msj.show();
@@ -1756,13 +1624,13 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
     };
 
     //alert dialog para obtener fecha
-    public void getDate(){
+    public void getDate() {
 
         int mYear, mMonth, mDay;
         Calendar mcurrentDate = Calendar.getInstance();
         mYear = mcurrentDate.get(Calendar.YEAR);
         mMonth = mcurrentDate.get(Calendar.MONTH);
-        mDay  =mcurrentDate.get(Calendar.DAY_OF_MONTH);
+        mDay = mcurrentDate.get(Calendar.DAY_OF_MONTH);
 
         DatePickerDialog mdatePickerDialog = new DatePickerDialog(form_event.this, new DatePickerDialog.OnDateSetListener() {
             @Override
@@ -1776,14 +1644,14 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                 textView.setText(fecha);
 
             }
-        },mYear,mMonth,mDay);
+        }, mYear, mMonth, mDay);
         mdatePickerDialog.setTitle("Selecione la fecha");
         mdatePickerDialog.show();
 
     }
 
     //alert dialog para obtener hora
-    public void getHour(){
+    public void getHour() {
 
         int mHour, mMinute;
         Calendar mcurrentDate = Calendar.getInstance();
@@ -1795,7 +1663,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 
                 TextView textView = new TextView(form_event.this);
-                textView =  findViewById(opcion);
+                textView = findViewById(opcion);
                 textView.setText(hourOfDay + ":" + minute);
                 Log.w("Hora", hourOfDay + ":" + minute);
 
@@ -1807,7 +1675,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
     }
 
-    public void completarDatos(){
+    public void completarDatos() {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Importante");
@@ -1825,7 +1693,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
     }
 
-    public void localizar () {
+    public void localizar() {
 
         LocationManager lm;
         LocationListener datos;
@@ -1890,11 +1758,24 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
                 try {
 
-                    JSONArray response = new JSONArray(formulario);
+                    JSONObject response = new JSONObject(formulario);
 
-                    for (int i = 0; i < response.length(); i++) {
+                    int auth = response.getInt("AUTH");
+                    if (auth == 1) {
+                        JSONArray fingerContent = response.getJSONArray("ENTITY_AUTH");
+                        for (int j = 0; j < fingerContent.length(); j++) {
+                            JSONObject fpData = fingerContent.getJSONObject(j);
+                            auths.add(new obj_auth(fpData.getInt("IDAUTH"), fpData.getString("BINARYFP"), fpData.getString("DESCFP")));
+                            Log.w("fpData", fpData.toString());
+                        }
+                        dialogFinger().show();
+                    }
 
-                        JSONObject form = response.getJSONObject(i);
+                    JSONArray fields = response.getJSONArray("FIELDS");
+
+                    for (int i = 0; i < fields.length(); i++) {
+
+                        JSONObject form = fields.getJSONObject(i);
 
                         idField = form.getInt("IDFIELD");
                         String name = form.getString("NAME");
@@ -1983,7 +1864,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                             case 7:
 
                                 creartextview(description);
-                                createTextviewFile(idField,is_mandatory);
+                                createTextviewFile(idField, is_mandatory);
 
                                 break;
 
@@ -2008,33 +1889,6 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
                             case 11:
 
-                                /*creartextview(description);
-                                createTextviewAudio(idField,is_mandatory);*/
-                                /*tvRecording.setVisibility(View.VISIBLE);
-                                tvRecording.setText(description);
-                                llRecording.setVisibility(View.VISIBLE);
-                                idAudio = idField;
-                                tvPathRecording.setHint(is_mandatory);
-                                /***********************/
-                                /*String carpeta = "geoport";
-                                File fileAudio = new File(Environment.getExternalStorageDirectory(), carpeta);
-                                boolean isCreada = fileAudio.exists();
-                                String nameAudio = "";
-
-                                if(isCreada == false) {
-
-                                    isCreada = fileAudio.mkdir();
-
-                                }
-
-                                if(isCreada == true) {
-
-                                    nameAudio = "AudioGesport" + fecha_1 +".3gp";
-
-                                }
-
-                                pathAudio = Environment.getExternalStorageDirectory() + File.separator + carpeta + File.separator + nameAudio;
-                                /**********************/
                                 createAudio(idField, description, is_mandatory);
 
                                 break;
@@ -2083,7 +1937,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         return connected;
     }
 
-    public void createJson(JSONArray jsonArray) {
+    public void createJson(JSONObject jsonArray) {
 
         String path = null;
         String carpeta = "geoport";
@@ -2091,13 +1945,13 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         boolean isCreada = fileJson.exists();
         String nombreJson = "";
 
-        if(isCreada == false) {
+        if (isCreada == false) {
 
             isCreada = fileJson.mkdir();
 
         }
 
-        if(isCreada == true) {
+        if (isCreada == true) {
 
             nombreJson = "form" + idForm + ".json";
 
@@ -2116,7 +1970,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
     }
 
-    public String readJsonFile (String path) {
+    public String readJsonFile(String path) {
 
         Log.w("ver", path);
 
@@ -2148,15 +2002,15 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         boolean isCreada = fileJson.exists();
         String nombreJson = "";
 
-        if(isCreada == false) {
+        if (isCreada == false) {
 
             isCreada = fileJson.mkdir();
 
         }
 
-        if(isCreada == true) {
+        if (isCreada == true) {
 
-            nombreJson = "Answer" + fecha_1+".json";
+            nombreJson = "Answer" + fecha_1 + ".json";
 
         }
 
@@ -2199,7 +2053,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         textView.setText(textAudio);
         textView.setHint(requerido);
         textView.setTextSize(14);
-        LinearLayout.LayoutParams lpTextView = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT,2f);
+        LinearLayout.LayoutParams lpTextView = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 2f);
         textView.setLayoutParams(lpTextView);
         linearLayout.addView(textView);
         textViewsAudio.add(textView);
@@ -2207,12 +2061,12 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         textView.setVisibility(View.GONE);
         final ImageView imageView = new ImageView(this);
         imageView.setImageResource(R.drawable.recording);
-        LinearLayout.LayoutParams lpImageView = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 150,5f);
+        LinearLayout.LayoutParams lpImageView = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 150, 5f);
         imageView.setLayoutParams(lpImageView);
         linearLayout.addView(imageView);
         final ImageView imageView2 = new ImageView(this);
         imageView2.setImageResource(R.drawable.play);
-        LinearLayout.LayoutParams lpImageView2 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 150,5f);
+        LinearLayout.LayoutParams lpImageView2 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 150, 5f);
         imageView2.setLayoutParams(lpImageView2);
         imageView2.setVisibility(View.INVISIBLE);
         linearLayout.addView(imageView2);
@@ -2222,7 +2076,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         textView1.setText(textAudio);
         textView1.setHint(requerido);
         textView1.setTextSize(14);
-        LinearLayout.LayoutParams lpTextView1 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT,2f);
+        LinearLayout.LayoutParams lpTextView1 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 2f);
         textView1.setLayoutParams(lpTextView1);
         linearLayout.addView(textView1);
         textView1.setVisibility(View.INVISIBLE);
@@ -2239,15 +2093,15 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                         boolean isCreada = fileAudio.exists();
                         String nameAudio = "";
 
-                        if(isCreada == false) {
+                        if (isCreada == false) {
 
                             isCreada = fileAudio.mkdir();
 
                         }
 
-                        if(isCreada == true) {
+                        if (isCreada == true) {
 
-                            nameAudio = "AudioGesport" + fecha_1 +".3gp";
+                            nameAudio = "AudioGesport" + fecha_1 + ".3gp";
 
                         }
 
@@ -2322,5 +2176,111 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
     public void onCompletion(MediaPlayer mediaPlayer) {
 
     }
+
+    private AlertDialog dialogFinger() {
+
+        usbPermission();
+
+        final AlertDialog.Builder builder = new AlertDialog.Builder(form_event.this);
+
+        LayoutInflater inflater = form_event.this.getLayoutInflater();
+
+        View v = inflater.inflate(R.layout.finger, null);
+
+        builder.setView(v);
+
+        Button btnCapture = (Button) v.findViewById(R.id.btnCapture);
+        Button btnExit = (Button) v.findViewById(R.id.btnExit);
+        ivFinger = (ImageView) v.findViewById(R.id.ivFinger);
+
+        btnCapture.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // Crear Cuenta...
+                        runOnUiThread(new Runnable() {
+
+                            @Override
+                            public void run() {
+                                // TODO Auto-generated method stub
+                                fingerPrintReader1.readFingerPrint();
+                                ivFinger.setImageBitmap(fingerPrintReader1
+                                        .toGrayscale(fingerPrintReader1.getFPBitMap()));
+
+                                byte[] abc = fingerPrintReader1.getHexTemplate();
+                                String Temp = conversion.getHexString(abc);
+                                Log.d(TAG, "Template" + Temp);
+
+                                fingerCapture = Base64.encodeToString(abc, Base64.DEFAULT);
+
+                            }
+                        });
+                    }
+                }
+        );
+
+        btnExit.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // Loguear...
+                        finish();
+                    }
+                }
+
+        );
+
+        return builder.create();
+    }
+
+    //biometrico
+    private void usbPermission() {
+        mPermissionIntent = PendingIntent.getBroadcast(this, 0, new Intent(
+                ACTION_USB_PERMISSION), 0);
+        filter = new IntentFilter(ACTION_USB_PERMISSION);
+        registerReceiver(mUsbReceiver, filter);
+        sgfplib = new JSGFPLib(
+                (UsbManager) getSystemService(Context.USB_SERVICE));
+        mLed = false;
+        mAutoOnEnabled = false;
+        error = sgfplib.Init(SGFDxDeviceName.SG_DEV_AUTO);
+        UsbDevice usbDevice = sgfplib.GetUsbDevice();
+        sgfplib.GetUsbManager().requestPermission(usbDevice, mPermissionIntent);
+        error = sgfplib.OpenDevice(0);
+        SecuGen.FDxSDKPro.SGDeviceInfoParam deviceInfo = new SecuGen.FDxSDKPro.SGDeviceInfoParam();
+        // error = sgfplib.GetDeviceInfo(deviceInfo);
+
+        fingerPrintReader1 = new FingerPrintReader(ivFinger,
+                sgfplib);
+    }
+
+    // USB Device Attach Permission
+    private static final String ACTION_USB_PERMISSION = "com.android.example.USB_PERMISSION";
+    private final BroadcastReceiver mUsbReceiver = new BroadcastReceiver() {
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (ACTION_USB_PERMISSION.equals(action)) {
+                synchronized (this) {
+                    UsbDevice device = (UsbDevice) intent
+                            .getParcelableExtra(UsbManager.EXTRA_DEVICE);
+                    if (intent.getBooleanExtra(
+                            UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
+                        if (device != null) {
+
+                            Log.d(TAG, "Vender DI" + device.getVendorId());
+
+                            Log.d(TAG, "Producat ID " + device.getProductId());
+
+                        } else
+                            Log.e(TAG,
+                                    "mUsbReceiver.onReceive() Device is null");
+                    } else
+                        Log.e(TAG,
+                                "mUsbReceiver.onReceive() permission denied for device "
+                                        + device);
+                }
+            }
+        }
+    };
 
 }

@@ -95,7 +95,7 @@ public class view_event extends AppCompatActivity implements View.OnClickListene
         url = url + idEvent;
         //mostrar datos
 
-        if(compruebaConexion(this)) {
+        if (compruebaConexion(this)) {
 
             cargarFormulario();
 
@@ -107,7 +107,6 @@ public class view_event extends AppCompatActivity implements View.OnClickListene
             btnCheckOut.setVisibility(View.GONE);
 
         }
-
 
 
         btnCheckOut.setOnClickListener(new View.OnClickListener() {
@@ -140,13 +139,13 @@ public class view_event extends AppCompatActivity implements View.OnClickListene
         String urls = "";
 
         for (Iterator iterator = imageViews.iterator(); iterator
-                .hasNext();) {
+                .hasNext(); ) {
 
             ImageView imageView = (ImageView) iterator.next();
 
             if (imageView.getId() == option) {
 
-                
+
                 urls = "" + imageView.getContentDescription();
                 Uri uri = Uri.parse(urls);
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
@@ -161,7 +160,7 @@ public class view_event extends AppCompatActivity implements View.OnClickListene
         }
 
         for (Iterator iterator = textViews.iterator(); iterator
-                .hasNext();) {
+                .hasNext(); ) {
 
             TextView textView = (TextView) iterator.next();
 
@@ -182,9 +181,9 @@ public class view_event extends AppCompatActivity implements View.OnClickListene
 
     }
 
-    private void cargarFormulario(){
+    private void cargarFormulario() {
 
-        mProgressDialog =  new ProgressDialog(this);
+        mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setMessage("Cargando...");
         mProgressDialog.setCancelable(false);
         mProgressDialog.show();
@@ -211,7 +210,7 @@ public class view_event extends AppCompatActivity implements View.OnClickListene
                         generaForm = form.getInt("generaForm");
                         JSONArray opciones = form.getJSONArray("P");
 
-                        if(generaForm > 0) {
+                        if (generaForm > 0) {
 
                             btnCheckOut.setVisibility(View.VISIBLE);
 
@@ -230,7 +229,7 @@ public class view_event extends AppCompatActivity implements View.OnClickListene
                             int type = op.getInt("type");
                             String description = op.getString("description");
 
-                            switch (type){
+                            switch (type) {
 
                                 case 1:
 
@@ -269,7 +268,7 @@ public class view_event extends AppCompatActivity implements View.OnClickListene
                                 case 6:
 
                                     createTextView(description);
-                                    if (valueInputField.equals("")){
+                                    if (valueInputField.equals("")) {
 
                                     } else {
 
@@ -282,7 +281,7 @@ public class view_event extends AppCompatActivity implements View.OnClickListene
                                 case 7:
 
                                     createTextView(description);
-                                    if (valueInputField.equals("")){
+                                    if (valueInputField.equals("")) {
 
                                     } else {
 
@@ -342,7 +341,7 @@ public class view_event extends AppCompatActivity implements View.OnClickListene
                 mProgressDialog.dismiss();
 
             }
-        }){
+        }) {
 
             @Override
             public Map getHeaders() throws AuthFailureError {
@@ -425,7 +424,7 @@ public class view_event extends AppCompatActivity implements View.OnClickListene
     public void createSwitch(String description, String valor) {
 
         Log.w("valor", valor);
-        boolean variable = Boolean.parseBoolean (valor);
+        boolean variable = Boolean.parseBoolean(valor);
         Log.w("bolean", "" + variable);
         Switch s = new Switch(this);
         s.setText(description);
@@ -438,7 +437,7 @@ public class view_event extends AppCompatActivity implements View.OnClickListene
 
     }
 
-    public void createImageView(int id, String imagen, String url){
+    public void createImageView(int id, String imagen, String url) {
 
         ImageView imageView = new ImageView(this);
 
@@ -450,7 +449,7 @@ public class view_event extends AppCompatActivity implements View.OnClickListene
         Bitmap decodedImage = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
         imageView.setImageBitmap(decodedImage);
 
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(400,400);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(400, 400);
         imageView.setLayoutParams(lp);
         imageView.setOnClickListener(this);
         imageViews.add(imageView);
@@ -480,19 +479,19 @@ public class view_event extends AppCompatActivity implements View.OnClickListene
         iv.setId(id);
         iv.setImageResource(R.drawable.files);
         iv.setContentDescription(description);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,150, 5f);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 150, 5f);
         iv.setLayoutParams(lp);
         llImg.addView(iv);
         iv.setOnClickListener(this);
         imageViews.add(iv);
 
         LinearLayout llImg2 = new LinearLayout(this);
-        LinearLayout.LayoutParams paramsImg2 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT,5f);
+        LinearLayout.LayoutParams paramsImg2 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 5f);
         llImg2.setLayoutParams(paramsImg2);
         llImg.addView(llImg2);
 
         LinearLayout llImg3 = new LinearLayout(this);
-        LinearLayout.LayoutParams paramsImg3 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT,2f);
+        LinearLayout.LayoutParams paramsImg3 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 2f);
         llImg3.setLayoutParams(paramsImg3);
         llImg.addView(llImg3);
         /*************************/
@@ -529,6 +528,7 @@ public class view_event extends AppCompatActivity implements View.OnClickListene
         }
         return connected;
     }
+
     /*************************/
     public void createAudio(String descripcion, final String audio) {
         TextView textViewOption = new TextView(this);
@@ -556,7 +556,7 @@ public class view_event extends AppCompatActivity implements View.OnClickListene
         final TextView textViewAudio = new TextView(this);
         textViewAudio.setText("Haga clic para reproducir el audio");
         textViewAudio.setTextSize(14);
-        LinearLayout.LayoutParams lpTextView = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT,2f);
+        LinearLayout.LayoutParams lpTextView = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 2f);
         textViewAudio.setLayoutParams(lpTextView);
         linearLayout.addView(textViewAudio);
         textViewAudio.setVisibility(View.INVISIBLE);
@@ -573,7 +573,7 @@ public class view_event extends AppCompatActivity implements View.OnClickListene
                     imageViewStop.setVisibility(View.VISIBLE);
                     imageViewPlay.setVisibility(View.INVISIBLE);
                 } catch (IOException e) {
-                    Log.e("LOG", ""+e);
+                    Log.e("LOG", "" + e);
                 }
             }
         });
@@ -592,7 +592,7 @@ public class view_event extends AppCompatActivity implements View.OnClickListene
     /*************************/
 
     @Override
-    public void onBackPressed(){
+    public void onBackPressed() {
 
         ir = new Intent(view_event.this, events.class);
         ir.putExtra("auth", auth);

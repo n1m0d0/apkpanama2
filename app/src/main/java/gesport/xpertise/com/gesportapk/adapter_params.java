@@ -13,15 +13,15 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 
-public class adapter_params extends ArrayAdapter<obj_params>{
+public class adapter_params extends ArrayAdapter<obj_params> {
 
 
     public adapter_params(Context context, ArrayList<obj_params> datos) {
-        super(context,0, datos);
-
+        super(context, 0, datos);
 
 
     }
+
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
@@ -33,9 +33,9 @@ public class adapter_params extends ArrayAdapter<obj_params>{
         return intView(position, convertView, parent);
     }
 
-    private View intView(int position, View convertView, ViewGroup parent){
+    private View intView(int position, View convertView, ViewGroup parent) {
 
-        if(convertView == null) {
+        if (convertView == null) {
 
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.personalization3, parent, false);
         }
@@ -45,13 +45,13 @@ public class adapter_params extends ArrayAdapter<obj_params>{
 
         obj_params datos = getItem(position);
 
-        if(datos != null) {
+        if (datos != null) {
 
             tvText.setText(datos.getDescription());
 
         }
 
-        return  convertView;
+        return convertView;
 
     }
 

@@ -76,6 +76,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
     String direccion;
     String certificado = "";
     String idOffline;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -102,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
             e.printStackTrace();
         }
 
-        if(compruebaConexion(this)) {
+        if (compruebaConexion(this)) {
 
             enviarFormularios();
 
@@ -112,9 +113,9 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
 
     public void logo(View v) {
 
-                Uri uri = Uri.parse("https://www.portcolon2000.com/");
-                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                startActivity(intent);
+        Uri uri = Uri.parse("https://www.portcolon2000.com/");
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        startActivity(intent);
 
     }
 
@@ -122,33 +123,30 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
     @Override
     public void onClick(View v) {
 
-        switch (v.getId())
-        {
+        switch (v.getId()) {
             case R.id.btnLogin:
 
                 if (etUser.getText().toString().trim().equalsIgnoreCase("") || etPassword.getText().toString().trim().equalsIgnoreCase("")) {
 
                     msj = Toast.makeText(this, "debe coompletar los datos", Toast.LENGTH_LONG);
                     msj.show();
-                }
-                else {
+                } else {
 
                     if (!validarEmail(etUser.getText().toString())) {
 
-                        msj = Toast.makeText(this,"la direcion de correo no es valida", Toast.LENGTH_LONG);
+                        msj = Toast.makeText(this, "la direcion de correo no es valida", Toast.LENGTH_LONG);
                         msj.show();
 
-                    }
-                    else {
+                    } else {
 
                         //llamar la funcion de login
 
                         String password = encryptPassword(etPassword.getText().toString().trim());
 
-                        credentials = etUser.getText().toString().trim()+":"+password;
+                        credentials = etUser.getText().toString().trim() + ":" + password;
                         auth = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
 
-                        if(compruebaConexion(this)) {
+                        if (compruebaConexion(this)) {
 
                             cargarLogin();
 
@@ -190,7 +188,6 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
                         }
 
 
-
                     }
 
                 }
@@ -215,15 +212,15 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
 
     }
 
-    private void cargarLogin(){
+    private void cargarLogin() {
 
-        mProgressDialog =  new ProgressDialog(this);
+        mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setMessage("Cargando...");
         mProgressDialog.show();
 
         mRequestQueue = Volley.newRequestQueue(this);
 
-        mJsonObjectRequest = new JsonObjectRequest(Request.Method.POST,url,null, this, this){
+        mJsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, null, this, this) {
 
             public Map getHeaders() throws AuthFailureError {
                 HashMap headers = new HashMap();
@@ -258,7 +255,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
             e.printStackTrace();
         }
 
-        if(code == 0) {
+        if (code == 0) {
 
             msj = Toast.makeText(this, "Bienvenido!!", Toast.LENGTH_LONG);
             msj.setGravity(Gravity.CENTER, 0, 0);
@@ -274,8 +271,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
                     conexion.createUser(etUser.getText().toString().trim(), auth, fullName);
                     conexion.createSession(etUser.getText().toString().trim());
 
-                }
-                else {
+                } else {
 
                     conexion.updateUser(etUser.getText().toString().trim(), auth);
                     conexion.createSession(etUser.getText().toString().trim());
@@ -306,32 +302,24 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
 
     }
 
-    private static String encryptPassword(String password)
-    {
+    private static String encryptPassword(String password) {
         String sha1 = "";
-        try
-        {
+        try {
             MessageDigest crypt = MessageDigest.getInstance("SHA-1");
             crypt.reset();
             crypt.update(password.getBytes("UTF-8"));
             sha1 = byteToHex(crypt.digest());
-        }
-        catch(NoSuchAlgorithmException e)
-        {
+        } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
-        }
-        catch(UnsupportedEncodingException e)
-        {
+        } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
         return sha1;
     }
 
-    private static String byteToHex(final byte[] hash)
-    {
+    private static String byteToHex(final byte[] hash) {
         Formatter formatter = new Formatter();
-        for (byte b : hash)
-        {
+        for (byte b : hash) {
             formatter.format("%02x", b);
         }
         String result = formatter.toString();
@@ -360,25 +348,24 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
 
 
     /******************/
-    private boolean validarPermisos(){
+    private boolean validarPermisos() {
 
-        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-
-            return true;
-
-        }
-        if((checkSelfPermission(ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) && (checkSelfPermission(ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) && (checkSelfPermission(CAMERA) == PackageManager.PERMISSION_GRANTED) && (checkSelfPermission(WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) && (checkSelfPermission(RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED)){
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
 
             return true;
 
         }
+        if ((checkSelfPermission(ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) && (checkSelfPermission(ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) && (checkSelfPermission(CAMERA) == PackageManager.PERMISSION_GRANTED) && (checkSelfPermission(WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) && (checkSelfPermission(RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED)) {
 
-        if ((shouldShowRequestPermissionRationale(ACCESS_FINE_LOCATION)) || (shouldShowRequestPermissionRationale(ACCESS_COARSE_LOCATION)) || (shouldShowRequestPermissionRationale(CAMERA)) || (shouldShowRequestPermissionRationale(WRITE_EXTERNAL_STORAGE))  || (shouldShowRequestPermissionRationale(RECORD_AUDIO))) {
+            return true;
+
+        }
+
+        if ((shouldShowRequestPermissionRationale(ACCESS_FINE_LOCATION)) || (shouldShowRequestPermissionRationale(ACCESS_COARSE_LOCATION)) || (shouldShowRequestPermissionRationale(CAMERA)) || (shouldShowRequestPermissionRationale(WRITE_EXTERNAL_STORAGE)) || (shouldShowRequestPermissionRationale(RECORD_AUDIO))) {
 
             cargardialogo();
 
-        }
-        else {
+        } else {
 
             requestPermissions(new String[]{ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION, WRITE_EXTERNAL_STORAGE, CAMERA, RECORD_AUDIO}, 100);
 
@@ -388,7 +375,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
 
     }
 
-    private void cargardialogo(){
+    private void cargardialogo() {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
         builder.setTitle("Permisos Desactivados");
@@ -412,10 +399,9 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        if(requestCode == 100) {
+        if (requestCode == 100) {
 
-            if(grantResults.length == 5 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED && grantResults[2] == PackageManager.PERMISSION_GRANTED && grantResults[3] == PackageManager.PERMISSION_GRANTED  && grantResults[4] == PackageManager.PERMISSION_GRANTED) {
-
+            if (grantResults.length == 5 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED && grantResults[2] == PackageManager.PERMISSION_GRANTED && grantResults[3] == PackageManager.PERMISSION_GRANTED && grantResults[4] == PackageManager.PERMISSION_GRANTED) {
 
 
             } else {
@@ -428,7 +414,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
 
     }
 
-    private void cargardialogo2(){
+    private void cargardialogo2() {
 
         final CharSequence[] op = {"si", "no"};
         final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
@@ -437,16 +423,15 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-                if(op[which].equals("si")){
+                if (op[which].equals("si")) {
 
                     Intent intent = new Intent();
                     intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
                     Uri uri = Uri.fromParts("package", getPackageName(), null);
-                    intent .setData(uri);
+                    intent.setData(uri);
                     startActivity(intent);
 
-                }
-                else {
+                } else {
 
                     msj = Toast.makeText(MainActivity.this, "los permisos no fueron aceptados", Toast.LENGTH_LONG);
                     msj.show();
@@ -460,9 +445,9 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
 
     }
 
-    private void enviarFormularios(){
+    private void enviarFormularios() {
 
-        mProgressDialog =  new ProgressDialog(this);
+        mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setMessage("Cargando...");
         mProgressDialog.setCancelable(false);
         mProgressDialog.show();
@@ -515,7 +500,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
                             Log.w("mioerror", "" + error);
 
                         }
-                    }){
+                    }) {
 
                         @Override
                         public Map getHeaders() throws AuthFailureError {
@@ -541,7 +526,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
 
     }
 
-    public String readJsonFileAnswer (String path) {
+    public String readJsonFileAnswer(String path) {
 
         Log.w("ver", path);
 

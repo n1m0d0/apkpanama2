@@ -676,7 +676,7 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
 
                 /**********************/
 
-                if (fingerCapture.equals("")){
+                if (fingerCapture.equals("")) {
                     validar++;
                 } else {
                     try {
@@ -806,7 +806,7 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
                         byte[] abc = fingerPrintReader1.getHexTemplate();
                         String Temp = conversion.getHexString(abc);
                         Log.d(TAG, "Template" + Temp);
-                        
+
                         fingerCapture = Base64.encodeToString(abc, Base64.DEFAULT);
 
                     }

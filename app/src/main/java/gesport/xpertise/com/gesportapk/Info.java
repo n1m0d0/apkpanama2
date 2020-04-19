@@ -21,6 +21,7 @@ public class Info extends AppCompatActivity {
     String versionGes;
     String fullName;
     Intent ir;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,24 +39,28 @@ public class Info extends AppCompatActivity {
         }
         user.setText("Usuario: " + userName);
         version = findViewById(R.id.version);
-        version.setText("Version " +versionGes);
+        version.setText("Version " + versionGes);
     }
+
     public void logo(View v) {
         Uri uri = Uri.parse("https://www.portcolon2000.com/");
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         startActivity(intent);
     }
+
     public void gesport(View v) {
         Uri uri = Uri.parse("https://www.xpertise-pa.com/");
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         startActivity(intent);
     }
+
     public void privacidad(View v) {
         Uri uri = Uri.parse("https://www.portcolon2000.site/politica/politica_privacidad.pdf");
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         startActivity(intent);
     }
-    public void onBackPressed(){
+
+    public void onBackPressed() {
 
         ir = new Intent(this, events.class);
         ir.putExtra("auth", auth);

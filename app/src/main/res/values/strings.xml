@@ -23,6 +23,7 @@
     <string name="save">Guardar</string>
     <string name="events">Eventos</string>
     <string name="capture">Capturar</string>
+    <string name="exit">Salir</string>
 
     <string name="servidor">https://test.portcolon2000.site</string>
 </resources>

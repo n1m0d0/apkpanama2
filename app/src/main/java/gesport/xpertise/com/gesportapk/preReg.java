@@ -270,7 +270,7 @@ public class preReg extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         //super.onBackPressed();
-        ir = new Intent(preReg.this,events.class);
+        ir = new Intent(preReg.this, events.class);
         ir.putExtra("auth", auth);
         ir.putExtra("userName", userName);
         ir.putExtra("fullName", fullName);

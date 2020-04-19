@@ -7,6 +7,7 @@ public class obj_attributes {
     protected int w;
     protected int h;
     protected Bitmap image;
+
     public obj_attributes(int id, int w, int h, Bitmap image) {
         this.id = id;
         this.w = w;

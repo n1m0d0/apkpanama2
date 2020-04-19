@@ -3,24 +3,24 @@
     <!-- disable state. -->
     <item android:state_enabled="false">
         <shape android:shape="rectangle">
-            <corners android:radius="16dp"/>
-            <solid android:color="@color/colorButton1"/>
+            <corners android:radius="16dp" />
+            <solid android:color="@color/colorButton1" />
         </shape>
     </item>
 
     <!--released state. -->
     <item android:state_pressed="false">
         <shape android:shape="rectangle">
-            <corners android:radius="16dp"/>
-            <solid android:color="@color/colorButton2"/>
+            <corners android:radius="16dp" />
+            <solid android:color="@color/colorButton2" />
         </shape>
     </item>
 
     <!--pressed state. -->
     <item android:state_pressed="true">
         <shape android:shape="rectangle">
-            <corners android:radius="16dp"/>
-            <solid android:color="@color/colorButton3"/>
+            <corners android:radius="16dp" />
+            <solid android:color="@color/colorButton3" />
         </shape>
     </item>
 

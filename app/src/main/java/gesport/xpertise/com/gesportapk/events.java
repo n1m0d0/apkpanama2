@@ -100,7 +100,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
         fbAdd = findViewById(R.id.fbAdd);
         etSearch = findViewById(R.id.etSearch);
         etSearch.setBackgroundResource(R.drawable.customedittext);
-        etSearch.setPadding(30,20,30,20);
+        etSearch.setPadding(30, 20, 30, 20);
 
 
         Bundle parametros = this.getIntent().getExtras();
@@ -266,7 +266,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
                 ir.putExtra("fullName", fullName);
                 startActivity(ir);
                 finish();
-                return  true;
+                return true;
 
             default:
                 return super.onOptionsItemSelected(item);
@@ -766,7 +766,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
     }
 
     /***********/
-    public void probar (JSONObject respuesta, final String idBD) {
+    public void probar(JSONObject respuesta, final String idBD) {
         mJsonObjectRequest = new JsonObjectRequest(Request.Method.POST, direccion, respuesta, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -818,10 +818,11 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
 
         };
 
-        	mJsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(50000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        mJsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(50000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
         mRequestQueue.add(mJsonObjectRequest);
     }
+
     /***********/
 
 

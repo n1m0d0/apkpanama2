@@ -18,6 +18,6 @@
         android:horizontalSpacing="10dp"
         android:stretchMode="columnWidth"
         android:padding="@dimen/separation"
-        android:gravity="center"/>
+        android:gravity="center" />
 
 </LinearLayout>

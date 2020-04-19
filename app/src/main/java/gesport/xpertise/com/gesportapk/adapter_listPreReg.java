@@ -109,21 +109,21 @@ public class adapter_listPreReg extends BaseAdapter {
             ivImage.setImageBitmap(decodedImage);
         }*/
 
-        ShapeDrawable biggerCircle= new ShapeDrawable( new OvalShape());
-        biggerCircle.setIntrinsicHeight( 60 );
-        biggerCircle.setIntrinsicWidth( 60);
+        ShapeDrawable biggerCircle = new ShapeDrawable(new OvalShape());
+        biggerCircle.setIntrinsicHeight(60);
+        biggerCircle.setIntrinsicWidth(60);
         biggerCircle.setBounds(new Rect(0, 0, 60, 60));
         biggerCircle.getPaint().setColor(Color.parseColor(item.getListColor()));
-        biggerCircle.setPadding(15,15,15,15);
+        biggerCircle.setPadding(15, 15, 15, 15);
 
-        ShapeDrawable smallerCircle= new ShapeDrawable( new OvalShape());
-        smallerCircle.setIntrinsicHeight( 10 );
-        smallerCircle.setIntrinsicWidth( 10);
+        ShapeDrawable smallerCircle = new ShapeDrawable(new OvalShape());
+        smallerCircle.setIntrinsicHeight(10);
+        smallerCircle.setIntrinsicWidth(10);
         smallerCircle.setBounds(new Rect(0, 0, 10, 10));
         smallerCircle.getPaint().setColor(Color.WHITE);
 
-        smallerCircle.setPadding(5,5,5,5);
-        Drawable[] d = {smallerCircle,biggerCircle};
+        smallerCircle.setPadding(5, 5, 5, 5);
+        Drawable[] d = {smallerCircle, biggerCircle};
         LayerDrawable composite1 = new LayerDrawable(d);
         //ivImage.setPadding(100, 100, 100, 100);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {

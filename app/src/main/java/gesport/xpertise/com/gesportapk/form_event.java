@@ -80,6 +80,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 import com.nbsp.materialfilepicker.MaterialFilePicker;
 import com.nbsp.materialfilepicker.ui.FilePickerActivity;
 
@@ -759,6 +761,17 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                         dialogFinger();
                     }
 
+                    if (auth == 2) {
+
+                        JSONArray fingerContent = response.getJSONArray("ENTITY_AUTH");
+                        for (int j = 0; j < fingerContent.length(); j++) {
+                            JSONObject fpData = fingerContent.getJSONObject(j);
+                            auths.add(new obj_auth(fpData.getInt("IDAUTH"), fpData.getString("BINARYFP"), fpData.getString("DESCFP")));
+                            Log.w("fpData", fpData.toString());
+                        }
+                        dialogBarcode();
+                    }
+
                     JSONArray fields = response.getJSONArray("FIELDS");
 
                     for (int i = 0; i < fields.length(); i++) {
@@ -1399,7 +1412,6 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
     private void tomarFotografia() {
 
 
-
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
@@ -1502,7 +1514,14 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
             }
 
-
+            IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+            if(result != null){
+                if(result.getContents() != null) {
+                    Log.w("myqr", result.getContents());
+                } else {
+                    Log.w("fallaqr", "error al scanear");
+                }
+            }
 
         }
     }
@@ -2235,7 +2254,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
         );
 
-       alertDialog.show();
+        alertDialog.show();
     }
 
     //biometrico
@@ -2287,5 +2306,44 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
             }
         }
     };
+
+    public void dialogBarcode() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(form_event.this);
+
+        builder.setCancelable(false);
+
+        LayoutInflater inflater = form_event.this.getLayoutInflater();
+
+        View v = inflater.inflate(R.layout.qr, null);
+
+        builder.setView(v);
+
+        Button btnCapture = (Button) v.findViewById(R.id.btnCapture);
+        Button btnExit = (Button) v.findViewById(R.id.btnExit);
+
+        final AlertDialog alertDialog = builder.create();
+
+        btnCapture.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        new IntentIntegrator(form_event.this).initiateScan();
+                        alertDialog.dismiss();
+                    }
+                }
+        );
+
+        btnExit.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        finish();
+                    }
+                }
+
+        );
+
+        alertDialog.show();
+    }
 
 }

@@ -109,7 +109,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
     TextView tvRecording, tvPathRecording;
     ProgressDialog mProgressDialog;
     RequestQueue mRequestQueue;
-    JsonArrayRequest mJsonArrayRequest;
+    JsonObjectRequest mJsonArrayRequest;
 
     final int codigoCamera = 20;
     final int codigoFile = 10;
@@ -797,11 +797,11 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
 
         mRequestQueue = Volley.newRequestQueue(this);
 
-        mJsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
+        mJsonArrayRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @TargetApi(Build.VERSION_CODES.M)
             @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
             @Override
-            public void onResponse(JSONArray response) {
+            public void onResponse(JSONObject response) {
 
                 Log.w("respuesta", "" + response);
 
@@ -809,9 +809,20 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
 
                 try {
 
-                    for (int i = 0; i < response.length(); i++) {
+                    int auth = response.getInt("AUTH");
+                    if (auth == 1) {
 
-                        JSONObject form = response.getJSONObject(i);
+                    }
+
+                    if (auth == 2) {
+
+                    }
+
+                    JSONArray fields = response.getJSONArray("FIELDS");
+
+                    for (int i = 0; i < fields.length(); i++) {
+
+                        JSONObject form = fields.getJSONObject(i);
 
                         idField = form.getInt("IDFIELD");
                         String name = form.getString("NAME");

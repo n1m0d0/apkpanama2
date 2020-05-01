@@ -22,10 +22,10 @@
         android:title="Informacion" />
 
     <item
-        android:id="@+id/closeSession"
-        android:title="Cerrar sesion" />
-
-    <item
         android:id="@+id/preReg"
         android:title="Pre-Registro" />
+
+    <item
+        android:id="@+id/closeSession"
+        android:title="Cerrar sesion" />
 </menu>

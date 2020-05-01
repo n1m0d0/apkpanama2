@@ -756,7 +756,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                             auths.add(new obj_auth(fpData.getInt("IDAUTH"), fpData.getString("BINARYFP"), fpData.getString("DESCFP")));
                             Log.w("fpData", fpData.toString());
                         }
-                        dialogFinger().show();
+                        dialogFinger();
                     }
 
                     JSONArray fields = response.getJSONArray("FIELDS");
@@ -1768,7 +1768,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                             auths.add(new obj_auth(fpData.getInt("IDAUTH"), fpData.getString("BINARYFP"), fpData.getString("DESCFP")));
                             Log.w("fpData", fpData.toString());
                         }
-                        dialogFinger().show();
+                        dialogFinger();
                     }
 
                     JSONArray fields = response.getJSONArray("FIELDS");
@@ -2177,11 +2177,13 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
     }
 
-    private AlertDialog dialogFinger() {
+    private void dialogFinger() {
 
-        usbPermission();
+        //usbPermission();
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(form_event.this);
+
+        builder.setCancelable(false);
 
         LayoutInflater inflater = form_event.this.getLayoutInflater();
 
@@ -2193,12 +2195,14 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         Button btnExit = (Button) v.findViewById(R.id.btnExit);
         ivFinger = (ImageView) v.findViewById(R.id.ivFinger);
 
+        final AlertDialog alertDialog = builder.create();
+
         btnCapture.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         // Crear Cuenta...
-                        runOnUiThread(new Runnable() {
+                        /*runOnUiThread(new Runnable() {
 
                             @Override
                             public void run() {
@@ -2214,7 +2218,8 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                                 fingerCapture = Base64.encodeToString(abc, Base64.DEFAULT);
 
                             }
-                        });
+                        });*/
+                        alertDialog.dismiss();
                     }
                 }
         );
@@ -2230,7 +2235,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
         );
 
-        return builder.create();
+       alertDialog.show();
     }
 
     //biometrico

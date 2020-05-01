@@ -226,7 +226,7 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
 
         //biometrico
         conversion = new HexConversion();
-        usbPermission();
+        //usbPermission();
         //biometrico
 
         hand.removeCallbacks(actualizar);
@@ -610,74 +610,12 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
 
                 }
 
-                /*if (idAudio != 0) {
-
-                    tvPathRecording.setTextColor(Color.BLACK);
-                    String obs_respuesta = tvPathRecording.getText().toString().trim();
-                    String control = tvPathRecording.getHint().toString().trim();
-
-                    Log.w("controlTextViewFiles", control);
-
-                    if (obs_respuesta.equals(textAudio) && control.equals(obligatorio)) {
-
-                        validar++;
-                        Log.w("sumaTextViewFiles", "" + validar);
-
-                    }
-
-                    File file = new File(tvPathRecording.getText().toString().trim());
-
-                    int file_size = Integer.parseInt(String.valueOf(file.length() / 1024));
-
-                    Log.w("min", "" + file_size);
-
-                    if (file_size > 2000) {
-
-                        validar++;
-                        tvPathRecording.setTextColor(Color.RED);
-
-                    }
-
-                    String[] parts = tvPathRecording.getText().toString().trim().split("/");
-                    String nombre = parts[parts.length - 1];
-
-                    byte[] fileArray = new byte[(int) file.length()];
-                    InputStream inputStream;
-
-                    String encodedFile = "";
-                    try {
-                        inputStream = new FileInputStream(file);
-                        inputStream.read(fileArray);
-                        encodedFile = Base64.encodeToString(fileArray, Base64.DEFAULT);
-                    } catch (Exception e) {
-                        // Manejar Error
-                    }
-
-                    if (obs_respuesta.equals(textAudio)) {
-
-                        encodedFile = "";
-
-                    }
-
-                    try {
-                        JSONObject parametros = new JSONObject();
-                        parametros.put("idField", idAudio);
-                        parametros.put("valueInputField", nombre);
-                        parametros.put("valueInputDateField", "");
-                        parametros.put("valueListField", "");
-                        parametros.put("valueFile", encodedFile);
-                        respuesta.put(parametros);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                }*/
                 /****************************************/
 
                 /**********************/
 
                 if (fingerCapture.equals("")) {
-                    validar++;
+                    //validar++;
                 } else {
                     try {
                         JSONObject parametros = new JSONObject();
@@ -794,7 +732,7 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
         btnCapture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                runOnUiThread(new Runnable() {
+                /*runOnUiThread(new Runnable() {
 
                     @Override
                     public void run() {
@@ -810,7 +748,7 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
                         fingerCapture = Base64.encodeToString(abc, Base64.DEFAULT);
 
                     }
-                });
+                });*/
             }
         });
 

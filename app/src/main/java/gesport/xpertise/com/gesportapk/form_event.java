@@ -110,6 +110,8 @@ import java.util.regex.Pattern;
 import SecuGen.FDxSDKPro.JSGFPLib;
 import SecuGen.FDxSDKPro.SGAutoOnEventNotifier;
 import SecuGen.FDxSDKPro.SGFDxDeviceName;
+import SecuGen.FDxSDKPro.SGFDxErrorCode;
+import SecuGen.FDxSDKPro.SGFDxSecurityLevel;
 
 import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
@@ -634,6 +636,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                     jsonenvio.put("posGeo", mLocation);
                     jsonenvio.put("idForm", idForm);
                     jsonenvio.put("P", respuesta);
+                    jsonenvio.put("idAuth", idAuht);
 
                     //Log.w("json", "" + jsonenvio);
                 } catch (JSONException e) {
@@ -2244,7 +2247,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        // Crear Cuenta...
+                        //
                         /*runOnUiThread(new Runnable() {
 
                             @Override
@@ -2256,12 +2259,39 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
                                 byte[] abc = fingerPrintReader1.getHexTemplate();
                                 String Temp = conversion.getHexString(abc);
-                                Log.d(TAG, "Template" + Temp);
+                                Log.d(TAG, "Template1" + fingerPrintReader1.getHexTemplate());
 
                                 fingerCapture = Base64.encodeToString(abc, Base64.DEFAULT);
 
                             }
-                        });*/
+                        });
+
+
+
+                        for (Iterator iterator = auths.iterator(); iterator
+                                .hasNext(); ) {
+                            obj_auth auth = (obj_auth) iterator.next();
+                            Log.w("Template2", auth.getBinaryfp());
+                            //byte[] decodedBytes = Base64.decode(auth.getBinaryfp());
+
+                        }*/
+
+
+
+
+                        /*long sl = SGFDxSecurityLevel.SL_NORMAL; // Set security level as NORMAL
+                        boolean[] matched1 = new boolean[1];
+                        error = sgfplib.MatchTemplate(fingerPrintReader1.getHexTemplate(), fingerPrintReader2.getHexTemplate(), sl, matched1);
+
+                        if (error == SGFDxErrorCode.SGFDX_ERROR_NONE)
+                        {
+                            if (matched1[0]) {
+                                Toast.makeText(MainActivity.this, "Usuario Autorizado", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(MainActivity.this, "Usuario No Autorizado", Toast.LENGTH_SHORT).show();
+                            }
+                        }*/
+
                         alertDialog.dismiss();
                     }
                 }

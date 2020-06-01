@@ -226,7 +226,7 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
 
         //biometrico
         conversion = new HexConversion();
-        //usbPermission();
+        usbPermission();
         //biometrico
 
         hand.removeCallbacks(actualizar);
@@ -732,7 +732,7 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
         btnCapture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                /*runOnUiThread(new Runnable() {
+                runOnUiThread(new Runnable() {
 
                     @Override
                     public void run() {
@@ -748,7 +748,7 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
                         fingerCapture = Base64.encodeToString(abc, Base64.DEFAULT);
 
                     }
-                });*/
+                });
             }
         });
 

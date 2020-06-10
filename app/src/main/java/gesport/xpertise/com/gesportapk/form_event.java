@@ -241,7 +241,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         Log.w("fullname", fullName);
 
         conversion = new HexConversion();
-        //usbPermission();
+        usbPermission();
 
         hand.removeCallbacks(actualizar);
         hand.postDelayed(actualizar, 100);
@@ -907,6 +907,8 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                         }
 
                     }
+
+                    //dialogFinger();
 
                 } catch (JSONException e) {
 
@@ -1817,6 +1819,17 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                         dialogFinger();
                     }
 
+                    if (auth == 2) {
+
+                        JSONArray fingerContent = response.getJSONArray("ENTITY_AUTH");
+                        for (int j = 0; j < fingerContent.length(); j++) {
+                            JSONObject fpData = fingerContent.getJSONObject(j);
+                            auths.add(new obj_auth(fpData.getInt("IDAUTH"), fpData.getString("BINARYFP"), fpData.getString("DESCFP")));
+                            Log.w("fpData", fpData.toString());
+                        }
+                        dialogBarcode();
+                    }
+
                     JSONArray fields = response.getJSONArray("FIELDS");
 
                     for (int i = 0; i < fields.length(); i++) {
@@ -1945,6 +1958,8 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                         }
 
                     }
+
+                    //dialogFinger();
 
                 } catch (JSONException e) {
 
@@ -2225,7 +2240,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
     private void dialogFinger() {
 
-        //usbPermission();
+        usbPermission();
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(form_event.this);
 
@@ -2241,6 +2256,9 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         Button btnExit = (Button) v.findViewById(R.id.btnExit);
         ivFinger = (ImageView) v.findViewById(R.id.ivFinger);
 
+        fingerPrintReader1 = new FingerPrintReader(ivFinger,
+                sgfplib);
+
         final AlertDialog alertDialog = builder.create();
 
         btnCapture.setOnClickListener(
@@ -2248,7 +2266,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                     @Override
                     public void onClick(View v) {
                         //
-                        /*runOnUiThread(new Runnable() {
+                        runOnUiThread(new Runnable() {
 
                             @Override
                             public void run() {
@@ -2259,39 +2277,49 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
                                 byte[] abc = fingerPrintReader1.getHexTemplate();
                                 String Temp = conversion.getHexString(abc);
-                                Log.d(TAG, "Template1" + fingerPrintReader1.getHexTemplate());
+                                //Log.d(TAG, "Template" + Temp);
 
                                 fingerCapture = Base64.encodeToString(abc, Base64.DEFAULT);
-
+                                Log.d(TAG, "" + Temp);
                             }
                         });
 
-
+                        int control = 0;
 
                         for (Iterator iterator = auths.iterator(); iterator
                                 .hasNext(); ) {
                             obj_auth auth = (obj_auth) iterator.next();
-                            Log.w("Template2", auth.getBinaryfp());
-                            //byte[] decodedBytes = Base64.decode(auth.getBinaryfp());
+                            //Log.w("Template2", auth.getBinaryfp());
+                            String aux = auth.getBinaryfp();
+                            byte[] decodedBytes = Base64.decode(aux,0);
+                            String Temp = conversion.getHexString(decodedBytes);
+                            Log.w("Template2", "" + Temp);
 
-                        }*/
+                            long sl = SGFDxSecurityLevel.SL_NORMAL; // Set security level as NORMAL
+                            boolean[] matched1 = new boolean[1];
+                            error = sgfplib.MatchTemplate(fingerPrintReader1.getHexTemplate(), decodedBytes, sl, matched1);
 
-
-
-
-                        /*long sl = SGFDxSecurityLevel.SL_NORMAL; // Set security level as NORMAL
-                        boolean[] matched1 = new boolean[1];
-                        error = sgfplib.MatchTemplate(fingerPrintReader1.getHexTemplate(), fingerPrintReader2.getHexTemplate(), sl, matched1);
-
-                        if (error == SGFDxErrorCode.SGFDX_ERROR_NONE)
-                        {
-                            if (matched1[0]) {
-                                Toast.makeText(MainActivity.this, "Usuario Autorizado", Toast.LENGTH_SHORT).show();
-                            } else {
-                                Toast.makeText(MainActivity.this, "Usuario No Autorizado", Toast.LENGTH_SHORT).show();
+                            if (error == SGFDxErrorCode.SGFDX_ERROR_NONE)
+                            {
+                                if (matched1[0]) {
+                                    //Toast.makeText(form_event.this, "Usuario Autorizado", Toast.LENGTH_SHORT).show();
+                                    control = 0;
+                                    idAuht = auth.getIdauth();
+                                } else {
+                                    //Toast.makeText(form_event.this, "Usuario No Autorizado", Toast.LENGTH_SHORT).show();
+                                    control++;
+                                    idAuht = 0;
+                                    finish();
+                                }
                             }
-                        }*/
 
+                        }
+
+                        if (control > 0) {
+                            Toast.makeText(form_event.this, "Persona No Registrado", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(form_event.this, "Persona Registrado", Toast.LENGTH_SHORT).show();
+                        }
                         alertDialog.dismiss();
                     }
                 }
@@ -2326,14 +2354,14 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         sgfplib.GetUsbManager().requestPermission(usbDevice, mPermissionIntent);
         error = sgfplib.OpenDevice(0);
         SecuGen.FDxSDKPro.SGDeviceInfoParam deviceInfo = new SecuGen.FDxSDKPro.SGDeviceInfoParam();
-        // error = sgfplib.GetDeviceInfo(deviceInfo);
+        //error = sgfplib.GetDeviceInfo(deviceInfo);
 
-        fingerPrintReader1 = new FingerPrintReader(ivFinger,
-                sgfplib);
+        /*fingerPrintReader1 = new FingerPrintReader(ivFinger,
+                sgfplib);*/
     }
 
     // USB Device Attach Permission
-    private static final String ACTION_USB_PERMISSION = "com.android.example.USB_PERMISSION";
+    private static final String ACTION_USB_PERMISSION = "gesport.xpertise.com.gesportapk.USB_PERMISSION";
     private final BroadcastReceiver mUsbReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();

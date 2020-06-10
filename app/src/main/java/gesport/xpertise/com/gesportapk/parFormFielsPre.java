@@ -2365,14 +2365,14 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
         sgfplib.GetUsbManager().requestPermission(usbDevice, mPermissionIntent);
         error = sgfplib.OpenDevice(0);
         SecuGen.FDxSDKPro.SGDeviceInfoParam deviceInfo = new SecuGen.FDxSDKPro.SGDeviceInfoParam();
-        // error = sgfplib.GetDeviceInfo(deviceInfo);
+        //error = sgfplib.GetDeviceInfo(deviceInfo);
 
         fingerPrintReader1 = new FingerPrintReader(ivFinger,
                 sgfplib);
     }
 
     // USB Device Attach Permission
-    private static final String ACTION_USB_PERMISSION = "com.android.example.USB_PERMISSION";
+    private static final String ACTION_USB_PERMISSION = "gesport.xpertise.com.gesportapk.USB_PERMISSION";
     private final BroadcastReceiver mUsbReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();

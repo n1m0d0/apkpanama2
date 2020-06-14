@@ -1530,21 +1530,24 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                     myQR = result.getContents();
                     Log.w("myqr", result.getContents());
                     if (myQR != null) {
+                        obj_auth respuesta = null;
                         for (Iterator iterator = auths.iterator(); iterator
                                 .hasNext(); ) {
                             obj_auth auth = (obj_auth) iterator.next();
                             Log.w("llave", auth.getBinaryfp());
                             if (myQR.equals(auth.getBinaryfp())) {
                                 Log.w("estadoQR", "SI");
-                                idAuht = auth.getIdauth();
-                                creartextviewLink(auth.getDescfp(), auth.getUrlData());
+                                respuesta = auth;
                             } else {
                                 Log.w("estadoQR", "NO");
                             }
                         }
-                        if (idAuht == 0) {
+                        if (respuesta == null) {
                             finish();
                             Toast.makeText(form_event.this, "No se encontró ninguna coincidencia.", Toast.LENGTH_LONG).show();
+                        } else {
+                            idAuht = respuesta.getIdauth();
+                            creartextviewLink("" + respuesta.getDescfp(), "" + respuesta.getUrlData());
                         }
                     }
                 } else {

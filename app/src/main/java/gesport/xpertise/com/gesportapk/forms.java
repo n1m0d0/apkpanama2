@@ -1,20 +1,30 @@
 package gesport.xpertise.com.gesportapk;
 
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
+import android.hardware.usb.UsbDevice;
+import android.hardware.usb.UsbManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Environment;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -39,6 +49,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import SecuGen.FDxSDKPro.JSGFPLib;
+import SecuGen.FDxSDKPro.SGAutoOnEventNotifier;
+import SecuGen.FDxSDKPro.SGFDxDeviceName;
+
 public class forms extends AppCompatActivity implements Response.Listener<JSONArray>, Response.ErrorListener {
 
     //GridView gvForms;
@@ -61,6 +75,22 @@ public class forms extends AppCompatActivity implements Response.Listener<JSONAr
     int positionForm;
     int typeDependency;
     String fullName;
+
+    // biometrico
+    long error;
+
+    private boolean mLed;
+    private boolean mAutoOnEnabled;
+    private SGAutoOnEventNotifier autoOn;
+    HexConversion conversion;
+
+    private static final String TAG = "MIRZA";
+
+
+    private PendingIntent mPermissionIntent;
+    private IntentFilter filter;
+
+    private JSGFPLib sgfplib;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -351,5 +381,82 @@ public class forms extends AppCompatActivity implements Response.Listener<JSONAr
 
         return jsoneforms;
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.activacion, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.activarUSB:
+
+                try {
+
+                    usbPermission();
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    //biometrico
+    private void usbPermission() {
+        mPermissionIntent = PendingIntent.getBroadcast(this, 0, new Intent(
+                ACTION_USB_PERMISSION), 0);
+        filter = new IntentFilter(ACTION_USB_PERMISSION);
+        registerReceiver(mUsbReceiver, filter);
+        sgfplib = new JSGFPLib(
+                (UsbManager) getSystemService(Context.USB_SERVICE));
+        mLed = false;
+        mAutoOnEnabled = false;
+        error = sgfplib.Init(SGFDxDeviceName.SG_DEV_AUTO);
+        UsbDevice usbDevice = sgfplib.GetUsbDevice();
+        sgfplib.GetUsbManager().requestPermission(usbDevice, mPermissionIntent);
+        error = sgfplib.OpenDevice(0);
+        SecuGen.FDxSDKPro.SGDeviceInfoParam deviceInfo = new SecuGen.FDxSDKPro.SGDeviceInfoParam();
+        //error = sgfplib.GetDeviceInfo(deviceInfo);
+        Toast.makeText(forms.this, "USB ACTIVADO", Toast.LENGTH_SHORT).show();
+    }
+
+    // USB Device Attach Permission
+    private static final String ACTION_USB_PERMISSION = "gesport.xpertise.com.gesportapk.USB_PERMISSION";
+    private final BroadcastReceiver mUsbReceiver = new BroadcastReceiver() {
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (ACTION_USB_PERMISSION.equals(action)) {
+                synchronized (this) {
+                    UsbDevice device = (UsbDevice) intent
+                            .getParcelableExtra(UsbManager.EXTRA_DEVICE);
+                    if (intent.getBooleanExtra(
+                            UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
+                        if (device != null) {
+
+                            Log.d(TAG, "Vender DI" + device.getVendorId());
+
+                            Log.d(TAG, "Producat ID " + device.getProductId());
+
+                        } else
+                            Log.e(TAG,
+                                    "mUsbReceiver.onReceive() Device is null");
+                    } else
+                        Log.e(TAG,
+                                "mUsbReceiver.onReceive() permission denied for device "
+                                        + device);
+                }
+            }
+        }
+    };
 
 }

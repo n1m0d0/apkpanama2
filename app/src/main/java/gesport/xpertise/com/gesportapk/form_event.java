@@ -123,7 +123,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
     String auth;
     String userName;
     String idForm;
-    LinearLayout llContenedor, llRecording;
+    LinearLayout llContenedor, llRecording, llData;
     Button btnSave;
     ImageView ivRecording, ivPlaying;
     TextView tvRecording, tvPathRecording;
@@ -222,6 +222,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
         llContenedor = findViewById(R.id.llContenedor);
         llRecording = findViewById(R.id.llRecording);
+        llData = findViewById(R.id.llData);
         btnSave = findViewById(R.id.btnSave);
         ivRecording = findViewById(R.id.ivRecording);
         ivPlaying = findViewById(R.id.ivPlaying);
@@ -241,7 +242,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         Log.w("fullname", fullName);
 
         conversion = new HexConversion();
-        usbPermission();
+        //usbPermission();
 
         hand.removeCallbacks(actualizar);
         hand.postDelayed(actualizar, 100);
@@ -762,7 +763,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                         JSONArray fingerContent = response.getJSONArray("ENTITY_AUTH");
                         for (int j = 0; j < fingerContent.length(); j++) {
                             JSONObject fpData = fingerContent.getJSONObject(j);
-                            auths.add(new obj_auth(fpData.getInt("IDAUTH"), fpData.getString("BINARYFP"), fpData.getString("DESCFP")));
+                            auths.add(new obj_auth(fpData.getInt("IDAUTH"), fpData.getString("BINARYFP"), fpData.getString("DESCFP"), fpData.getString("URLDATA")));
                             Log.w("fpData", fpData.toString());
                         }
                         dialogFinger();
@@ -773,7 +774,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                         JSONArray fingerContent = response.getJSONArray("ENTITY_AUTH");
                         for (int j = 0; j < fingerContent.length(); j++) {
                             JSONObject fpData = fingerContent.getJSONObject(j);
-                            auths.add(new obj_auth(fpData.getInt("IDAUTH"), fpData.getString("BINARYFP"), fpData.getString("DESCFP")));
+                            auths.add(new obj_auth(fpData.getInt("IDAUTH"), fpData.getString("BINARYFP"), fpData.getString("DESCFP"), fpData.getString("URLDATA")));
                             Log.w("fpData", fpData.toString());
                         }
                         dialogBarcode();
@@ -1536,6 +1537,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                             if (myQR.equals(auth.getBinaryfp())) {
                                 Log.w("estadoQR", "SI");
                                 idAuht = auth.getIdauth();
+                                creartextviewLink(auth.getDescfp(), auth.getUrlData());
                             } else {
                                 Log.w("estadoQR", "NO");
                             }
@@ -1813,7 +1815,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                         JSONArray fingerContent = response.getJSONArray("ENTITY_AUTH");
                         for (int j = 0; j < fingerContent.length(); j++) {
                             JSONObject fpData = fingerContent.getJSONObject(j);
-                            auths.add(new obj_auth(fpData.getInt("IDAUTH"), fpData.getString("BINARYFP"), fpData.getString("DESCFP")));
+                            auths.add(new obj_auth(fpData.getInt("IDAUTH"), fpData.getString("BINARYFP"), fpData.getString("DESCFP"), fpData.getString("URLDATA")));
                             Log.w("fpData", fpData.toString());
                         }
                         dialogFinger();
@@ -1824,7 +1826,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                         JSONArray fingerContent = response.getJSONArray("ENTITY_AUTH");
                         for (int j = 0; j < fingerContent.length(); j++) {
                             JSONObject fpData = fingerContent.getJSONObject(j);
-                            auths.add(new obj_auth(fpData.getInt("IDAUTH"), fpData.getString("BINARYFP"), fpData.getString("DESCFP")));
+                            auths.add(new obj_auth(fpData.getInt("IDAUTH"), fpData.getString("BINARYFP"), fpData.getString("DESCFP"), fpData.getString("URLDATA")));
                             Log.w("fpData", fpData.toString());
                         }
                         dialogBarcode();
@@ -2240,7 +2242,12 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
     private void dialogFinger() {
 
-        usbPermission();
+        try {
+            usbPermission();
+        } catch (Exception e) {
+            Toast.makeText(form_event.this, "Revise la conexión del USB", Toast.LENGTH_SHORT).show();
+            finish();
+        }
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(form_event.this);
 
@@ -2252,7 +2259,6 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
         builder.setView(v);
 
-        Button btnCapture = (Button) v.findViewById(R.id.btnCapture);
         Button btnExit = (Button) v.findViewById(R.id.btnExit);
         ivFinger = (ImageView) v.findViewById(R.id.ivFinger);
 
@@ -2261,66 +2267,76 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
         final AlertDialog alertDialog = builder.create();
 
-        btnCapture.setOnClickListener(
+        ivFinger.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         //
-                        runOnUiThread(new Runnable() {
+                        try {
 
-                            @Override
-                            public void run() {
-                                // TODO Auto-generated method stub
-                                fingerPrintReader1.readFingerPrint();
-                                ivFinger.setImageBitmap(fingerPrintReader1
-                                        .toGrayscale(fingerPrintReader1.getFPBitMap()));
 
-                                byte[] abc = fingerPrintReader1.getHexTemplate();
-                                String Temp = conversion.getHexString(abc);
-                                //Log.d(TAG, "Template" + Temp);
+                            runOnUiThread(new Runnable() {
 
-                                fingerCapture = Base64.encodeToString(abc, Base64.DEFAULT);
-                                Log.d(TAG, "" + Temp);
-                            }
-                        });
+                                @Override
+                                public void run() {
+                                    // TODO Auto-generated method stub
+                                    fingerPrintReader1.readFingerPrint();
+                                    ivFinger.setImageBitmap(fingerPrintReader1
+                                            .toGrayscale(fingerPrintReader1.getFPBitMap()));
 
-                        int control = 0;
+                                    byte[] abc = fingerPrintReader1.getHexTemplate();
+                                    String Temp = conversion.getHexString(abc);
+                                    //Log.d(TAG, "Template" + Temp);
 
-                        for (Iterator iterator = auths.iterator(); iterator
-                                .hasNext(); ) {
-                            obj_auth auth = (obj_auth) iterator.next();
-                            //Log.w("Template2", auth.getBinaryfp());
-                            String aux = auth.getBinaryfp();
-                            byte[] decodedBytes = Base64.decode(aux,0);
-                            String Temp = conversion.getHexString(decodedBytes);
-                            Log.w("Template2", "" + Temp);
-
-                            long sl = SGFDxSecurityLevel.SL_NORMAL; // Set security level as NORMAL
-                            boolean[] matched1 = new boolean[1];
-                            error = sgfplib.MatchTemplate(fingerPrintReader1.getHexTemplate(), decodedBytes, sl, matched1);
-
-                            if (error == SGFDxErrorCode.SGFDX_ERROR_NONE)
-                            {
-                                if (matched1[0]) {
-                                    //Toast.makeText(form_event.this, "Usuario Autorizado", Toast.LENGTH_SHORT).show();
-                                    control = 0;
-                                    idAuht = auth.getIdauth();
-                                } else {
-                                    //Toast.makeText(form_event.this, "Usuario No Autorizado", Toast.LENGTH_SHORT).show();
-                                    control++;
-                                    idAuht = 0;
-                                    finish();
+                                    fingerCapture = Base64.encodeToString(abc, Base64.DEFAULT);
+                                    Log.d(TAG, "" + Temp);
                                 }
+                            });
+
+                            int control = 0;
+
+                            for (Iterator iterator = auths.iterator(); iterator
+                                    .hasNext(); ) {
+                                obj_auth auth = (obj_auth) iterator.next();
+                                //Log.w("Template2", auth.getBinaryfp());
+                                String aux = auth.getBinaryfp();
+                                byte[] decodedBytes = Base64.decode(aux, 0);
+                                String Temp = conversion.getHexString(decodedBytes);
+                                Log.w("Template2", "" + Temp);
+
+                                long sl = SGFDxSecurityLevel.SL_NORMAL; // Set security level as NORMAL
+                                boolean[] matched1 = new boolean[1];
+                                error = sgfplib.MatchTemplate(fingerPrintReader1.getHexTemplate(), decodedBytes, sl, matched1);
+
+                                if (error == SGFDxErrorCode.SGFDX_ERROR_NONE) {
+                                    if (matched1[0]) {
+                                        //Toast.makeText(form_event.this, "Usuario Autorizado", Toast.LENGTH_SHORT).show();
+                                        control = 0;
+                                        idAuht = auth.getIdauth();
+                                        Log.d("idAuth", "" + idAuht);
+                                        Log.d("descfp", "" + auth.getDescfp());
+                                        Log.d("urlData", "" + auth.getUrlData());
+                                        creartextviewLink("" + auth.getDescfp(), "" + auth.getUrlData());
+                                    } else {
+                                        //Toast.makeText(form_event.this, "Usuario No Autorizado", Toast.LENGTH_SHORT).show();
+                                        control++;
+                                        idAuht = 0;
+                                    }
+                                }
+
                             }
 
+                            if (control > 0) {
+                                Toast.makeText(form_event.this, "Persona No Registrado", Toast.LENGTH_SHORT).show();
+                                finish();
+                            } else {
+                                Toast.makeText(form_event.this, "Persona Registrado", Toast.LENGTH_SHORT).show();
+                            }
+                            alertDialog.dismiss();
+                        } catch (Exception e) {
+                            Toast.makeText(form_event.this, "Revise la conexión del USB", Toast.LENGTH_SHORT).show();
+                            finish();
                         }
-
-                        if (control > 0) {
-                            Toast.makeText(form_event.this, "Persona No Registrado", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(form_event.this, "Persona Registrado", Toast.LENGTH_SHORT).show();
-                        }
-                        alertDialog.dismiss();
                     }
                 }
         );
@@ -2400,12 +2416,12 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
         builder.setView(v);
 
-        Button btnCapture = (Button) v.findViewById(R.id.btnCapture);
         Button btnExit = (Button) v.findViewById(R.id.btnExit);
+        ImageView ivQR = v.findViewById(R.id.ivQR);
 
         final AlertDialog alertDialog = builder.create();
 
-        btnCapture.setOnClickListener(
+        ivQR.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -2427,6 +2443,31 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         );
 
         alertDialog.show();
+    }
+
+    // texto link
+    public void creartextviewLink(String texto, final String urlData) {
+        Log.d("miUrl", texto);
+        TextView tv;
+        tv = new TextView(this);
+        tv.setText(texto);
+        tv.setTextSize(14);
+        LinearLayout.LayoutParams lastTxtParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        lastTxtParams.setMargins(0, 0, 0, 0);
+        tv.setLayoutParams(lastTxtParams);
+        //tv.setTextColor(getResources().getColor(R.color.colorBlack));
+        tv.setTextAppearance(this, R.style.colorText);
+        llData.addView(tv);
+
+        tv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Uri uri = Uri.parse(urlData);
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent);
+            }
+        });
+
     }
 
 }

@@ -93,15 +93,6 @@
             </LinearLayout>
 
             <Button
-                android:id="@+id/btnCapture"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="35dp"
-                android:background="@drawable/custonbutton"
-                android:text="@string/capture"
-                android:textColor="@color/colorWhite" />
-
-            <Button
                 android:id="@+id/btnSave"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

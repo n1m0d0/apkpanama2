@@ -186,7 +186,6 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
 
     TextView tvFinger;
     ImageView ivFinger;
-    Button btnCapture;
     int idFinger;
     String fingerCapture = "";
 
@@ -216,7 +215,6 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
 
         tvFinger = findViewById(R.id.tvFinger);
         ivFinger = findViewById(R.id.ivFinger);
-        btnCapture = findViewById(R.id.btnCapture);
 
         Bundle parametros = this.getIntent().getExtras();
         auth = parametros.getString("auth");
@@ -226,7 +224,18 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
 
         //biometrico
         conversion = new HexConversion();
-        usbPermission();
+
+        try {
+            usbPermission();
+        } catch (Exception e) {
+            Toast.makeText(parFormFielsPre.this, "Revise la conexión del USB", Toast.LENGTH_SHORT).show();
+            ir = new Intent(parFormFielsPre.this, preReg.class);
+            ir.putExtra("auth", auth);
+            ir.putExtra("userName", userName);
+            ir.putExtra("fullName", fullName);
+            startActivity(ir);
+            finish();
+        }
         //biometrico
 
         hand.removeCallbacks(actualizar);
@@ -729,26 +738,36 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
             }
         });
 
-        btnCapture.setOnClickListener(new View.OnClickListener() {
+        ivFinger.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                runOnUiThread(new Runnable() {
+                try {
+                    runOnUiThread(new Runnable() {
 
-                    @Override
-                    public void run() {
-                        // TODO Auto-generated method stub
-                        fingerPrintReader1.readFingerPrint();
-                        ivFinger.setImageBitmap(fingerPrintReader1
-                                .toGrayscale(fingerPrintReader1.getFPBitMap()));
+                        @Override
+                        public void run() {
+                            // TODO Auto-generated method stub
+                            fingerPrintReader1.readFingerPrint();
+                            ivFinger.setImageBitmap(fingerPrintReader1
+                                    .toGrayscale(fingerPrintReader1.getFPBitMap()));
 
-                        byte[] abc = fingerPrintReader1.getHexTemplate();
-                        String Temp = conversion.getHexString(abc);
-                        Log.d(TAG, "Template" + Temp);
+                            byte[] abc = fingerPrintReader1.getHexTemplate();
+                            String Temp = conversion.getHexString(abc);
+                            Log.d(TAG, "Template" + Temp);
 
-                        fingerCapture = Base64.encodeToString(abc, Base64.DEFAULT);
+                            fingerCapture = Base64.encodeToString(abc, Base64.DEFAULT);
 
-                    }
-                });
+                        }
+                    });
+                } catch (Exception e) {
+                    Toast.makeText(parFormFielsPre.this, "Revise la conexión del USB", Toast.LENGTH_SHORT).show();
+                    ir = new Intent(parFormFielsPre.this, preReg.class);
+                    ir.putExtra("auth", auth);
+                    ir.putExtra("userName", userName);
+                    ir.putExtra("fullName", fullName);
+                    startActivity(ir);
+                    finish();
+                }
             }
         });
 

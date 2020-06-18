@@ -2252,31 +2252,31 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
             finish();
         }
 
-        final AlertDialog.Builder builder = new AlertDialog.Builder(form_event.this);
+        try {
 
-        builder.setCancelable(false);
 
-        LayoutInflater inflater = form_event.this.getLayoutInflater();
+            final AlertDialog.Builder builder = new AlertDialog.Builder(form_event.this);
 
-        View v = inflater.inflate(R.layout.finger, null);
+            builder.setCancelable(false);
 
-        builder.setView(v);
+            LayoutInflater inflater = form_event.this.getLayoutInflater();
 
-        Button btnExit = (Button) v.findViewById(R.id.btnExit);
-        ivFinger = (ImageView) v.findViewById(R.id.ivFinger);
+            View v = inflater.inflate(R.layout.finger, null);
 
-        fingerPrintReader1 = new FingerPrintReader(ivFinger,
-                sgfplib);
+            builder.setView(v);
 
-        final AlertDialog alertDialog = builder.create();
+            Button btnExit = (Button) v.findViewById(R.id.btnExit);
+            ivFinger = (ImageView) v.findViewById(R.id.ivFinger);
 
-        ivFinger.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        //
-                        try {
+            fingerPrintReader1 = new FingerPrintReader(ivFinger,
+                    sgfplib);
 
+            final AlertDialog alertDialog = builder.create();
+
+            ivFinger.setOnClickListener(
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
 
                             runOnUiThread(new Runnable() {
 
@@ -2336,26 +2336,28 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                                 Toast.makeText(form_event.this, "Persona Registrado", Toast.LENGTH_SHORT).show();
                             }
                             alertDialog.dismiss();
-                        } catch (Exception e) {
-                            Toast.makeText(form_event.this, "Revise la conexión del USB", Toast.LENGTH_SHORT).show();
+
+                        }
+                    }
+            );
+
+            btnExit.setOnClickListener(
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            // Loguear...
                             finish();
                         }
                     }
-                }
-        );
 
-        btnExit.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        // Loguear...
-                        finish();
-                    }
-                }
+            );
 
-        );
+            alertDialog.show();
 
-        alertDialog.show();
+        } catch (Exception e) {
+            Toast.makeText(form_event.this, "Revise la conexión del USB", Toast.LENGTH_SHORT).show();
+            finish();
+        }
     }
 
     //biometrico

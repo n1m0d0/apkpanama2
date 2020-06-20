@@ -24,7 +24,7 @@
         android:layout_marginLeft="@dimen/separation"
         android:layout_marginTop="@dimen/separation"
         android:layout_marginRight="@dimen/separation"
-        android:text="PRE-REGISTROS REGISTRADOS"
+        android:text="PRE-REGISTROS"
         android:textAppearance="@style/colorTitle" />
 
 

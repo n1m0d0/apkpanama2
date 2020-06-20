@@ -223,6 +223,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         llContenedor = findViewById(R.id.llContenedor);
         llRecording = findViewById(R.id.llRecording);
         llData = findViewById(R.id.llData);
+        llData.setVisibility(View.GONE);
         btnSave = findViewById(R.id.btnSave);
         ivRecording = findViewById(R.id.ivRecording);
         ivPlaying = findViewById(R.id.ivPlaying);
@@ -1547,6 +1548,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                             Toast.makeText(form_event.this, "No se encontró ninguna coincidencia.", Toast.LENGTH_LONG).show();
                         } else {
                             idAuht = respuesta.getIdauth();
+                            llData.setVisibility(View.VISIBLE);
                             creartextviewLink("" + respuesta.getDescfp(), "" + respuesta.getUrlData());
                         }
                     }
@@ -2296,8 +2298,6 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                                 }
                             });
 
-                            int control = 0;
-
                             for (Iterator iterator = auths.iterator(); iterator
                                     .hasNext(); ) {
                                 obj_auth auth = (obj_auth) iterator.next();
@@ -2313,26 +2313,20 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
                                 if (error == SGFDxErrorCode.SGFDX_ERROR_NONE) {
                                     if (matched1[0]) {
-                                        //Toast.makeText(form_event.this, "Usuario Autorizado", Toast.LENGTH_SHORT).show();
-                                        control = 0;
                                         idAuht = auth.getIdauth();
                                         Log.d("idAuth", "" + idAuht);
                                         Log.d("descfp", "" + auth.getDescfp());
                                         Log.d("urlData", "" + auth.getUrlData());
                                         creartextviewLink("" + auth.getDescfp(), "" + auth.getUrlData());
-                                    } else {
-                                        //Toast.makeText(form_event.this, "Usuario No Autorizado", Toast.LENGTH_SHORT).show();
-                                        control++;
-                                        idAuht = 0;
                                     }
                                 }
 
                             }
-
-                            if (control > 0) {
+                            if (idAuht == 0) {
                                 Toast.makeText(form_event.this, "Persona No Registrado", Toast.LENGTH_SHORT).show();
                                 finish();
                             } else {
+                                llData.setVisibility(View.VISIBLE);
                                 Toast.makeText(form_event.this, "Persona Registrado", Toast.LENGTH_SHORT).show();
                             }
                             alertDialog.dismiss();

@@ -2254,31 +2254,36 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
             finish();
         }
 
+
+        final AlertDialog.Builder builder = new AlertDialog.Builder(form_event.this);
+
+        builder.setCancelable(false);
+
+        LayoutInflater inflater = form_event.this.getLayoutInflater();
+
+        View v = inflater.inflate(R.layout.finger, null);
+
+        builder.setView(v);
+
+        Button btnExit = (Button) v.findViewById(R.id.btnExit);
+        ivFinger = (ImageView) v.findViewById(R.id.ivFinger);
+
         try {
-
-
-            final AlertDialog.Builder builder = new AlertDialog.Builder(form_event.this);
-
-            builder.setCancelable(false);
-
-            LayoutInflater inflater = form_event.this.getLayoutInflater();
-
-            View v = inflater.inflate(R.layout.finger, null);
-
-            builder.setView(v);
-
-            Button btnExit = (Button) v.findViewById(R.id.btnExit);
-            ivFinger = (ImageView) v.findViewById(R.id.ivFinger);
-
             fingerPrintReader1 = new FingerPrintReader(ivFinger,
                     sgfplib);
+        } catch (Exception e) {
+            Toast.makeText(form_event.this, "Revise la conexión del USB", Toast.LENGTH_SHORT).show();
+            finish();
+        }
 
-            final AlertDialog alertDialog = builder.create();
+        final AlertDialog alertDialog = builder.create();
 
-            ivFinger.setOnClickListener(
-                    new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
+        ivFinger.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        try {
 
                             runOnUiThread(new Runnable() {
 
@@ -2331,27 +2336,29 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                             }
                             alertDialog.dismiss();
 
-                        }
-                    }
-            );
-
-            btnExit.setOnClickListener(
-                    new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            // Loguear...
+                        } catch (Exception e) {
+                            Toast.makeText(form_event.this, "Revise la conexión del USB", Toast.LENGTH_SHORT).show();
                             finish();
                         }
+
                     }
+                }
+        );
 
-            );
+        btnExit.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // Loguear...
+                        finish();
+                    }
+                }
 
-            alertDialog.show();
+        );
 
-        } catch (Exception e) {
-            Toast.makeText(form_event.this, "Revise la conexión del USB", Toast.LENGTH_SHORT).show();
-            finish();
-        }
+        alertDialog.show();
+
+
     }
 
     //biometrico

@@ -2247,14 +2247,6 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
     private void dialogFinger() {
 
-        try {
-            usbPermission();
-        } catch (Exception e) {
-            Toast.makeText(form_event.this, "Revise la conexión del USB", Toast.LENGTH_SHORT).show();
-            finish();
-        }
-
-
         final AlertDialog.Builder builder = new AlertDialog.Builder(form_event.this);
 
         builder.setCancelable(false);
@@ -2269,8 +2261,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         ivFinger = (ImageView) v.findViewById(R.id.ivFinger);
 
         try {
-            fingerPrintReader1 = new FingerPrintReader(ivFinger,
-                    sgfplib);
+            usbPermission();
         } catch (Exception e) {
             Toast.makeText(form_event.this, "Revise la conexión del USB", Toast.LENGTH_SHORT).show();
             finish();
@@ -2378,8 +2369,8 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         SecuGen.FDxSDKPro.SGDeviceInfoParam deviceInfo = new SecuGen.FDxSDKPro.SGDeviceInfoParam();
         //error = sgfplib.GetDeviceInfo(deviceInfo);
 
-        /*fingerPrintReader1 = new FingerPrintReader(ivFinger,
-                sgfplib);*/
+        fingerPrintReader1 = new FingerPrintReader(ivFinger,
+                sgfplib);
     }
 
     // USB Device Attach Permission

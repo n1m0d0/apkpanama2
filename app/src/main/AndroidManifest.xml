@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="gesport.xpertise.com.gesportapk">
+    package="diggate.xpertise.com.diggateapk">
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -22,31 +22,31 @@
         android:icon="@drawable/perfecto"
         android:label="@string/app_name"
         android:largeHeap="true"
-        android:roundIcon="@drawable/perfecto"
+        android:roundIcon="@drawable/diggate"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".detailPre"></activity>
-        <activity android:name=".parFormFielsPre" />
-        <activity android:name=".listPreReg" />
-        <activity android:name=".preReg" />
-        <activity android:name=".MainActivity">
+        <activity android:name="diggate.xpertise.com.diggateapk.detailPre"></activity>
+        <activity android:name="diggate.xpertise.com.diggateapk.parFormFielsPre" />
+        <activity android:name="diggate.xpertise.com.diggateapk.listPreReg" />
+        <activity android:name="diggate.xpertise.com.diggateapk.preReg" />
+        <activity android:name="diggate.xpertise.com.diggateapk.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".forgotPassword" />
-        <activity android:name=".events" />
-        <activity android:name=".form_event" />
-        <activity android:name=".view_event" />
-        <activity android:name=".checkout" />
-        <activity android:name=".forms" />
-        <activity android:name=".Info" />
+        <activity android:name="diggate.xpertise.com.diggateapk.forgotPassword" />
+        <activity android:name="diggate.xpertise.com.diggateapk.events" />
+        <activity android:name="diggate.xpertise.com.diggateapk.form_event" />
+        <activity android:name="diggate.xpertise.com.diggateapk.view_event" />
+        <activity android:name="diggate.xpertise.com.diggateapk.checkout" />
+        <activity android:name="diggate.xpertise.com.diggateapk.forms" />
+        <activity android:name="diggate.xpertise.com.diggateapk.Info" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="gesport.xpertise.com.gesportapk.fileprovider"
+            android:authorities="diggate.xpertise.com.diggateapk.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data

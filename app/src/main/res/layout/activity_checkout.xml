@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:layout_height="match_parent"
     android:background="@color/colorBody"
-    tools:context="gesport.xpertise.com.gesportapk.form_event">
+    tools:context="diggate.xpertise.com.diggateapk.form_event">
 
     <ScrollView
         android:layout_width="match_parent"

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">GesPort</string>
+    <string name="app_name">DigGate</string>
     <string name="login">Login</string>
     <string name="send">Enviar</string>
     <string name="user">Usuario</string>

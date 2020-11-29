@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorBody"
     android:orientation="vertical"
-    tools:context="gesport.xpertise.com.gesportapk.form_event">
+    tools:context="diggate.xpertise.com.diggateapk.form_event">
 
     <LinearLayout
         android:id="@+id/llData"

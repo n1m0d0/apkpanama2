@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:padding="@dimen/separation"
     android:background="@color/colorBody"
-    tools:context="gesport.xpertise.com.gesportapk.forms">
+    tools:context="diggate.xpertise.com.diggateapk.forms">
 
     <GridView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/gvForms"

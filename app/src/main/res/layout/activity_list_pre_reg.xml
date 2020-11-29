@@ -8,7 +8,7 @@
     android:focusableInTouchMode="true"
     android:orientation="vertical"
     android:padding="1dp"
-    tools:context="gesport.xpertise.com.gesportapk.listPreReg">
+    tools:context="diggate.xpertise.com.diggateapk.listPreReg">
 
     <EditText
         android:id="@+id/etSearch"

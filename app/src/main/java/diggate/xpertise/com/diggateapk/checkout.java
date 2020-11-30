@@ -1558,7 +1558,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
             }
             // Continue only if the File was successfully created
             if (photoFile != null) {
-                Uri photoURI = FileProvider.getUriForFile(this, "gesport.xpertise.com.gesportapk.fileprovider", photoFile);
+                Uri photoURI = FileProvider.getUriForFile(this, "diggate.xpertise.com.digigateapk.fileprovider", photoFile);
                 //Uri photoURI = FileProvider.getUriForFile(getApplicationContext(), getPackageName() + ".fileprovider", photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePictureIntent, codigoCamera);

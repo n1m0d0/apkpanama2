@@ -1557,11 +1557,15 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
                 ex.printStackTrace();
             }
             // Continue only if the File was successfully created
-            if (photoFile != null) {
-                Uri photoURI = FileProvider.getUriForFile(this, "diggate.xpertise.com.diggateapk.fileprovider", photoFile);
-                //Uri photoURI = FileProvider.getUriForFile(getApplicationContext(), getPackageName() + ".fileprovider", photoFile);
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                startActivityForResult(takePictureIntent, codigoCamera);
+            try {
+                if (photoFile != null) {
+                    Uri photoURI = FileProvider.getUriForFile(this, "diggate.xpertise.com.diggateapk.fileprovider", photoFile);
+                    //Uri photoURI = FileProvider.getUriForFile(this, getApplicationContext().getPackageName() + ".fileprovider", photoFile);
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                    startActivityForResult(takePictureIntent, codigoCamera);
+                }
+            } catch (Exception error) {
+                error.printStackTrace();
             }
         }
 
@@ -1990,7 +1994,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
                 Log.w("option", "" + option[0]);
                 switch (option[0]) {
                     case 0:
-                        String carpeta = "geport";
+                        String carpeta = "DigGate";
                         File fileAudio = new File(Environment.getExternalStorageDirectory(), carpeta);
                         boolean isCreada = fileAudio.exists();
                         String nameAudio = "";
@@ -2058,7 +2062,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
     public String createAnswerJson(JSONObject jsonArray) {
 
         String path = null;
-        String carpeta = "geoport";
+        String carpeta = "DigGate";
         File fileJson = new File(Environment.getExternalStorageDirectory(), carpeta);
         boolean isCreada = fileJson.exists();
         String nombreJson = "";

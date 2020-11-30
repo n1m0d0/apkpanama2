@@ -1911,7 +1911,7 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
     public void cargarFormularioOffline() {
 
         try {
-            String formulario = readJsonFile("/storage/emulated/0/geoport/formPre" + idFromPreReg + ".json");
+            String formulario = readJsonFile("/storage/emulated/0/DigGate/formPre" + idFromPreReg + ".json");
             if (formulario == null) {
 
                 msj = Toast.makeText(this, "No hay datos para mostrar", Toast.LENGTH_LONG);
@@ -2124,7 +2124,7 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
     public void createJson(JSONArray jsonArray) {
 
         String path = null;
-        String carpeta = "geoport";
+        String carpeta = "DigGate";
         File fileJson = new File(Environment.getExternalStorageDirectory(), carpeta);
         boolean isCreada = fileJson.exists();
         String nombreJson = "";
@@ -2181,7 +2181,7 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
     public String createAnswerJson(JSONObject jsonArray) {
 
         String path = null;
-        String carpeta = "geoport";
+        String carpeta = "DigGate";
         File fileJson = new File(Environment.getExternalStorageDirectory(), carpeta);
         boolean isCreada = fileJson.exists();
         String nombreJson = "";
@@ -2272,7 +2272,7 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
                 Log.w("option", "" + option[0]);
                 switch (option[0]) {
                     case 0:
-                        String carpeta = "geport";
+                        String carpeta = "DigGate";
                         File fileAudio = new File(Environment.getExternalStorageDirectory(), carpeta);
                         boolean isCreada = fileAudio.exists();
                         String nameAudio = "";
@@ -2394,7 +2394,7 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
     }
 
     // USB Device Attach Permission
-    private static final String ACTION_USB_PERMISSION = "gesport.xpertise.com.gesportapk.USB_PERMISSION";
+    private static final String ACTION_USB_PERMISSION = "diggate.xpertise.com.diggateapk.USB_PERMISSION";
     private final BroadcastReceiver mUsbReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();

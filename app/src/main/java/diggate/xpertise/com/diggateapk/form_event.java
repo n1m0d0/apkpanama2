@@ -1793,7 +1793,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
     public void cargarFormularioOffline() {
 
         try {
-            String formulario = readJsonFile("/storage/emulated/0/geoport/form" + idForm + ".json");
+            String formulario = readJsonFile("/storage/emulated/0/DigGate/form" + idForm + ".json");
             if (formulario == null) {
 
                 msj = Toast.makeText(this, "No hay datos para mostrar", Toast.LENGTH_LONG);
@@ -2000,7 +2000,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
     public void createJson(JSONObject jsonArray) {
 
         String path = null;
-        String carpeta = "geoport";
+        String carpeta = "DigGate";
         File fileJson = new File(Environment.getExternalStorageDirectory(), carpeta);
         boolean isCreada = fileJson.exists();
         String nombreJson = "";
@@ -2057,7 +2057,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
     public String createAnswerJson(JSONObject jsonArray) {
 
         String path = null;
-        String carpeta = "geoport";
+        String carpeta = "DigGate";
         File fileJson = new File(Environment.getExternalStorageDirectory(), carpeta);
         boolean isCreada = fileJson.exists();
         String nombreJson = "";
@@ -2148,7 +2148,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                 Log.w("option", "" + option[0]);
                 switch (option[0]) {
                     case 0:
-                        String carpeta = "geport";
+                        String carpeta = "DigGate";
                         File fileAudio = new File(Environment.getExternalStorageDirectory(), carpeta);
                         boolean isCreada = fileAudio.exists();
                         String nameAudio = "";
@@ -2366,7 +2366,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
     }
 
     // USB Device Attach Permission
-    private static final String ACTION_USB_PERMISSION = "gesport.xpertise.com.gesportapk.USB_PERMISSION";
+    private static final String ACTION_USB_PERMISSION = "diggate.xpertise.com.diggateapk.USB_PERMISSION";
     private final BroadcastReceiver mUsbReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();

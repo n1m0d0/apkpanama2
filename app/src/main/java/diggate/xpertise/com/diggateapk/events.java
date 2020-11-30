@@ -440,7 +440,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
     public void cargarEventosOffline() {
 
         try {
-            String events = readJsonFile("/storage/emulated/0/geoport/events.json");
+            String events = readJsonFile("/storage/emulated/0/DigGate/events.json");
             if (events == null) {
 
                 msj = Toast.makeText(this, "No hay datos para mostrar", Toast.LENGTH_LONG);
@@ -571,7 +571,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
     public void createJson(JSONObject jsonArray) {
 
         String path = null;
-        String carpeta = "geoport";
+        String carpeta = "DigGate";
         File fileJson = new File(Environment.getExternalStorageDirectory(), carpeta);
         boolean isCreada = fileJson.exists();
         String nombreJson = "";

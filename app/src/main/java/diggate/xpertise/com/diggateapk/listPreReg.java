@@ -225,7 +225,7 @@ public class listPreReg extends AppCompatActivity {
     public void createJson(JSONObject jsonArray) {
 
         String path = null;
-        String carpeta = "geoport";
+        String carpeta = "DigGate";
         File fileJson = new File(Environment.getExternalStorageDirectory(), carpeta);
         boolean isCreada = fileJson.exists();
         String nombreJson = "";
@@ -282,7 +282,7 @@ public class listPreReg extends AppCompatActivity {
     public void listOffline() {
 
         try {
-            String PreReg = readJsonFile("/storage/emulated/0/geoport/listPreReg" + idFromPreReg + ".json");
+            String PreReg = readJsonFile("/storage/emulated/0/DigGate/listPreReg" + idFromPreReg + ".json");
             if (PreReg == null) {
 
                 msj = Toast.makeText(this, "No hay datos para mostrar", Toast.LENGTH_LONG);

@@ -254,7 +254,7 @@ public class forms extends AppCompatActivity implements Response.Listener<JSONAr
     public void cargarFormulariosOffline() {
 
         try {
-            String forms = readJsonFile("/storage/emulated/0/geoport/forms.json");
+            String forms = readJsonFile("/storage/emulated/0/DigGate/forms.json");
             if (forms == null) {
 
                 msj = Toast.makeText(this, "No hay datos para mostrar", Toast.LENGTH_LONG);
@@ -324,7 +324,7 @@ public class forms extends AppCompatActivity implements Response.Listener<JSONAr
     public void createJson(JSONArray jsonArray) {
 
         String path = null;
-        String carpeta = "geoport";
+        String carpeta = "DigGate";
         File fileJson = new File(Environment.getExternalStorageDirectory(), carpeta);
         boolean isCreada = fileJson.exists();
         String nombreJson = "";
@@ -427,7 +427,7 @@ public class forms extends AppCompatActivity implements Response.Listener<JSONAr
     }
 
     // USB Device Attach Permission
-    private static final String ACTION_USB_PERMISSION = "gesport.xpertise.com.gesportapk.USB_PERMISSION";
+    private static final String ACTION_USB_PERMISSION = "diggate.xpertise.com.diggatetapk.USB_PERMISSION";
     private final BroadcastReceiver mUsbReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();

@@ -399,12 +399,27 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
 
 
         } catch (JSONException e) {
+            try {
+                if(response.getInt("code") == 1) {
+                    try {
+                        cerrarSesion();
+                    } catch (Exception err) {
+                        err.printStackTrace();
+                    }
+                } else {
+                    msj = Toast.makeText(this, "No se tiene datos registrados", Toast.LENGTH_LONG);
+                    msj.show();
+                }
+            } catch (JSONException jsonException) {
+                jsonException.printStackTrace();
+            }
             e.printStackTrace();
-            msj = Toast.makeText(this, "No se tiene datos registrados", Toast.LENGTH_LONG);
-            msj.show();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+
 
     }
 

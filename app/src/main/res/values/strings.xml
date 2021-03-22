@@ -24,6 +24,8 @@
     <string name="events">Eventos</string>
     <string name="capture">Capturar</string>
     <string name="exit">Salir</string>
+    <string name="addoptions">Agregar Opciones</string>
+    <string name="name">Nombre</string>
 
-    <string name="servidor">https://test.portcolon2000.site</string>
+    <string name="servidor">https://testdg.xpertise-pa.com</string>
 </resources>

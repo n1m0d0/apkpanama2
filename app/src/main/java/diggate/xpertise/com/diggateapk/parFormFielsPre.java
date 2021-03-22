@@ -45,9 +45,11 @@ import android.text.method.ScrollingMovementMethod;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
@@ -821,7 +823,7 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
                         //int reg_end = form.getInt("REG_END");
                         String is_mandatory = form.getString("isMandatory");
                         //int is_keybaule = form.getInt("IS_KEYVALUE");
-
+                        int idValue_other =form.getInt("IDVALUE_OTHER");
 
                         JSONArray opciones = form.getJSONArray("P");
 
@@ -899,7 +901,8 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
                             case 8:
 
                                 creartextview(description);
-                                createSpinner(idField, itemp, input_max);
+                                //createSpinner(idField, itemp, input_max);
+                                createSpinner2(idField, itemp, input_max,idValue_other);
 
                                 break;
 
@@ -1944,7 +1947,7 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
                         int reg_end = form.getInt("REG_END");
                         String is_mandatory = form.getString("IS_MANDATORY");
                         int is_keybaule = form.getInt("IS_KEYVALUE");
-
+                        int idValue_other =form.getInt("IDVALUE_OTHER");
 
                         JSONArray opciones = form.getJSONArray("P");
 
@@ -2022,7 +2025,8 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
                             case 8:
 
                                 creartextview(description);
-                                createSpinner(idField, itemp, input_max);
+                                //createSpinner(idField, itemp, input_max);
+                                createSpinner2(idField, itemp, input_max,idValue_other);
 
                                 break;
 
@@ -2421,5 +2425,85 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
             }
         }
     };
+
+    // dialogo de crear opcion spinner
+    public void createSpinner2(int idField, final ArrayList<obj_params> aux, int idParametro, final int idValue) {
+
+        final Spinner sp = new Spinner(this);
+        sp.setId(idField);
+        adapter_params adapter = new adapter_params(parFormFielsPre.this, aux);
+        sp.setAdapter(adapter);
+        spinners.add(sp);
+        llContenedor.addView(sp);
+        int posicion = 0;
+        for (int i = 0; i < sp.getCount(); i++) {
+
+            obj_params elegido = (obj_params) sp.getItemAtPosition(i);
+            if (elegido.getId() == idParametro) {
+                posicion = i;
+            }
+        }
+        sp.setSelection(posicion);
+        final int other = aux.size() - 1;
+        sp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Log.w("posicion", position + "");
+                if(idValue > 0 && position == other) {
+                    dialogInsertOption(sp, aux, idValue);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+    public void dialogInsertOption(final Spinner spinner, final ArrayList<obj_params> options, final int idValue) {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(parFormFielsPre.this);
+
+        builder.setCancelable(false);
+
+        LayoutInflater inflater = parFormFielsPre.this.getLayoutInflater();
+
+        View v = inflater.inflate(R.layout.spinner_options, null);
+
+        builder.setView(v);
+
+        final EditText etName = (EditText) v.findViewById(R.id.etName);
+        Button btnSave = (Button) v.findViewById(R.id.btnSave);
+        Button btnExit = (Button) v.findViewById(R.id.btnExit);
+
+        final AlertDialog alertDialog = builder.create();
+
+
+        btnSave.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (etName.getText().toString().trim().equals("")) {
+                            Toast.makeText(parFormFielsPre.this, "Debe ingresar un nombre", Toast.LENGTH_SHORT).show();
+                        } else {
+                            options.add(new obj_params(idValue, etName.getText().toString().trim()));
+                            adapter_params adapter = new adapter_params(parFormFielsPre.this, options);
+                            spinner.setAdapter(adapter);
+                            spinner.setSelection(spinner.getCount()-1);
+                            alertDialog.cancel();
+                        }
+                    }
+                }
+
+        );
+
+        btnExit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.cancel();
+            }
+        });
+
+        alertDialog.show();
+    }
 
 }

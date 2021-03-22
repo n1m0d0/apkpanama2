@@ -49,6 +49,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
@@ -794,7 +795,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                         int reg_end = form.getInt("REG_END");
                         String is_mandatory = form.getString("IS_MANDATORY");
                         int is_keybaule = form.getInt("IS_KEYVALUE");
-
+                        int idValue_other = form.getInt("IDVALUE_OTHER");
 
                         JSONArray opciones = form.getJSONArray("P");
 
@@ -872,7 +873,8 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                             case 8:
 
                                 creartextview(description);
-                                createSpinner(idField, itemp, input_max);
+                                //createSpinner(idField, itemp, input_max);
+                                createSpinner2(idField, itemp, input_max,idValue_other);
 
                                 break;
 
@@ -1850,7 +1852,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                         int reg_end = form.getInt("REG_END");
                         String is_mandatory = form.getString("IS_MANDATORY");
                         int is_keybaule = form.getInt("IS_KEYVALUE");
-
+                        int idValue_other =form.getInt("IDVALUE_OTHER");
 
                         JSONArray opciones = form.getJSONArray("P");
 
@@ -1928,7 +1930,8 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                             case 8:
 
                                 creartextview(description);
-                                createSpinner(idField, itemp, input_max);
+                                //createSpinner(idField, itemp, input_max);
+                                createSpinner2(idField, itemp, input_max,idValue_other);
 
                                 break;
 
@@ -2437,9 +2440,34 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
     // texto link
     public void creartextviewLink(String texto, final String urlData) {
         Log.d("miUrl", texto);
+        /**cambio**/
+        String[] info = texto.split("\\$");
+        TextView tv0;
+        tv0 = new TextView(this);
+        tv0.setText(info[0]);
+        tv0.setTextAppearance(this, R.style.colorTitle);
+        llData.addView(tv0);
+        for (int i = 1; i < info.length; i++) {
+            String[] part = info[i].split("!");
+            TextView tv;
+            tv = new TextView(this);
+            tv.setText(part[0]);
+            tv.setTextAppearance(this, R.style.colorTitle);
+            llData.addView(tv);
+            TextView tv2;
+            tv2 = new TextView(this);
+            tv2.setText(part[1]);
+            tv2.setTextSize(14);
+            LinearLayout.LayoutParams lastTxtParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            lastTxtParams.setMargins(0, 30, 0, 0);
+            tv2.setLayoutParams(lastTxtParams);
+            //tv.setTextColor(getResources().getColor(R.color.colorBlack));
+            tv2.setTextAppearance(this, R.style.boldreg);
+            llData.addView(tv2);
+        }
         TextView tv;
         tv = new TextView(this);
-        tv.setText(texto);
+        tv.setText("ver más...");
         tv.setTextSize(14);
         LinearLayout.LayoutParams lastTxtParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         lastTxtParams.setMargins(0, 0, 0, 0);
@@ -2447,6 +2475,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         //tv.setTextColor(getResources().getColor(R.color.colorBlack));
         tv.setTextAppearance(this, R.style.colorText);
         llData.addView(tv);
+        /****/
 
         tv.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -2457,6 +2486,86 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
             }
         });
 
+    }
+
+    // dialogo de crear opcion spinner
+    public void createSpinner2(int idField, final ArrayList<obj_params> aux, int idParametro, final int idValue) {
+
+        final Spinner sp = new Spinner(this);
+        sp.setId(idField);
+        adapter_params adapter = new adapter_params(form_event.this, aux);
+        sp.setAdapter(adapter);
+        spinners.add(sp);
+        llContenedor.addView(sp);
+        int posicion = 0;
+        for (int i = 0; i < sp.getCount(); i++) {
+
+            obj_params elegido = (obj_params) sp.getItemAtPosition(i);
+            if (elegido.getId() == idParametro) {
+                posicion = i;
+            }
+        }
+        sp.setSelection(posicion);
+        final int other = aux.size() - 1;
+        sp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Log.w("posicion", position + "");
+                if(idValue > 0 && position == other) {
+                    dialogInsertOption(sp, aux, idValue);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+    public void dialogInsertOption(final Spinner spinner, final ArrayList<obj_params> options, final int idValue) {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(form_event.this);
+
+        builder.setCancelable(false);
+
+        LayoutInflater inflater = form_event.this.getLayoutInflater();
+
+        View v = inflater.inflate(R.layout.spinner_options, null);
+
+        builder.setView(v);
+
+        final EditText etName = (EditText) v.findViewById(R.id.etName);
+        Button btnSave = (Button) v.findViewById(R.id.btnSave);
+        Button btnExit = (Button) v.findViewById(R.id.btnExit);
+
+        final AlertDialog alertDialog = builder.create();
+
+
+        btnSave.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (etName.getText().toString().trim().equals("")) {
+                            Toast.makeText(form_event.this, "Debe ingresar un nombre", Toast.LENGTH_SHORT).show();
+                        } else {
+                            options.add(new obj_params(idValue, etName.getText().toString().trim()));
+                            adapter_params adapter = new adapter_params(form_event.this, options);
+                            spinner.setAdapter(adapter);
+                            spinner.setSelection(spinner.getCount()-1);
+                            alertDialog.cancel();
+                        }
+                    }
+                }
+
+        );
+
+        btnExit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.cancel();
+            }
+        });
+
+        alertDialog.show();
     }
 
 }

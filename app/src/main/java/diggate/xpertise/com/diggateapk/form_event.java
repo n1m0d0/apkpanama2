@@ -1551,7 +1551,10 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                     finish();
                 }
             }
-
+        } else {
+            if (auths.size() > 0) {
+                dialogBarcode();
+            }
         }
     }
 
@@ -2561,6 +2564,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         btnExit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                spinner.setSelection(0);
                 alertDialog.cancel();
             }
         });

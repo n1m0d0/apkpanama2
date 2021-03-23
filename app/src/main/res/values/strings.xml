@@ -24,8 +24,10 @@
     <string name="events">Eventos</string>
     <string name="capture">Capturar</string>
     <string name="exit">Salir</string>
-    <string name="addoptions">Agregar Opciones</string>
-    <string name="name">Nombre</string>
+    <string name="addoptions">AGREGAR OPCIONES</string>
+    <string name="newValue">Nuevo valor</string>
+    <string name="accept">Aceptar</string>
+    <string name="cancel">Cancelar</string>
 
     <string name="servidor">https://testdg.xpertise-pa.com</string>
 </resources>

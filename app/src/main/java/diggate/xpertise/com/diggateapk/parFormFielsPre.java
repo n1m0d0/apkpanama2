@@ -2499,6 +2499,7 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
         btnExit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                spinner.setSelection(0);
                 alertDialog.cancel();
             }
         });

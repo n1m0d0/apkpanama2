@@ -3,44 +3,62 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorBody"
-    android:padding="@dimen/separation"
     android:orientation="vertical">
 
-    <TextView
-        style="@style/colorTitle"
-        android:text="@string/addoptions"
-        android:gravity="center"
+    <LinearLayout
+        android:background="@color/colorBodyEditText"
+        android:orientation="vertical"
+        android:padding="@dimen/title"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content">
 
-    <TextView
-        style="@style/colorText"
-        android:text="@string/name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        <TextView
+            style="@style/colorTitle"
+            android:text="@string/addoptions"
+            android:textColor="@color/colorBody"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
-    <EditText
-        android:id="@+id/etName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+    </LinearLayout>
 
-    <Button
-        android:id="@+id/btnSave"
+    <LinearLayout
+        android:orientation="vertical"
+        android:padding="@dimen/separation"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="35dp"
-        android:background="@drawable/custonbutton"
-        android:text="@string/save"
-        android:textColor="@color/colorWhite" />
+        android:layout_height="wrap_content">
 
-    <Button
-        android:id="@+id/btnExit"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="35dp"
-        android:background="@drawable/custonbutton"
-        android:text="@string/exit"
-        android:textColor="@color/colorWhite" />
+        <TextView
+            style="@style/colorText"
+            android:text="@string/newValue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <EditText
+            android:id="@+id/etName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/btnSave"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="35dp"
+            android:background="@drawable/custonbutton"
+            android:text="@string/accept"
+            android:textColor="@color/colorWhite" />
+
+        <Button
+            android:id="@+id/btnExit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="35dp"
+            android:background="@drawable/custonbutton"
+            android:text="@string/cancel"
+            android:textColor="@color/colorWhite" />
+
+    </LinearLayout>
+
 
 
 

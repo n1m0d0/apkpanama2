@@ -2472,8 +2472,8 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
         builder.setView(v);
 
         final EditText etName = (EditText) v.findViewById(R.id.etName);
-        Button btnSave = (Button) v.findViewById(R.id.btnSave);
-        Button btnExit = (Button) v.findViewById(R.id.btnExit);
+        TextView btnSave = (TextView) v.findViewById(R.id.btnSave);
+        TextView btnExit = (TextView) v.findViewById(R.id.btnExit);
 
         final AlertDialog alertDialog = builder.create();
 

@@ -39,27 +39,30 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <Button
-            android:id="@+id/btnSave"
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="35dp"
-            android:background="@drawable/custonbutton"
-            android:text="@string/accept"
-            android:textColor="@color/colorWhite" />
+            android:gravity="center|right" >
 
-        <Button
-            android:id="@+id/btnExit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="35dp"
-            android:background="@drawable/custonbutton"
-            android:text="@string/cancel"
-            android:textColor="@color/colorWhite" />
+            <TextView
+                android:id="@+id/btnSave"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/separation"
+                android:text="@string/accept"
+                android:textColor="@color/colorBodyEditText" />
+
+            <TextView
+                android:id="@+id/btnExit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/separation"
+                android:text="@string/cancel"
+                android:textColor="@color/colorBodyEditText" />
+
+        </LinearLayout>
 
     </LinearLayout>
-
-
-
 
 </LinearLayout>

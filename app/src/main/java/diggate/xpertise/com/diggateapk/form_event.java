@@ -389,18 +389,34 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
                     Log.w("Spinner", "spinner: " + spinner.getId() + " posicion: " + position + " " + elegido.getId());
 
-                    try {
-                        JSONObject parametros = new JSONObject();
-                        parametros.put("idField", spinner.getId());
-                        parametros.put("valueInputField", "");
-                        parametros.put("valueInputDateField", "");
-                        parametros.put("valueListField", elegido.getId());
-                        parametros.put("valueFile", "");
-                        respuesta.put(parametros);
+                    if (elegido.control == 0) {
+                        try {
+                            JSONObject parametros = new JSONObject();
+                            parametros.put("idField", spinner.getId());
+                            parametros.put("valueInputField", "");
+                            parametros.put("valueInputDateField", "");
+                            parametros.put("valueListField", elegido.getId());
+                            parametros.put("valueFile", "");
+                            respuesta.put(parametros);
 
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        try {
+                            JSONObject parametros = new JSONObject();
+                            parametros.put("idField", spinner.getId());
+                            parametros.put("valueInputField", elegido.getDescription());
+                            parametros.put("valueInputDateField", "");
+                            parametros.put("valueListField", -1);
+                            parametros.put("valueFile", "");
+                            respuesta.put(parametros);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
+
 
                 }
 
@@ -811,7 +827,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
                             listopcion[j] = des;
 
-                            itemp.add(new obj_params(valor, des));
+                            itemp.add(new obj_params(valor, des, 0));
 
                             Log.w("Description opcion", listopcion[j]);
 
@@ -1871,7 +1887,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
                             listopcion[j] = des;
 
-                            itemp.add(new obj_params(valor, des));
+                            itemp.add(new obj_params(valor, des, 0));
 
                             Log.w("Description opcion", listopcion[j]);
 
@@ -2550,7 +2566,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                         if (etName.getText().toString().trim().equals("")) {
                             Toast.makeText(form_event.this, "Debe ingresar un nombre", Toast.LENGTH_SHORT).show();
                         } else {
-                            options.add(new obj_params(idValue, etName.getText().toString().trim()));
+                            options.add(new obj_params(idValue, etName.getText().toString().trim(), 1));
                             adapter_params adapter = new adapter_params(form_event.this, options);
                             spinner.setAdapter(adapter);
                             spinner.setSelection(spinner.getCount()-1);

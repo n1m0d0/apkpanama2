@@ -393,7 +393,7 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
 
                     Log.w("Spinner", "spinner: " + spinner.getId() + " posicion: " + position + " " + elegido.getId());
 
-                    try {
+                    /*try {
                         JSONObject parametros = new JSONObject();
                         parametros.put("idField", spinner.getId());
                         parametros.put("valueInputField", "");
@@ -404,6 +404,33 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
 
                     } catch (JSONException e) {
                         e.printStackTrace();
+                    }*/
+                    if (elegido.control == 0) {
+                        try {
+                            JSONObject parametros = new JSONObject();
+                            parametros.put("idField", spinner.getId());
+                            parametros.put("valueInputField", "");
+                            parametros.put("valueInputDateField", "");
+                            parametros.put("valueListField", elegido.getId());
+                            parametros.put("valueFile", "");
+                            respuesta.put(parametros);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        try {
+                            JSONObject parametros = new JSONObject();
+                            parametros.put("idField", spinner.getId());
+                            parametros.put("valueInputField", elegido.getDescription());
+                            parametros.put("valueInputDateField", "");
+                            parametros.put("valueListField", -1);
+                            parametros.put("valueFile", "");
+                            respuesta.put(parametros);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
 
                 }
@@ -839,7 +866,7 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
 
                             listopcion[j] = des;
 
-                            itemp.add(new obj_params(valor, des));
+                            itemp.add(new obj_params(valor, des, 0));
 
                             Log.w("Description opcion", listopcion[j]);
 
@@ -1963,7 +1990,7 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
 
                             listopcion[j] = des;
 
-                            itemp.add(new obj_params(valor, des));
+                            itemp.add(new obj_params(valor, des, 0));
 
                             Log.w("Description opcion", listopcion[j]);
 
@@ -2485,7 +2512,7 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
                         if (etName.getText().toString().trim().equals("")) {
                             Toast.makeText(parFormFielsPre.this, "Debe ingresar un nombre", Toast.LENGTH_SHORT).show();
                         } else {
-                            options.add(new obj_params(idValue, etName.getText().toString().trim()));
+                            options.add(new obj_params(idValue, etName.getText().toString().trim(), 1));
                             adapter_params adapter = new adapter_params(parFormFielsPre.this, options);
                             spinner.setAdapter(adapter);
                             spinner.setSelection(spinner.getCount()-1);

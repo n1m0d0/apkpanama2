@@ -40,7 +40,7 @@
             android:divider="@android:color/transparent"
             android:dividerHeight="10.0sp" />
 
-        <android.support.design.widget.FloatingActionButton
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fabAdd"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

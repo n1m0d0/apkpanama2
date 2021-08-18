@@ -45,7 +45,7 @@
         <activity android:name="diggate.xpertise.com.diggateapk.Info" />
 
         <provider
-            android:name="android.support.v4.content.FileProvider"
+            android:name="androidx.core.content.FileProvider"
             android:authorities="diggate.xpertise.com.diggateapk.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">

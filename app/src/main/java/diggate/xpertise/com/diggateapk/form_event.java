@@ -33,11 +33,11 @@ import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.FileProvider;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
+import androidx.core.app.ActivityCompat;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.InputType;
@@ -1263,7 +1263,19 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                 /*msj = Toast.makeText(form_event.this, "" + response, Toast.LENGTH_LONG);
                 msj.show();*/
                 mProgressDialog.dismiss();
-                finish();
+                try {
+                    if (response.getInt("generateReceipt") == 1)
+                    {
+                        Uri uri = Uri.parse(response.getString("urlReceipt"));
+                        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        finish();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
 
             }
 

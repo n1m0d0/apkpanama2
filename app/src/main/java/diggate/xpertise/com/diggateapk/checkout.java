@@ -29,11 +29,11 @@ import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.FileProvider;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.FileProvider;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.InputType;
@@ -1340,13 +1340,36 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
                 Log.w("mio", "" + response);
                 /*msj = Toast.makeText(checkout.this, "" + response, Toast.LENGTH_LONG);
                 msj.show();*/
-                ir = new Intent(checkout.this, events.class);
+                mProgressDialog.dismiss();
+                try {
+                    if (response.getInt("generateReceipt") == 1)
+                    {
+                        ir = new Intent(checkout.this, events.class);
+                        ir.putExtra("auth", auth);
+                        ir.putExtra("userName", userName);
+                        ir.putExtra("fullName", fullName);
+                        startActivity(ir);
+                        Uri uri = Uri.parse(response.getString("urlReceipt"));
+                        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        ir.putExtra("auth", auth);
+                        ir.putExtra("userName", userName);
+                        ir.putExtra("fullName", fullName);
+                        startActivity(ir);
+                        finish();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                /*ir = new Intent(checkout.this, events.class);
                 ir.putExtra("auth", auth);
                 ir.putExtra("userName", userName);
                 ir.putExtra("fullName", fullName);
                 startActivity(ir);
                 mProgressDialog.dismiss();
-                finish();
+                finish();*/
 
             }
 

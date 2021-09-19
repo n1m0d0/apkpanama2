@@ -28,6 +28,7 @@
     <string name="newValue">Nuevo valor</string>
     <string name="accept">Aceptar</string>
     <string name="cancel">Cancelar</string>
+    <string name="filters">Filtros</string>
 
     <string name="servidor">https://testdg.xpertise-pa.com</string>
 </resources>

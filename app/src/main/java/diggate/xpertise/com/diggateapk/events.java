@@ -1,5 +1,6 @@
 package diggate.xpertise.com.diggateapk;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -9,19 +10,32 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Environment;
 import android.os.Handler;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputFilter;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +47,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.zxing.integration.android.IntentIntegrator;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -84,6 +99,9 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
     String listText = "SUCESOS REGISTRADOS";
     String fullName;
 
+    JSONArray filtros;
+    ArrayList<Spinner> spinners = new ArrayList<Spinner>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -91,7 +109,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
         setContentView(R.layout.activity_events);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-        url = getString(R.string.servidor) + "/api/lastEventsV2";
+        url = getString(R.string.servidor) + "/api/lastEventsV3";
         direccion = getString(R.string.servidor) + "/api/saveEvent";
 
         tvPending = findViewById(R.id.tvPending);
@@ -206,6 +224,12 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         switch (id) {
+            case R.id.search:
+
+                filtros(events.this);
+
+                return true;
+
             case R.id.closeSession:
 
                 try {
@@ -349,6 +373,8 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
         try {
             JSONArray formulario = response.getJSONArray("forms");
             JSONArray eventitos = response.getJSONArray("events");
+            filtros = response.getJSONArray("filters");
+            Log.w("filtros", filtros.toString());
 
             bd conexion = new bd(events.this);
             conexion.abrir();
@@ -400,7 +426,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
 
         } catch (JSONException e) {
             try {
-                if(response.getInt("code") == 1) {
+                if (response.getInt("code") == 1) {
                     try {
                         cerrarSesion();
                     } catch (Exception err) {
@@ -418,7 +444,6 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
         } catch (Exception e) {
             e.printStackTrace();
         }
-
 
 
     }
@@ -862,5 +887,94 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
         }
 
         return jsonAnswer;
+    }
+
+    public void filtros(Context c) {
+        LinearLayout llCon = new LinearLayout(c);
+        //***********************************************************************************
+        LinearLayout llcrearDialogo = new LinearLayout(getApplicationContext());
+        LinearLayout.LayoutParams parametrosTextoEditor = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        llcrearDialogo.setLayoutParams(parametrosTextoEditor);
+        llcrearDialogo.setOrientation(LinearLayout.VERTICAL);
+        llcrearDialogo.setPadding(10, 10, 10, 10);
+        llCon.addView(llcrearDialogo);
+
+        try {
+
+            for (int i = 0; i < filtros.length(); i++) {
+                JSONObject filtro = filtros.getJSONObject(i);
+                JSONArray options = filtro.getJSONArray("values");
+                String nameFilter = filtro.getString("nameFilter");
+                ArrayList<obj_params> listoption = new ArrayList<>();
+                for (int j = 0; j < options.length(); j++) {
+                    JSONObject option = options.getJSONObject(j);
+                    int id = option.getInt("idValue");
+                    String description = option.getString("description");
+                    listoption.add(new obj_params(id, description, 0));
+                }
+                createtextViewTitle(nameFilter, llcrearDialogo);
+                createSpinner(i, listoption, llcrearDialogo);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        //***********************BUTTON ACEPTAR********************************
+        Button btnAceptar = new Button(c);
+        LinearLayout.LayoutParams parametrosAceptar = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        parametrosAceptar.setMargins(0, 30, 0, 0);
+        btnAceptar.setLayoutParams(parametrosAceptar);
+        btnAceptar.setText("aceptar");
+        btnAceptar.setTextAppearance(this, R.style.colorTitle);
+        btnAceptar.setBackgroundResource(R.drawable.custonbutton);
+        llcrearDialogo.addView(btnAceptar);
+
+
+        //AlertDialog.Builder builder = new AlertDialog.Builder(c);
+        final AlertDialog optionDialog = new AlertDialog.Builder(c).create();
+
+        optionDialog.setTitle("Selecciona la opcion:");
+
+        optionDialog.setView(llCon);//******************************************
+
+        btnAceptar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                optionDialog.dismiss();
+
+            }
+
+
+        }); //fin del button
+
+        //AlertDialog dialog = builder.create();
+        optionDialog.show();
+        //dialog.show();
+
+    }
+
+    public void createSpinner(int idField, ArrayList<obj_params> aux, LinearLayout llContainer) {
+
+        Spinner sp = new Spinner(this);
+        sp.setId(idField);
+        adapter_params adapter = new adapter_params(events.this, aux);
+        sp.setAdapter(adapter);
+        spinners.add(sp);
+        llContainer.addView(sp);
+        int posicion = 0;
+        sp.setSelection(posicion);
+
+    }
+
+    public void createtextViewTitle(String texto, LinearLayout llContainer) {
+
+        TextView tv;
+        tv = new TextView(this);
+        tv.setText(texto);
+        tv.setTextAppearance(this, R.style.colorTitle);
+        llContainer.addView(tv);
+
     }
 }

@@ -1354,6 +1354,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
                         startActivity(intent);
                         finish();
                     } else {
+                        ir = new Intent(checkout.this, events.class);
                         ir.putExtra("auth", auth);
                         ir.putExtra("userName", userName);
                         ir.putExtra("fullName", fullName);

@@ -6,8 +6,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.RoundRectShape;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 
@@ -16,10 +22,12 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.text.TextWatcher;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -29,12 +37,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -54,6 +65,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
@@ -100,7 +112,9 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
     String fullName;
 
     JSONArray filtros;
+    JSONArray formularios;
     ArrayList<Spinner> spinners = new ArrayList<Spinner>();
+    ArrayList<CheckBox> checkBoxes = new ArrayList<CheckBox>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -374,7 +388,9 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
             JSONArray formulario = response.getJSONArray("forms");
             JSONArray eventitos = response.getJSONArray("events");
             filtros = response.getJSONArray("filters");
+            formularios = formulario;
             Log.w("filtros", filtros.toString());
+            Log.w("formulario", formularios.toString());
 
             bd conexion = new bd(events.this);
             conexion.abrir();
@@ -892,12 +908,25 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
     public void filtros(Context c) {
         LinearLayout llCon = new LinearLayout(c);
         //***********************************************************************************
-        LinearLayout llcrearDialogo = new LinearLayout(getApplicationContext());
-        LinearLayout.LayoutParams parametrosTextoEditor = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        LinearLayout llcrearDialogo = new LinearLayout(c);
+        LinearLayout.LayoutParams parametrosTextoEditor = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         llcrearDialogo.setLayoutParams(parametrosTextoEditor);
         llcrearDialogo.setOrientation(LinearLayout.VERTICAL);
         llcrearDialogo.setPadding(10, 10, 10, 10);
         llCon.addView(llcrearDialogo);
+
+        ScrollView svBody = new ScrollView(c);
+        ScrollView.LayoutParams parametros = new ScrollView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        svBody.setLayoutParams(parametros);
+        svBody.setPadding(10, 10, 10, 10);
+        llcrearDialogo.addView(svBody);
+
+        LinearLayout llbody = new LinearLayout(c);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        llbody.setLayoutParams(params);
+        llbody.setOrientation(LinearLayout.VERTICAL);
+        llbody.setPadding(10, 10, 10, 10);
+        svBody.addView(llbody);
 
         try {
 
@@ -912,8 +941,18 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
                     String description = option.getString("description");
                     listoption.add(new obj_params(id, description, 0));
                 }
-                createtextViewTitle(nameFilter, llcrearDialogo);
-                createSpinner(i, listoption, llcrearDialogo);
+                createtextViewTitle(nameFilter, llbody);
+                createSpinner(i, listoption, llbody);
+            }
+            for (int j = 0; j < formularios.length(); j++) {
+                JSONObject form = formularios.getJSONObject(j);
+
+                int idForm = form.getInt("idForm");
+                String colorForm = form.getString("colorForm");
+                String idIconForm = form.getString("idIconForm");
+
+                switchForm(idForm, colorForm, idIconForm, llbody);
+                Log.w("formulario", idForm + "");
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -928,11 +967,11 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
         btnAceptar.setText("aceptar");
         btnAceptar.setTextAppearance(this, R.style.colorTitle);
         btnAceptar.setBackgroundResource(R.drawable.custonbutton);
-        llcrearDialogo.addView(btnAceptar);
+        llbody.addView(btnAceptar);
 
 
         //AlertDialog.Builder builder = new AlertDialog.Builder(c);
-        final AlertDialog optionDialog = new AlertDialog.Builder(c).create();
+        final AlertDialog optionDialog = new AlertDialog.Builder(c, android.R.style.Theme_DeviceDefault_Light_NoActionBar_Fullscreen).create();
 
         optionDialog.setTitle("Selecciona la opcion:");
 
@@ -977,4 +1016,50 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
         llContainer.addView(tv);
 
     }
+
+    public void switchForm(int id, String color, String img, LinearLayout llContainer) {
+
+        LinearLayout llbody = new LinearLayout(this);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        params.setMargins(0, 20, 0, 0);
+        params.gravity = Gravity.CENTER;
+        llbody.setLayoutParams(params);
+        llbody.setOrientation(LinearLayout.HORIZONTAL);
+        llbody.setPadding(2, 2, 2, 2);
+        llContainer.addView(llbody);
+
+        ImageView ivForm = new ImageView(this);
+        LinearLayout.LayoutParams parametrosImagen = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 7);
+        //parametrosImagen.gravity = Gravity.LEFT;
+        ivForm.setLayoutParams(parametrosImagen);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        byte[] imageBytes = baos.toByteArray();
+        imageBytes = Base64.decode(img, Base64.DEFAULT);
+        Bitmap decodedImage = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+
+        RoundRectShape roundRectShape = new RoundRectShape(new float[]{
+                30, 30, 30, 30,
+                30, 30, 30, 30}, null, null);
+        ShapeDrawable shapeDrawable = new ShapeDrawable(roundRectShape);
+        shapeDrawable.getPaint().setColor(Color.parseColor(color));
+        shapeDrawable.setPadding(20, 20, 20, 20);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            ivForm.setBackground(shapeDrawable);
+        } else {
+            ivForm.setBackgroundColor(Color.parseColor(color));
+        }
+        ivForm.setImageBitmap(decodedImage);
+
+        llbody.addView(ivForm);
+
+        CheckBox cbx = new CheckBox(this);
+        LinearLayout.LayoutParams parametrosCheck = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 3);
+        //parametrosImagen.gravity = Gravity.LEFT;
+        cbx.setLayoutParams(parametrosCheck);
+        cbx.setTextColor(getResources().getColor(R.color.colorBlack));
+        cbx.setId(id);
+        llbody.addView(cbx);
+        checkBoxes.add(cbx);
+    }
+
 }

@@ -114,7 +114,9 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
     JSONArray filtros;
     JSONArray formularios;
     ArrayList<Spinner> spinners = new ArrayList<Spinner>();
+    ArrayList<Spinner> spinners2 = new ArrayList<Spinner>();
     ArrayList<CheckBox> checkBoxes = new ArrayList<CheckBox>();
+    ArrayList<obj_form> obj_forms = new ArrayList<obj_form>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -944,16 +946,21 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
                 createtextViewTitle(nameFilter, llbody);
                 createSpinner(i, listoption, llbody);
             }
+
             for (int j = 0; j < formularios.length(); j++) {
                 JSONObject form = formularios.getJSONObject(j);
 
                 int idForm = form.getInt("idForm");
                 String colorForm = form.getString("colorForm");
                 String idIconForm = form.getString("idIconForm");
-
-                switchForm(idForm, colorForm, idIconForm, llbody);
-                Log.w("formulario", idForm + "");
+                String descriptionForm = form.getString("descriptionForm");
+                obj_forms.add(new obj_form(idForm, colorForm, descriptionForm, idIconForm, 0, 0));
+                /*switchForm(idForm, colorForm, idIconForm, llbody);
+                Log.w("descriptionForm", descriptionForm + "");*/
             }
+
+            createSpinnerForm(obj_forms, llbody);
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -1017,49 +1024,19 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
 
     }
 
-    public void switchForm(int id, String color, String img, LinearLayout llContainer) {
+    public void createSpinnerForm(ArrayList<obj_form> aux, LinearLayout llContainer) {
 
-        LinearLayout llbody = new LinearLayout(this);
+        Spinner sp = new Spinner(this);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         params.setMargins(0, 20, 0, 0);
-        params.gravity = Gravity.CENTER;
-        llbody.setLayoutParams(params);
-        llbody.setOrientation(LinearLayout.HORIZONTAL);
-        llbody.setPadding(2, 2, 2, 2);
-        llContainer.addView(llbody);
+        sp.setLayoutParams(params);
+        adapter_paramsForm adapter = new adapter_paramsForm(events.this, aux);
+        sp.setAdapter(adapter);
+        spinners2.add(sp);
+        llContainer.addView(sp);
 
-        ImageView ivForm = new ImageView(this);
-        LinearLayout.LayoutParams parametrosImagen = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 7);
-        //parametrosImagen.gravity = Gravity.LEFT;
-        ivForm.setLayoutParams(parametrosImagen);
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        byte[] imageBytes = baos.toByteArray();
-        imageBytes = Base64.decode(img, Base64.DEFAULT);
-        Bitmap decodedImage = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
-
-        RoundRectShape roundRectShape = new RoundRectShape(new float[]{
-                30, 30, 30, 30,
-                30, 30, 30, 30}, null, null);
-        ShapeDrawable shapeDrawable = new ShapeDrawable(roundRectShape);
-        shapeDrawable.getPaint().setColor(Color.parseColor(color));
-        shapeDrawable.setPadding(20, 20, 20, 20);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            ivForm.setBackground(shapeDrawable);
-        } else {
-            ivForm.setBackgroundColor(Color.parseColor(color));
-        }
-        ivForm.setImageBitmap(decodedImage);
-
-        llbody.addView(ivForm);
-
-        CheckBox cbx = new CheckBox(this);
-        LinearLayout.LayoutParams parametrosCheck = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 3);
-        //parametrosImagen.gravity = Gravity.LEFT;
-        cbx.setLayoutParams(parametrosCheck);
-        cbx.setTextColor(getResources().getColor(R.color.colorBlack));
-        cbx.setId(id);
-        llbody.addView(cbx);
-        checkBoxes.add(cbx);
     }
+
+
 
 }

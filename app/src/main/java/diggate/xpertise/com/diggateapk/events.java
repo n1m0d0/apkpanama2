@@ -73,6 +73,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 public class events extends AppCompatActivity implements Response.Listener<JSONObject>, Response.ErrorListener {
@@ -115,7 +116,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
     JSONArray formularios;
     ArrayList<Spinner> spinners = new ArrayList<Spinner>();
     ArrayList<Spinner> spinners2 = new ArrayList<Spinner>();
-    ArrayList<CheckBox> checkBoxes = new ArrayList<CheckBox>();
+    ArrayList<String> strings = new ArrayList<String>();
     ArrayList<obj_form> obj_forms = new ArrayList<obj_form>();
 
     @Override
@@ -242,7 +243,17 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
         switch (id) {
             case R.id.search:
 
-                filtros(events.this);
+                if (compruebaConexion(this)) {
+
+                    filtros(events.this);
+
+                } else {
+
+                    msj = Toast.makeText(this, "Sin conexion a Internet", Toast.LENGTH_LONG);
+                    msj.setGravity(Gravity.CENTER, 0, 0);
+                    msj.show();
+
+                }
 
                 return true;
 
@@ -320,7 +331,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
 
         mRequestQueue = Volley.newRequestQueue(this);
 
-        mJsonArrayRequest = new JsonObjectRequest(Request.Method.GET, url, null, this, this) {
+        mJsonArrayRequest = new JsonObjectRequest(Request.Method.POST, url, null, this, this) {
 
             @Override
             public Map getHeaders() throws AuthFailureError {
@@ -936,15 +947,18 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
                 JSONObject filtro = filtros.getJSONObject(i);
                 JSONArray options = filtro.getJSONArray("values");
                 String nameFilter = filtro.getString("nameFilter");
+                Log.w("nameFilter", nameFilter);
                 ArrayList<obj_params> listoption = new ArrayList<>();
                 for (int j = 0; j < options.length(); j++) {
                     JSONObject option = options.getJSONObject(j);
                     int id = option.getInt("idValue");
                     String description = option.getString("description");
-                    listoption.add(new obj_params(id, description, 0));
+                    listoption.add(new obj_params(id, description, i));
                 }
                 createtextViewTitle(nameFilter, llbody);
                 createSpinner(i, listoption, llbody);
+
+                strings.add(nameFilter);
             }
 
             for (int j = 0; j < formularios.length(); j++) {
@@ -959,6 +973,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
                 Log.w("descriptionForm", descriptionForm + "");*/
             }
 
+            createtextViewTitle("Formularios", llbody);
             createSpinnerForm(obj_forms, llbody);
 
         } catch (JSONException e) {
@@ -988,6 +1003,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
             @Override
             public void onClick(View view) {
 
+                createSearch();
                 optionDialog.dismiss();
 
             }
@@ -1037,6 +1053,155 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
 
     }
 
+    public void createSearch() {
 
+        JSONObject search = new JSONObject();
+        JSONArray filterSelected = new JSONArray();
+
+        for (Iterator iterator = spinners.iterator(); iterator
+                .hasNext(); ) {
+
+            Spinner spinner = (Spinner) iterator.next();
+
+            int position = spinner.getSelectedItemPosition();
+
+            obj_params elegido = (obj_params) spinner.getItemAtPosition(position);
+            Log.w("Spinner", "spinner: " + spinner.getId() + " posicion: " + position + " " + elegido.getId());
+            String idFilter = strings.get(elegido.getControl());
+            Log.w("idFilter", "" + idFilter);
+            try {
+                JSONObject parametros = new JSONObject();
+                parametros.put("idFilter", idFilter);
+                parametros.put("idValue", elegido.getId());
+                filterSelected.put(parametros);
+                search.put("filterSelected", filterSelected);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
+        try {
+            JSONObject parametros = new JSONObject();
+            JSONArray formList = new JSONArray();
+            parametros.put("idFilter", "events");
+            for (Iterator iterator = spinners2.iterator(); iterator
+                    .hasNext(); ) {
+                Spinner spinner = (Spinner) iterator.next();
+                int position = spinner.getSelectedItemPosition();
+                obj_form elegido = (obj_form) spinner.getItemAtPosition(position);
+                JSONObject parametros2 = new JSONObject();
+                parametros2.put("idfrom", elegido.getId());
+                formList.put(parametros2);
+            }
+            parametros.put("values", formList);
+            filterSelected.put(parametros);
+            search.put("filterSelected", filterSelected);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        Log.w("search", "" + search);
+        spinners.clear();
+        spinners2.clear();
+        sendSearch(search);
+
+    }
+
+    public void sendSearch(JSONObject jsonSearch) {
+        String url = getString(R.string.servidor) + "/api/lastEventsV3";
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, jsonSearch, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.w("logres", response.toString());
+                try {
+                    JSONArray formulario = response.getJSONArray("forms");
+                    JSONArray eventitos = response.getJSONArray("events");
+
+                    bd conexion = new bd(events.this);
+                    conexion.abrir();
+                    conexion.deleteForm();
+
+                    itemEvents.clear();
+                    for (int s = 0; s < formulario.length(); s++) {
+
+                        JSONObject formularioObj = formulario.getJSONObject(s);
+
+                        idForm = formularioObj.getInt("idForm");
+                        colorForm = formularioObj.getString("colorForm");
+                        idIconForm = formularioObj.getString("idIconForm");
+
+                        conexion.createForm(idForm, colorForm, idIconForm);
+
+                        Log.w("contadorForm", "" + s);
+
+                    }
+                    for (int a = 0; a < eventitos.length(); a++) {
+
+                        JSONObject eventitosObj = eventitos.getJSONObject(a);
+
+                        int idForm2 = eventitosObj.getInt("idForm");
+                        idEvent = eventitosObj.getInt("idEvent");
+                        keyValue = eventitosObj.getString("keyValue");
+                        dateEventBegin = eventitosObj.getString("dateEventBegin");
+                        dateEventEnd = eventitosObj.getString("dateEventEnd");
+                        personNumber = eventitosObj.getInt("personNumber");
+                        containerNumber = eventitosObj.getInt("containerNumber");
+                        eventState = eventitosObj.getInt("eventState");
+
+                        Cursor atributos = conexion.searchForm(idForm2);
+                        atributos.moveToNext();
+                        String colorForm2 = atributos.getString(1);
+                        String idIconForm2 = atributos.getString(2);
+
+                        Log.w("color", colorForm2);
+                        Log.w("icono", idIconForm2);
+
+                        itemEvents.add(new obj_events(idEvent, keyValue, dateEventBegin, dateEventEnd, idForm2, personNumber, containerNumber, eventState, colorForm2, idIconForm2));
+
+                    }
+
+                    adapter = new adapter_events(events.this, itemEvents);
+                    lvEvents.setAdapter(adapter);
+
+
+                } catch (JSONException e) {
+                    try {
+                        if (response.getInt("code") == 1) {
+                            try {
+                                cerrarSesion();
+                            } catch (Exception err) {
+                                err.printStackTrace();
+                            }
+                        } else {
+                            msj = Toast.makeText(events.this, "No se tiene datos registrados", Toast.LENGTH_LONG);
+                            msj.show();
+                        }
+                    } catch (JSONException jsonException) {
+                        jsonException.printStackTrace();
+                    }
+                    e.printStackTrace();
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        }){
+
+            @Override
+            public Map getHeaders() throws AuthFailureError {
+                HashMap headers = new HashMap();
+                headers.put("Authorization", auth); //authentication
+                return headers;
+            }
+
+        };
+
+        requestQueue.add(jsonObjectRequest);
+    }
 
 }

@@ -919,6 +919,8 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
     }
 
     public void filtros(Context c) {
+        obj_forms.clear();
+
         LinearLayout llCon = new LinearLayout(c);
         //***********************************************************************************
         LinearLayout llcrearDialogo = new LinearLayout(c);
@@ -1050,6 +1052,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
         sp.setAdapter(adapter);
         spinners2.add(sp);
         llContainer.addView(sp);
+
 
     }
 

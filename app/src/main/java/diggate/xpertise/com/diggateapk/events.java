@@ -949,6 +949,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
                 JSONObject filtro = filtros.getJSONObject(i);
                 JSONArray options = filtro.getJSONArray("values");
                 String nameFilter = filtro.getString("nameFilter");
+                String idFilter = filtro.getString("idFilter");
                 Log.w("nameFilter", nameFilter);
                 ArrayList<obj_params> listoption = new ArrayList<>();
                 for (int j = 0; j < options.length(); j++) {
@@ -960,7 +961,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
                 createtextViewTitle(nameFilter, llbody);
                 createSpinner(i, listoption, llbody);
 
-                strings.add(nameFilter);
+                strings.add(idFilter);
             }
 
             for (int j = 0; j < formularios.length(); j++) {
@@ -1053,6 +1054,17 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
         spinners2.add(sp);
         llContainer.addView(sp);
 
+       /* sp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });*/
     }
 
     public void createSearch() {

@@ -1053,7 +1053,6 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
         spinners2.add(sp);
         llContainer.addView(sp);
 
-
     }
 
     public void createSearch() {
@@ -1093,7 +1092,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
                 int position = spinner.getSelectedItemPosition();
                 obj_form elegido = (obj_form) spinner.getItemAtPosition(position);
                 JSONObject parametros2 = new JSONObject();
-                parametros2.put("idfrom", elegido.getId());
+                parametros2.put("idFrom", elegido.getId());
                 formList.put(parametros2);
             }
             parametros.put("values", formList);

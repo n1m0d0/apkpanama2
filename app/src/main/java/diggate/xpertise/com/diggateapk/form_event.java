@@ -15,8 +15,11 @@ import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.PorterDuff;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
@@ -46,6 +49,7 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
@@ -910,6 +914,12 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                             case 11:
 
                                 createAudio(idField, description, is_mandatory);
+
+                                break;
+
+                            case 14:
+
+                                createSignature(idField, description, 1, 2);
 
                                 break;
 
@@ -2600,4 +2610,126 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         alertDialog.show();
     }
 
+    // firma
+    public void createSignature(int idField, String description, int w, int h){
+        TextView tv;
+        tv = new TextView(this);
+        tv.setText(description);
+        tv.setTextAppearance(this, R.style.colorTitle);
+        llContenedor.addView(tv);
+        LinearLayout linearLayout = new LinearLayout(this);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 400);
+        linearLayout.setLayoutParams(lp);
+        linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+        //linearLayout.setWeightSum(12);
+        linearLayout.setGravity(Gravity.CENTER);
+
+        vista aux = new vista(form_event.this, linearLayout);
+        aux.setBackgroundColor(Color.GRAY);
+        linearLayout.addView(aux);
+
+        llContenedor.addView(linearLayout);
+
+        Button btnSave = new Button(this);
+        btnSave.setText("Limpiar");
+        LinearLayout.LayoutParams btn = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        btnSave.setLayoutParams(btn);
+
+        llContenedor.addView(btnSave);
+
+        btnSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                aux.clear();
+            }
+        });
+    }
+
+    class vista extends View {
+
+        Path path =  new Path();
+        Paint paint = new Paint();
+        LinearLayout linearLayout;
+        Bitmap firmaBitmap;
+        float x = 50;
+        float y = 50;
+        String accion = "accion";
+
+        public vista(Context context, LinearLayout linearLayout) {
+            super(context);
+            // TODO Auto-generated constructor stub
+            this.linearLayout = linearLayout;
+        }
+
+        /*public void save()
+        {
+            View v = linearLayout;
+            if(firmaBitmap == null)
+            {
+                firmaBitmap =  Bitmap.createBitmap (linearLayout.getWidth(), linearLayout.getHeight(), Bitmap.Config.RGB_565);
+            }
+            Canvas canvas = new Canvas(firmaBitmap);
+            try
+            {
+                /*FileOutputStream mFileOutStream = new FileOutputStream(mypath);
+
+                v.draw(canvas);
+                firmaBitmap.compress(Bitmap.CompressFormat.PNG, 90, mFileOutStream);
+                mFileOutStream.flush();
+                mFileOutStream.close();
+                String url = Images.Media.insertImage(getContentResolver(), mBitmap, "title", null);
+                Log.v("log_tag","url: " + url);*/
+            /*}
+            catch(Exception e)
+            {
+                Log.v("log_tag", e.toString());
+            }
+        }*/
+
+        public void onDraw(Canvas canvas){
+
+
+            paint.setStyle(Paint.Style.STROKE);
+            paint.setStrokeWidth(6);
+            paint.setColor(Color.BLACK);
+            if(accion == "down")
+            {
+                path.moveTo(x, y);
+            }
+            if(accion == "move")
+            {
+                path.lineTo(x, y);
+            }
+            canvas.drawPath(path, paint);
+        }
+
+        public boolean onTouchEvent(MotionEvent e){
+
+            x = e.getX();
+            y = e.getY();
+            if(e.getAction() == MotionEvent.ACTION_DOWN)
+            {
+
+                accion = "down";
+
+            }
+            if(e.getAction() == MotionEvent.ACTION_MOVE)
+            {
+
+                accion = "move";
+
+            }
+            invalidate();
+            return true;
+
+        }
+
+        public void clear()
+        {
+
+            path.reset();
+
+        }
+
+    }
 }

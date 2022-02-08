@@ -8,7 +8,15 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/PC-John/StudioProjects/apkpanama2/app/src/main/res/drawable-v24/ic_fingerprint_black_24dp.xml" value="0.1605" />
+        <entry key="..\:/Users/PC-John/StudioProjects/apkpanama2/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1605" />
         <entry key="..\:/Users/PC-John/StudioProjects/apkpanama2/app/src/main/res/drawable-v24/shape_finger.xml" value="0.19479166666666667" />
+        <entry key="..\:/Users/PC-John/StudioProjects/apkpanama2/app/src/main/res/drawable/circle.xml" value="0.1605" />
+        <entry key="..\:/Users/PC-John/StudioProjects/apkpanama2/app/src/main/res/drawable/customedittext.xml" value="0.1605" />
+        <entry key="..\:/Users/PC-John/StudioProjects/apkpanama2/app/src/main/res/drawable/custonbutton.xml" value="0.1605" />
+        <entry key="..\:/Users/PC-John/StudioProjects/apkpanama2/app/src/main/res/drawable/ic_baseline_create_24.xml" value="0.1605" />
+        <entry key="..\:/Users/PC-John/StudioProjects/apkpanama2/app/src/main/res/drawable/ic_crop_free_black_24dp.xml" value="0.1605" />
+        <entry key="..\:/Users/PC-John/StudioProjects/apkpanama2/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1605" />
         <entry key="..\:/Users/PC-John/StudioProjects/apkpanama2/app/src/main/res/drawable/rounded_corner.xml" value="0.19479166666666667" />
         <entry key="..\:/Users/PC-John/StudioProjects/apkpanama2/app/src/main/res/drawable/rounded_cornerlist.xml" value="0.19479166666666667" />
         <entry key="..\:/Users/PC-John/StudioProjects/apkpanama2/app/src/main/res/drawable/shape_gesport.xml" value="0.19479166666666667" />
@@ -33,6 +41,7 @@
         <entry key="..\:/Users/PC-John/StudioProjects/apkpanama2/app/src/main/res/layout/personalization3.xml" value="0.20520833333333333" />
         <entry key="..\:/Users/PC-John/StudioProjects/apkpanama2/app/src/main/res/layout/qr.xml" value="0.20520833333333333" />
         <entry key="..\:/Users/PC-John/StudioProjects/apkpanama2/app/src/main/res/layout/recording_dialog.xml" value="0.20520833333333333" />
+        <entry key="..\:/Users/PC-John/StudioProjects/apkpanama2/app/src/main/res/layout/signature.xml" value="0.2484375" />
         <entry key="..\:/Users/PC-John/StudioProjects/apkpanama2/app/src/main/res/layout/spinner_form.xml" value="0.17864583333333334" />
         <entry key="..\:/Users/PC-John/StudioProjects/apkpanama2/app/src/main/res/layout/spinner_options.xml" value="0.20520833333333333" />
         <entry key="..\:/Users/PC-John/StudioProjects/apkpanama2/app/src/main/res/menu/menusesion.xml" value="0.190625" />

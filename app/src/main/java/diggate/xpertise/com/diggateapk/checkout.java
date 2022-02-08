@@ -134,6 +134,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
     ArrayList<TextView> textViewsFiles = new ArrayList<TextView>();
     ArrayList<String> stringsRegEx = new ArrayList<String>();
     ArrayList<TextView> textViewsAudio = new ArrayList<TextView>();
+    ArrayList<ImageView> signatures = new ArrayList<ImageView>();
 
     Bitmap bit;
     Uri output;
@@ -161,6 +162,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
     String fullName;
 
     ArrayList<obj_attributes> objAttributes = new ArrayList<obj_attributes>();
+    ArrayList<obj_attributes> objAttributesSignatures = new ArrayList<obj_attributes>();
 
     String currentPhotoPath;
 
@@ -706,6 +708,66 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
                     }
 
                 }*/
+                //firma
+                /******************************************/
+                for (Iterator iterator = signatures.iterator(); iterator
+                        .hasNext(); ) {
+
+                    ImageView imageView = (ImageView) iterator.next();
+
+
+                    String[] parts = imageView.getContentDescription().toString().trim().split("-");
+                    String description = parts[0];
+                    String control = parts[parts.length - 1];
+
+                    if (description.equals(textImage) && control.equals(obligatorio)) {
+
+                        validar++;
+                        Log.w("sumaImageView", "" + validar);
+
+                    }
+
+                    Log.w("controlImageView", control);
+                    /**********/
+                    Bitmap bitmap = null;
+                    for (Iterator iterator2 = objAttributesSignatures.iterator(); iterator2
+                            .hasNext(); ) {
+                        obj_attributes properties = (obj_attributes) iterator2.next();
+                        if (imageView.getId() == properties.getId()) {
+                            bitmap = properties.getImage();
+                        }
+                    }
+                    /**********/
+                    /*imageView.buildDrawingCache();
+                    Bitmap bitmap = imageView.getDrawingCache();*/
+                    String encoded = "";
+                    if (bitmap != null) {
+                        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+                        byte[] byteArray = byteArrayOutputStream.toByteArray();
+
+                        encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
+                    }
+                    if (description.equals(textImage)) {
+
+                        encoded = "";
+
+                    }
+
+                    Log.w("Imagen", "signature" + " " + imageView.getId() + " " + encoded);
+                    try {
+                        JSONObject parametros = new JSONObject();
+                        parametros.put("idField", imageView.getId());
+                        parametros.put("valueInputField", "");
+                        parametros.put("valueInputDateField", "");
+                        parametros.put("valueListField", "");
+                        parametros.put("valueFile", encoded);
+                        respuesta.put(parametros);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
                 /****************************************/
 
                 localizar();
@@ -992,6 +1054,13 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
                                 /*creartextview(description);
                                 createTextviewAudio(idField,is_mandatory);*/
                                 createAudio(idField, description, is_mandatory);
+
+                                break;
+
+                            case 14:
+
+                                creartextview(description);
+                                createSignature(idField, is_mandatory, photo_resolution_w, photo_resolution_h);
 
                                 break;
 
@@ -2275,4 +2344,197 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
         alertDialog.show();
     }
 
+    // firma
+    public void createSignature(int idField, String option, int w, int h) {
+
+        LinearLayout llImg = new LinearLayout(this);
+        LinearLayout.LayoutParams paramsImg = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        llImg.setLayoutParams(paramsImg);
+        llImg.setOrientation(LinearLayout.HORIZONTAL);
+        llImg.setWeightSum(12);
+        llContenedor.addView(llImg);
+
+        ImageView iv = new ImageView(this);
+        iv.setId(idField);
+        iv.setImageResource(R.drawable.pencil);
+        iv.setContentDescription(textImage + "-" + option);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 150, 5f);
+        iv.setLayoutParams(lp);
+        llImg.addView(iv);
+
+        LinearLayout llImg2 = new LinearLayout(this);
+        LinearLayout.LayoutParams paramsImg2 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 5f);
+        llImg2.setLayoutParams(paramsImg2);
+        llImg.addView(llImg2);
+
+        LinearLayout llImg3 = new LinearLayout(this);
+        LinearLayout.LayoutParams paramsImg3 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 2f);
+        llImg3.setLayoutParams(paramsImg3);
+        llImg.addView(llImg3);
+
+        if (w > 0 && h > 0) {
+            objAttributesSignatures.add(new obj_attributes(idField, w, h, null));
+        } else {
+            w = 400;
+            h = 400;
+            objAttributesSignatures.add(new obj_attributes(idField, w, h, null));
+        }
+
+        signatures.add(iv);
+
+        iv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                captureSignature(iv, checkout.this);
+            }
+        });
+
+    }
+
+    public void captureSignature(ImageView iv, Context c){
+
+        LinearLayout llCon = new LinearLayout(c);
+        //***********************************************************************************
+        LinearLayout llcrearDialogo = new LinearLayout(c);
+        LinearLayout.LayoutParams parametrosTextoEditor = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        parametrosTextoEditor.setMargins(20, 10, 20, 10);
+        llcrearDialogo.setLayoutParams(parametrosTextoEditor);
+        llcrearDialogo.setOrientation(LinearLayout.VERTICAL);
+        llcrearDialogo.setPadding(10, 10, 10, 10);
+        llCon.addView(llcrearDialogo);
+
+        LinearLayout linearLayout0 = new LinearLayout(c);
+        LinearLayout.LayoutParams lp0 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 400);
+        linearLayout0.setLayoutParams(lp0);
+        linearLayout0.setOrientation(LinearLayout.HORIZONTAL);
+        //linearLayout.setWeightSum(12);
+        linearLayout0.setBackgroundResource(R.drawable.shape_finger);
+        linearLayout0.setGravity(Gravity.CENTER);
+        llcrearDialogo.addView(linearLayout0);
+
+        LinearLayout linearLayout = new LinearLayout(c);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        linearLayout.setLayoutParams(lp);
+        linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+        linearLayout.setPadding(30, 30, 30, 30);
+        //linearLayout.setWeightSum(12);
+        linearLayout.setGravity(Gravity.CENTER);
+
+        /********* Signature *******/
+        /*vista aux = new vista(c, linearLayout, iv);
+        aux.setBackgroundColor(Color.GRAY);*/
+        CaptureBitmapView mSig;
+        mSig = new CaptureBitmapView(this, null);
+        linearLayout.addView(mSig);
+
+        /********* Signature *******/
+
+        linearLayout0.addView(linearLayout);
+
+        //***********************BUTTONS********************************
+        Button btnLimpiar = new Button(c);
+        LinearLayout.LayoutParams parametrosLimpiar = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        parametrosLimpiar.setMargins(0, 30, 0, 0);
+        btnLimpiar.setLayoutParams(parametrosLimpiar);
+        btnLimpiar.setText("Limpiar");
+        btnLimpiar.setTextAppearance(this, R.style.colorTitle);
+        btnLimpiar.setBackgroundResource(R.drawable.custonbutton);
+        llcrearDialogo.addView(btnLimpiar);
+
+        Button btnAceptar = new Button(c);
+        LinearLayout.LayoutParams parametrosAceptar = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        parametrosAceptar.setMargins(0, 30, 0, 0);
+        btnAceptar.setLayoutParams(parametrosAceptar);
+        btnAceptar.setText("Guardar");
+        btnAceptar.setTextAppearance(this, R.style.colorTitle);
+        btnAceptar.setBackgroundResource(R.drawable.custonbutton);
+        llcrearDialogo.addView(btnAceptar);
+
+        Button btnSalir = new Button(c);
+        LinearLayout.LayoutParams parametrosSalir = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        parametrosSalir.setMargins(0, 30, 0, 0);
+        btnSalir.setLayoutParams(parametrosSalir);
+        btnSalir.setText("Salir");
+        btnSalir.setTextAppearance(this, R.style.colorTitle);
+        btnSalir.setBackgroundResource(R.drawable.custonbutton);
+        llcrearDialogo.addView(btnSalir);
+
+        final AlertDialog optionDialog = new AlertDialog.Builder(c, android.R.style.Theme_DeviceDefault_Light_NoActionBar_Fullscreen).create();
+
+        optionDialog.setTitle("Firma");
+
+        optionDialog.setView(llCon);//******************************************
+
+        btnLimpiar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                mSig.ClearCanvas();
+
+            }
+
+
+        }); //fin del button
+
+        btnAceptar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Bitmap bitmap = mSig.getBitmap();
+                String[] parts = iv.getContentDescription().toString().trim().split("-");
+                String description = parts[0] + "captura";
+                String control = parts[parts.length - 1];
+
+                iv.setContentDescription(description + "-" + control);
+                Log.w("imagenDesc", description + "-" + control);
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 600);
+                iv.setLayoutParams(lp);
+                iv.setImageBitmap(bitmap);
+                for (Iterator iterator2 = objAttributesSignatures.iterator(); iterator2
+                        .hasNext(); ) {
+                    obj_attributes properties = (obj_attributes) iterator2.next();
+                    if (iv.getId() == properties.getId()) {
+                        int width = bitmap.getWidth();
+                        int height = bitmap.getHeight();
+                        int newWidth = properties.w;
+                        int newHeight = properties.h;
+
+                        // calculamos el escalado de la imagen destino
+                        float scaleWidth = ((float) newWidth) / width;
+                        float scaleHeight = ((float) newHeight) / height;
+
+                        // para poder manipular la imagen
+                        // debemos crear una matriz
+
+                        Matrix matrix = new Matrix();
+                        // resize the Bitmap
+                        matrix.postScale(scaleWidth, scaleHeight);
+
+                        // volvemos a crear la imagen con los nuevos valores
+                        Bitmap resizedBitmap = Bitmap.createBitmap(bitmap, 0, 0,
+                                width, height, matrix, true);
+                        properties.setImage(resizedBitmap);
+                    }
+                }
+                optionDialog.dismiss();
+
+            }
+
+
+        }); //fin del button
+
+        btnSalir.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                optionDialog.dismiss();
+
+            }
+
+
+        });
+
+        optionDialog.show();
+
+    }
 }

@@ -29,6 +29,8 @@
     <string name="accept">Aceptar</string>
     <string name="cancel">Cancelar</string>
     <string name="filters">Filtros</string>
+    <string name="name">Nombre</string>
+    <string name="email">Correo</string>
     <string name="signature">Firma</string>
 
     <string name="servidor">https://testdg.xpertise-pa.com</string>

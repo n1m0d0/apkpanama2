@@ -47,6 +47,7 @@ import android.text.InputType;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Base64;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -152,6 +153,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
     ArrayList<String> stringsRegEx = new ArrayList<String>();
     ArrayList<TextView> textViewsAudio = new ArrayList<TextView>();
     ArrayList<ImageView> signatures = new ArrayList<ImageView>();
+    ArrayList<Spinner> spinners2 = new ArrayList<Spinner>();
 
     Bitmap bmp;
     JSONObject jsonenvio = new JSONObject();
@@ -426,6 +428,52 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
 
                 }
+
+                /******** new Spinner ********/
+                for (Iterator iterator = spinners2.iterator(); iterator
+                        .hasNext(); ) {
+
+                    Spinner spinner = (Spinner) iterator.next();
+
+                    int position = spinner.getSelectedItemPosition();
+
+                    String nombre = spinner.getItemAtPosition(position).toString();
+
+                    obj_params elegido = (obj_params) spinner.getItemAtPosition(position);
+
+                    Log.w("Spinner", "spinner: " + spinner.getId() + " posicion: " + position + " " + elegido.getId());
+
+                    if (elegido.control == 0) {
+                        try {
+                            JSONObject parametros = new JSONObject();
+                            parametros.put("idField", spinner.getId());
+                            parametros.put("valueInputField", "");
+                            parametros.put("valueInputDateField", "");
+                            parametros.put("valueListField", elegido.getId());
+                            parametros.put("valueFile", "");
+                            respuesta.put(parametros);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        try {
+                            JSONObject parametros = new JSONObject();
+                            parametros.put("idField", spinner.getId());
+                            parametros.put("valueInputField", elegido.getDescription());
+                            parametros.put("valueInputDateField", "");
+                            parametros.put("valueListField", -1);
+                            parametros.put("valueFile", "");
+                            respuesta.put(parametros);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+
+                }
+                /*******************************/
 
                 for (Iterator iterator = switches.iterator(); iterator
                         .hasNext(); ) {
@@ -985,6 +1033,13 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
                                 creartextview(description);
                                 createSignature(idField, is_mandatory, photo_resolution_w, photo_resolution_h);
+
+                                break;
+
+                            case 15:
+
+                                creartextview(description);
+                                createSpinner3(idField, itemp, input_max,idValue_other);
 
                                 break;
 
@@ -2067,6 +2122,11 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
                                 break;
 
+                            case 15:
+
+                                creartextview(description);
+                                createSpinner3(idField, itemp, input_max,idValue_other);
+
                             default:
                                 break;
 
@@ -2742,7 +2802,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         llCon.addView(llcrearDialogo);
 
         LinearLayout linearLayout0 = new LinearLayout(c);
-        LinearLayout.LayoutParams lp0 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 400);
+        LinearLayout.LayoutParams lp0 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 600);
         linearLayout0.setLayoutParams(lp0);
         linearLayout0.setOrientation(LinearLayout.HORIZONTAL);
         //linearLayout.setWeightSum(12);
@@ -2873,6 +2933,101 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         });
 
         optionDialog.show();
+
+    }
+
+    // cambio
+    // dialogo de crear opcion2 spinner
+    public void createSpinner3(int idField, final ArrayList<obj_params> aux, int idParametro, final int idValue) {
+
+        final Spinner sp = new Spinner(this);
+        sp.setId(idField);
+        adapter_params adapter = new adapter_params(form_event.this, aux);
+        sp.setAdapter(adapter);
+        spinners2.add(sp);
+        llContenedor.addView(sp);
+        int posicion = 0;
+        for (int i = 0; i < sp.getCount(); i++) {
+
+            obj_params elegido = (obj_params) sp.getItemAtPosition(i);
+            if (elegido.getId() == idParametro) {
+                posicion = i;
+            }
+        }
+        sp.setSelection(posicion);
+        final int other = aux.size() - 1;
+        sp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Log.w("posicion", position + "");
+                if(idValue > 0 && position == other) {
+                    dialogInsertOption2(sp, aux, idValue);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+    public void dialogInsertOption2(final Spinner spinner, final ArrayList<obj_params> options, final int idValue) {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(form_event.this);
+
+        builder.setCancelable(false);
+
+        LayoutInflater inflater = form_event.this.getLayoutInflater();
+
+        View v = inflater.inflate(R.layout.spinner_options2, null);
+
+        builder.setView(v);
+
+        final EditText etName = (EditText) v.findViewById(R.id.etName);
+        final EditText etEmail = (EditText) v.findViewById(R.id.etEmail);
+        TextView btnSave = (TextView) v.findViewById(R.id.btnSave);
+        TextView btnExit = (TextView) v.findViewById(R.id.btnExit);
+
+        final AlertDialog alertDialog = builder.create();
+
+
+        btnSave.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (etName.getText().toString().trim().equals("") || etEmail.getText().toString().trim().equals("")) {
+                            Toast.makeText(form_event.this, "Debe completar los datos", Toast.LENGTH_SHORT).show();
+                        } else {
+                            if (!validarEmail(etEmail.getText().toString()))
+                            {
+                                Toast.makeText(form_event.this, "la direcion de correo no es valida", Toast.LENGTH_SHORT).show();
+                            } else {
+                                options.add(new obj_params(idValue, etName.getText().toString().trim() + " | " + etEmail.getText().toString().trim(), 1));
+                                adapter_params adapter = new adapter_params(form_event.this, options);
+                                spinner.setAdapter(adapter);
+                                spinner.setSelection(spinner.getCount()-1);
+                                alertDialog.cancel();
+                            }
+                        }
+                    }
+                }
+
+        );
+
+        btnExit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                spinner.setSelection(0);
+                alertDialog.cancel();
+            }
+        });
+
+        alertDialog.show();
+    }
+
+    private boolean validarEmail(String email) {
+
+        Pattern pattern = Patterns.EMAIL_ADDRESS;
+        return pattern.matcher(email).matches();
 
     }
 }

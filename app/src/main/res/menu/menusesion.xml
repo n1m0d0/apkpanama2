@@ -25,11 +25,9 @@
         android:id="@+id/info"
         android:title="Informacion" />
 
-    <!--
     <item
         android:id="@+id/preReg"
         android:title="Pre-Registro" />
-    -->
 
     <item
         android:id="@+id/closeSession"

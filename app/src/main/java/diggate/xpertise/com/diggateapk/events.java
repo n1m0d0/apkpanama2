@@ -308,7 +308,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
 
                 return true;
 
-            /*case R.id.preReg:
+            case R.id.preReg:
                 //llamar a la actividad de pre-reg
                 ir = new Intent(this, preReg.class);
                 ir.putExtra("auth", auth);
@@ -316,7 +316,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
                 ir.putExtra("fullName", fullName);
                 startActivity(ir);
                 finish();
-                return true;*/
+                return true;
 
             default:
                 return super.onOptionsItemSelected(item);

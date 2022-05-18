@@ -154,6 +154,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
     ArrayList<TextView> textViewsAudio = new ArrayList<TextView>();
     ArrayList<ImageView> signatures = new ArrayList<ImageView>();
     ArrayList<Spinner> spinners2 = new ArrayList<Spinner>();
+    ArrayList<TextView> textViewsLocation = new ArrayList<TextView>();
 
     Bitmap bmp;
     JSONObject jsonenvio = new JSONObject();
@@ -162,6 +163,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
     String textFile = "Haga clic para obtener el Archivo";
     String textAudio = "Haga clic para grabar el audio";
     String textImage = "Imagen";
+    String textLocation = "Haga clic para obtener la localizacion";
     String obligatorio = "obligatorio";
 
     Handler hand = new Handler();
@@ -384,6 +386,40 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                     }
 
                 }
+
+                /*************/
+                //TextView Location
+                for (Iterator iterator = textViewsLocation.iterator(); iterator
+                        .hasNext(); ) {
+
+                    TextView textView = (TextView) iterator.next();
+                    String obs_respuesta = textView.getText().toString().trim();
+                    String control = textView.getHint().toString().trim();
+
+                    if (obs_respuesta.equals(textLocation) && control.equals(obligatorio)) {
+
+                        validar++;
+                        Log.w("sumaTextViewLocation", "" + validar);
+
+                    }
+
+                    Log.w("controlTextViewLocation", control);
+
+                    Log.w("TextViewLocation", "TextView" + " " + textView.getId() + " " + obs_respuesta);
+                    try {
+                        JSONObject parametros = new JSONObject();
+                        parametros.put("idField", textView.getId());
+                        parametros.put("valueInputField", obs_respuesta);
+                        parametros.put("valueInputDateField", "");
+                        parametros.put("valueListField", "");
+                        parametros.put("valueFile", "");
+                        respuesta.put(parametros);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+                /*************/
 
                 for (Iterator iterator = spinners.iterator(); iterator
                         .hasNext(); ) {
@@ -1040,6 +1076,13 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
                                 creartextview(description);
                                 createSpinner3(idField, itemp, input_max,idValue_other);
+
+                                break;
+
+                            case 16:
+
+                                creartextview(description);
+                                createTextViewLocation(idField, is_mandatory);
 
                                 break;
 
@@ -2127,6 +2170,15 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                                 creartextview(description);
                                 createSpinner3(idField, itemp, input_max,idValue_other);
 
+                                break;
+
+                            case 16:
+
+                                creartextview(description);
+                                createTextViewLocation(idField, is_mandatory);
+
+                                break;
+
                             default:
                                 break;
 
@@ -3028,6 +3080,27 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
         Pattern pattern = Patterns.EMAIL_ADDRESS;
         return pattern.matcher(email).matches();
+
+    }
+
+    public void createTextViewLocation(int id, String option) {
+
+        TextView textView = new TextView(this);
+        textView.setId(id);
+        textView.setTextSize(14);
+        textView.setText(textLocation);
+        textView.setHint(option);
+        textView.setOnClickListener(form_event.this);
+
+        textViewsLocation.add(textView);
+        llContenedor.addView(textView);
+
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                textView.setText(mLocation);
+            }
+        });
 
     }
 }

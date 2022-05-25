@@ -137,6 +137,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
     ArrayList<TextView> textViewsAudio = new ArrayList<TextView>();
     ArrayList<ImageView> signatures = new ArrayList<ImageView>();
     ArrayList<Spinner> spinners2 = new ArrayList<Spinner>();
+    ArrayList<TextView> textViewsLocation = new ArrayList<TextView>();
 
     Bitmap bit;
     Uri output;
@@ -147,6 +148,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
     String textHour = "Haga clic para obtener la Hora";
     String textFile = "Haga clic para obtener el Archivo";
     String textAudio = "Haga clic para grabar el audio";
+    String textLocation = "Haga clic para obtener la localizacion";
     String textImage = "Imagen";
     String obligatorio = "obligatorio";
 
@@ -1117,9 +1119,17 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
                                 creartextview(description);
                                 createSpinner3(idField, itemp, input_max,idValue_other);
 
-                            default:
                                 break;
 
+                            case 16:
+
+                                creartextview(description);
+                                createTextViewLocation(idField, is_mandatory);
+
+                                break;
+
+                            default:
+                                break;
                         }
 
                     }
@@ -2684,5 +2694,24 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
         Pattern pattern = Patterns.EMAIL_ADDRESS;
         return pattern.matcher(email).matches();
 
+    }
+
+    public void createTextViewLocation(int id, String option) {
+        TextView textView = new TextView(this);
+        textView.setId(id);
+        textView.setTextSize(14);
+        textView.setText(textLocation);
+        textView.setHint(option);
+        textView.setOnClickListener(checkout.this);
+
+        textViewsLocation.add(textView);
+        llContenedor.addView(textView);
+
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                textView.setText(mLocation);
+            }
+        });
     }
 }

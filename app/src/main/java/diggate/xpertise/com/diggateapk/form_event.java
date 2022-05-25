@@ -95,12 +95,17 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Formatter;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -210,6 +215,9 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
     //QR
     String myQR = null;
     int idAuht = 0;
+
+    String part1 = null;
+    String part2 = null;
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
@@ -1722,28 +1730,55 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
             IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
             if (result != null) {
                 if (result.getContents() != null) {
-                    myQR = result.getContents();
-                    Log.w("myqr", result.getContents());
+                    try {
+                        String[] parts = result.getContents().split("[|]");
+                        part1 = parts[0];
+                        part2 = parts[1];
+                        Log.w("parts", part1 + " " + part2);
+                        myQR = part1;
+                        Log.w("myqr", myQR);
+                        Log.w("part1", part1);
+                        Log.w("part2", part2);
+                    } catch (Exception e) {
+                        myQR = result.getContents();
+                        Log.w("myqr", result.getContents());
+                    }
+                    obj_auth respuesta = null;
+                    int statusOK = 0;
                     if (myQR != null) {
-                        obj_auth respuesta = null;
                         for (Iterator iterator = auths.iterator(); iterator
                                 .hasNext(); ) {
                             obj_auth auth = (obj_auth) iterator.next();
                             Log.w("llave", auth.getBinaryfp());
                             if (myQR.equals(auth.getBinaryfp())) {
                                 Log.w("estadoQR", "SI");
+                                statusOK = 1;
                                 respuesta = auth;
                             } else {
                                 Log.w("estadoQR", "NO");
                             }
                         }
-                        if (respuesta == null) {
-                            finish();
+                        Log.w("statusOK", "" + statusOK);
+                        if (statusOK == 0) {
                             Toast.makeText(form_event.this, "No se encontró ninguna coincidencia.", Toast.LENGTH_LONG).show();
+                            finish();
                         } else {
                             idAuht = respuesta.getIdauth();
                             llData.setVisibility(View.VISIBLE);
                             creartextviewLink("" + respuesta.getDescfp(), "" + respuesta.getUrlData());
+                        }
+                    }
+                    if (statusOK == 1) {
+                        if (part2 != null) {
+                            String codeBinaryFp = respuesta.getBinaryfp();
+                            String codeQR = encryptSeed(codeBinaryFp + getDateQR());
+                            Log.w("keys", codeQR + " - " + part2);
+                            if (part2.equals(codeQR)) {
+
+                            } else {
+                                Toast.makeText(form_event.this, "No se encontró ninguna coincidencia.", Toast.LENGTH_LONG).show();
+                                finish();
+                            }
                         }
                     }
                 } else {
@@ -3084,7 +3119,6 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
     }
 
     public void createTextViewLocation(int id, String option) {
-
         TextView textView = new TextView(this);
         textView.setId(id);
         textView.setTextSize(14);
@@ -3101,6 +3135,37 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                 textView.setText(mLocation);
             }
         });
+    }
 
+    public String getDateQR() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(
+                "yyyyMMddHHmm", Locale.getDefault());
+        Date date = new Date();
+        return dateFormat.format(date);
+    }
+
+    private static String encryptSeed(String seed) {
+        String sha256 = "";
+        try {
+            MessageDigest crypt = MessageDigest.getInstance("SHA-256");
+            crypt.reset();
+            crypt.update(seed.getBytes("UTF-8"));
+            sha256 = byteToHex(crypt.digest());
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return sha256;
+    }
+
+    private static String byteToHex(final byte[] hash) {
+        Formatter formatter = new Formatter();
+        for (byte b : hash) {
+            formatter.format("%02x", b);
+        }
+        String result = formatter.toString();
+        formatter.close();
+        return result;
     }
 }

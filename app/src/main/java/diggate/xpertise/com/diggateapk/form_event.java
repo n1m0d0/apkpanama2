@@ -3119,20 +3119,44 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
     }
 
     public void createTextViewLocation(int id, String option) {
+        ImageView iv = new ImageView(this);
+        iv.setId(idField);
+        iv.setImageResource(R.drawable.gps);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(150, 150);
+        lp.gravity = Gravity.LEFT;
+        iv.setLayoutParams(lp);
+        llContenedor.addView(iv);
+
         TextView textView = new TextView(this);
         textView.setId(id);
         textView.setTextSize(14);
         textView.setText(textLocation);
         textView.setHint(option);
-        textView.setOnClickListener(form_event.this);
+        textView.setTextAppearance(this, R.style.colorTitle);
+        textView.setVisibility(View.GONE);
 
         textViewsLocation.add(textView);
         llContenedor.addView(textView);
 
+        iv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mLocation.equals("-1")) {
+                    Toast.makeText(form_event.this, "No se encontró la ubicación inténtelo nuevamente", Toast.LENGTH_SHORT).show();
+                } else {
+                    iv.setVisibility(View.GONE);
+                    textView.setVisibility(View.VISIBLE);
+                    textView.setText(mLocation);
+                }
+            }
+        });
+
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                textView.setText(mLocation);
+                Uri uri = Uri.parse("https://www.google.com/maps/search/?api=1&query=" + textView.getText().toString());
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent);
             }
         });
     }

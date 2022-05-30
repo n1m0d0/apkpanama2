@@ -2713,8 +2713,16 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
         textView.setTextAppearance(this, R.style.colorTitle);
         textView.setVisibility(View.GONE);
 
+        TextView textView2 = new TextView(this);
+        textView2.setId(id);
+        textView2.setTextSize(14);
+        textView2.setText("Ver mapa...");
+        textView2.setHint(option);
+        textView2.setTextAppearance(this, R.style.colorTitle);
+        textView2.setVisibility(View.GONE);
+
         textViewsLocation.add(textView);
-        llContenedor.addView(textView);
+        llContenedor.addView(textView2);
 
         iv.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -2722,14 +2730,13 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
                 if (mLocation.equals("-1")) {
                     Toast.makeText(checkout.this, "No se encontró la ubicación inténtelo nuevamente", Toast.LENGTH_SHORT).show();
                 } else {
-                    iv.setVisibility(View.GONE);
-                    textView.setVisibility(View.VISIBLE);
+                    textView2.setVisibility(View.VISIBLE);
                     textView.setText(mLocation);
                 }
             }
         });
 
-        textView.setOnClickListener(new View.OnClickListener() {
+        textView2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Uri uri = Uri.parse("https://www.google.com/maps/search/?api=1&query=" + textView.getText().toString());

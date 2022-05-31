@@ -2739,7 +2739,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
         textView2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Uri uri = Uri.parse("https://www.google.com/maps/search/?api=1&query=" + textView.getText().toString());
+                Uri uri = Uri.parse("https://www.google.es/maps?q=" + textView.getText().toString());
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                 startActivity(intent);
             }

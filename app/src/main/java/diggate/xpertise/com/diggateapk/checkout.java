@@ -334,6 +334,40 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
 
                 }
 
+                /*************/
+                //TextView Location
+                for (Iterator iterator = textViewsLocation.iterator(); iterator
+                        .hasNext(); ) {
+
+                    TextView textView = (TextView) iterator.next();
+                    String obs_respuesta = textView.getText().toString().trim();
+                    String control = textView.getHint().toString().trim();
+
+                    if (obs_respuesta.equals(textLocation) && control.equals(obligatorio)) {
+
+                        validar++;
+                        Log.w("sumaTextViewLocation", "" + validar);
+
+                    }
+
+                    Log.w("controlTextViewLocation", control);
+
+                    Log.w("TextViewLocation", "TextView" + " " + textView.getId() + " " + obs_respuesta);
+                    try {
+                        JSONObject parametros = new JSONObject();
+                        parametros.put("idField", textView.getId());
+                        parametros.put("valueInputField", obs_respuesta);
+                        parametros.put("valueInputDateField", "");
+                        parametros.put("valueListField", "");
+                        parametros.put("valueFile", "");
+                        respuesta.put(parametros);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+                /*************/
+
                 for (Iterator iterator = spinners.iterator(); iterator
                         .hasNext(); ) {
 

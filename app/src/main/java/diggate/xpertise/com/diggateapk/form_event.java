@@ -72,6 +72,7 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -1489,6 +1490,8 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
             }
 
         };
+
+        mjsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(50000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
         mRequestQueue2.add(mjsonObjectRequest);
 

@@ -14,16 +14,20 @@ public class bd {
     private static final String nameUser = "nameUser";
     private static final String codeUser = "codeUser";
     private static final String fullName = "fullName";
+
     // TABLA REGISTRO
     private static final String idAnswers = "_id";
+    private static final String answersJson = "answersJson";
     private static final String nameUserAnswers = "nameUserAnswers";
     private static final String certificateAnswers = "certificateAnswers";
-    private static final String answersJson = "answersJson";
     private static final String stateAnswers = "stateAnswers";
+    private static final String branch = "branch";
+
     // TABLA SESEION
     private static final String idSession = "_id";
     private static final String nameUserSession = "nameUserSession";
     private static final String stateSession = "stateSession";
+    private static final String port = "port";
 
     // TABLA FORMULARIOS
     private static final String idForm = "_id";
@@ -36,7 +40,7 @@ public class bd {
     private static final String answers = "answers";
     private static final String mysession = "mysession";
     private static final String form = "form";
-    private static final int VERSION_BD = 20;
+    private static final int VERSION_BD = 21;
 
     private BDHelper nHelper;
     private final Context nContexto;
@@ -53,23 +57,30 @@ public class bd {
         public void onCreate(SQLiteDatabase db) {
             // TODO Auto-generated method stub
 
-            db.execSQL("CREATE TABLE " + user + "(" + idUser
-                    + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " + nameUser
-                    + " TEXT NOT NULL, " + codeUser + " TEXT NOT NULL, " + fullName + " TEXT NOT NULL);");
+            db.execSQL("CREATE TABLE " + user + "("
+                    + idUser + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "
+                    + nameUser + " TEXT NOT NULL, "
+                    + codeUser + " TEXT NOT NULL, "
+                    + fullName + " TEXT NOT NULL);");
 
-            db.execSQL("CREATE TABLE " + answers + "(" + idAnswers
-                    + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " + answersJson
-                    + " TEXT NOT NULL, " + nameUserAnswers
-                    + " TEXT NOT NULL, " + certificateAnswers
-                    + " TEXT NOT NULL, " + stateAnswers + " TEXT NOT NULL);");
+            db.execSQL("CREATE TABLE " + answers + "("
+                    + idAnswers + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "
+                    + answersJson + " TEXT NOT NULL, "
+                    + nameUserAnswers + " TEXT NOT NULL, "
+                    + certificateAnswers + " TEXT NOT NULL, "
+                    + stateAnswers + " TEXT NOT NULL, "
+                    + branch + " TEXT);");
 
-            db.execSQL("CREATE TABLE " + mysession + "(" + idSession
-                    + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " + nameUserSession
-                    + " TEXT NOT NULL, " + stateSession + " TEXT NOT NULL);");
+            db.execSQL("CREATE TABLE " + mysession + "("
+                    + idSession + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "
+                    + nameUserSession + " TEXT NOT NULL, "
+                    + stateSession + " TEXT NOT NULL, "
+                    + port + " TEXT);");
 
-            db.execSQL("CREATE TABLE " + form + "(" + idForm
-                    + " INTEGER PRIMARY KEY NOT NULL, " + colorForm
-                    + " TEXT NOT NULL, " + idIconForm + " TEXT NOT NULL);");
+            db.execSQL("CREATE TABLE " + form + "("
+                    + idForm + " INTEGER PRIMARY KEY NOT NULL, "
+                    + colorForm + " TEXT NOT NULL, "
+                    + idIconForm + " TEXT NOT NULL);");
 
         }
 
@@ -78,9 +89,16 @@ public class bd {
             // TODO Auto-generated method stub
 
             if (oldVersion < 20) {
-                db.execSQL("CREATE TABLE " + form + "(" + idForm
-                        + " INTEGER PRIMARY KEY NOT NULL, " + colorForm
-                        + " TEXT NOT NULL, " + idIconForm + " TEXT NOT NULL);");
+                db.execSQL("CREATE TABLE " + form + "("
+                        + idForm + " INTEGER PRIMARY KEY NOT NULL, "
+                        + colorForm + " TEXT NOT NULL, "
+                        + idIconForm + " TEXT NOT NULL);");
+            }
+
+            if (oldVersion < 21)
+            {
+                db.execSQL("ALTER TABLE " + answers + " ADD COLUMN " + branch + " TEXT;");
+                db.execSQL("ALTER TABLE " + mysession + " ADD COLUMN " + port + " TEXT;");
             }
 
             /*db.execSQL("DROP TABLE IF EXISTS " + user);
@@ -162,7 +180,7 @@ public class bd {
     }
 
     //Answers
-    public long createAnswers(String name, String auth, String path)
+    public long createAnswers(String name, String auth, String path, String branch)
             throws SQLException {
         // TODO Auto-generated method stub
 
@@ -172,6 +190,7 @@ public class bd {
         cv.put(certificateAnswers, auth);
         cv.put(answersJson, path);
         cv.put(stateAnswers, state);
+        cv.put(this.branch, branch);
         return nBD.insert(answers, null, cv);
 
     }
@@ -194,7 +213,7 @@ public class bd {
 
     }
 
-    public long createSession(String name)
+    public long createSession(String name, String port)
             throws SQLException {
         // TODO Auto-generated method stub
 
@@ -203,6 +222,7 @@ public class bd {
         ContentValues cv = new ContentValues();
         cv.put(nameUserSession, name);
         cv.put(stateSession, state);
+        cv.put(this.port, port);
         return nBD.insert(mysession, null, cv);
 
     }

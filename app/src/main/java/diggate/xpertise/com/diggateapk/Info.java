@@ -21,6 +21,8 @@ public class Info extends AppCompatActivity {
     String fullName;
     Intent ir;
 
+    String branch;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,6 +32,8 @@ public class Info extends AppCompatActivity {
         auth = parametros.getString("auth");
         userName = parametros.getString("userName");
         fullName = parametros.getString("fullName");
+        branch = parametros.getString("branch");
+
         user = findViewById(R.id.user);
         try {
             versionGes = getApplicationContext().getPackageManager().getPackageInfo(getApplicationContext().getPackageName(), 0).versionName;
@@ -65,6 +69,7 @@ public class Info extends AppCompatActivity {
         ir.putExtra("auth", auth);
         ir.putExtra("userName", userName);
         ir.putExtra("fullName", fullName);
+        ir.putExtra("branch", branch);
         startActivity(ir);
         finish();
 

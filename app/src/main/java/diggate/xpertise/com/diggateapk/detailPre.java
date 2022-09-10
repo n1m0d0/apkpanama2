@@ -63,6 +63,8 @@ public class detailPre extends AppCompatActivity implements View.OnClickListener
     Toast msj;
     String fullName;
 
+    String branch;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -80,7 +82,7 @@ public class detailPre extends AppCompatActivity implements View.OnClickListener
         userName = parametros.getString("userName");
         idRegPre = parametros.getInt("idRegPre");
         fullName = parametros.getString("fullName");
-
+        branch = parametros.getString("branch");
 
         Log.w("idRegPre", "" + idRegPre);
         url = url + idRegPre;
@@ -321,6 +323,7 @@ public class detailPre extends AppCompatActivity implements View.OnClickListener
 
                 HashMap headers = new HashMap();
                 headers.put("Authorization", auth); //authentication
+                headers.put("Branch", branch); //rama
                 return headers;
 
             }
@@ -571,6 +574,7 @@ public class detailPre extends AppCompatActivity implements View.OnClickListener
         ir.putExtra("auth", auth);
         ir.putExtra("userName", userName);
         ir.putExtra("fullName", fullName);
+        ir.putExtra("branch", branch);
         startActivity(ir);
         finish();
 

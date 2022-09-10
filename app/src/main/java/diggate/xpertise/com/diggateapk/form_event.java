@@ -220,6 +220,8 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
     String part1 = null;
     String part2 = null;
 
+    String branch;
+
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -251,7 +253,9 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         userName = parametros.getString("userName");
         idForm = parametros.getString("idForm");
         fullName = parametros.getString("fullName");
+        branch = parametros.getString("branch");
         Log.w("fullname", fullName);
+        Log.w("branch", branch);
 
         conversion = new HexConversion();
         //usbPermission();
@@ -827,7 +831,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                             bd conexion = new bd(form_event.this);
                             conexion.abrir();
                             String answer = createAnswerJson(jsonenvio);
-                            conexion.createAnswers(userName, auth, answer);
+                            conexion.createAnswers(userName, auth, answer, branch);
                             conexion.cerrar();
                             finish();
                         } catch (Exception e) {
@@ -1130,6 +1134,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
                 HashMap headers = new HashMap();
                 headers.put("Authorization", auth); //authentication
+                headers.put("Branch", branch); //rama
                 return headers;
 
             }
@@ -1471,7 +1476,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                     bd conexion = new bd(form_event.this);
                     conexion.abrir();
                     String answer = createAnswerJson(jsonenvio);
-                    conexion.createAnswers(userName, auth, answer);
+                    conexion.createAnswers(userName, auth, answer, branch);
                     conexion.cerrar();
                     mProgressDialog.dismiss();
                     finish();
@@ -1486,6 +1491,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
             public Map getHeaders() throws AuthFailureError {
                 HashMap headers = new HashMap();
                 headers.put("Authorization", auth); //authentication
+                headers.put("Branch", branch); //rama
                 return headers;
             }
 
@@ -2691,6 +2697,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        alertDialog.dismiss();
                         finish();
                     }
                 }

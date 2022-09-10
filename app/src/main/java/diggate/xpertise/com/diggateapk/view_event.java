@@ -63,6 +63,8 @@ public class view_event extends AppCompatActivity implements View.OnClickListene
     Toast msj;
     String fullName;
 
+    String branch;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -80,7 +82,7 @@ public class view_event extends AppCompatActivity implements View.OnClickListene
         userName = parametros.getString("userName");
         idEvent = parametros.getString("idEvent");
         fullName = parametros.getString("fullName");
-
+        branch = parametros.getString("branch");
 
         Log.w("idEvent", idEvent);
         url = url + idEvent;
@@ -110,6 +112,7 @@ public class view_event extends AppCompatActivity implements View.OnClickListene
                 ir.putExtra("idForm", "" + generaForm);
                 ir.putExtra("idEvent", "" + idEvent);
                 ir.putExtra("fullName", fullName);
+                ir.putExtra("branch", branch);
                 startActivity(ir);
                 finish();
 
@@ -340,6 +343,7 @@ public class view_event extends AppCompatActivity implements View.OnClickListene
 
                 HashMap headers = new HashMap();
                 headers.put("Authorization", auth); //authentication
+                headers.put("Branch", branch); //rama
                 return headers;
 
             }
@@ -590,6 +594,7 @@ public class view_event extends AppCompatActivity implements View.OnClickListene
         ir.putExtra("auth", auth);
         ir.putExtra("userName", userName);
         ir.putExtra("fullName", fullName);
+        ir.putExtra("branch", branch);
         startActivity(ir);
         finish();
 

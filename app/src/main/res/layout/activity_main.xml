@@ -84,6 +84,30 @@
                     android:textColorHint="#2F3887" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/hint3"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                app:hintTextAppearance="@style/test_appearance">
+
+                <EditText
+                    android:id="@+id/etPort"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:backgroundTint="#2F3887"
+                    android:foregroundTint="#2F3887"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:hint="Codigo del Puerto"
+                    android:inputType="textCapCharacters"
+                    android:textColor="#2F3887"
+                    android:textColorHighlight="#2F3887"
+                    android:textColorHint="#2F3887" />
+            </com.google.android.material.textfield.TextInputLayout>
+
             <TextView
                 android:id="@+id/btnForgotPassword"
                 android:layout_width="wrap_content"

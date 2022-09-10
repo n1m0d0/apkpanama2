@@ -191,6 +191,8 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
     int idFinger;
     String fingerCapture = "";
 
+    String branch;
+
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -223,6 +225,7 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
         userName = parametros.getString("userName");
         fullName = parametros.getString("fullName");
         idFromPreReg = parametros.getInt("idFromPreReg");
+        branch = parametros.getString("branch");
 
         //biometrico
         conversion = new HexConversion();
@@ -235,6 +238,7 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
             ir.putExtra("auth", auth);
             ir.putExtra("userName", userName);
             ir.putExtra("fullName", fullName);
+            ir.putExtra("branch", branch);
             startActivity(ir);
             finish();
         }
@@ -697,7 +701,7 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
                             bd conexion = new bd(parFormFielsPre.this);
                             conexion.abrir();
                             String answer = createAnswerJson(jsonenvio);
-                            conexion.createAnswers(userName, auth, answer);
+                            conexion.createAnswers(userName, auth, answer, branch);
                             conexion.cerrar();
                             finish();
                         } catch (Exception e) {
@@ -795,6 +799,7 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
                     ir.putExtra("auth", auth);
                     ir.putExtra("userName", userName);
                     ir.putExtra("fullName", fullName);
+                    ir.putExtra("branch", branch);
                     startActivity(ir);
                     finish();
                 }
@@ -1018,6 +1023,7 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
 
                 HashMap headers = new HashMap();
                 headers.put("Authorization", auth); //authentication
+                headers.put("Branch", branch); //rama
                 return headers;
 
             }
@@ -1338,6 +1344,7 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
                 ir.putExtra("auth", auth);
                 ir.putExtra("userName", userName);
                 ir.putExtra("fullName", fullName);
+                ir.putExtra("branch", branch);
                 startActivity(ir);
                 finish();
 
@@ -1353,7 +1360,7 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
                     bd conexion = new bd(parFormFielsPre.this);
                     conexion.abrir();
                     String answer = createAnswerJson(jsonenvio);
-                    conexion.createAnswers(userName, auth, answer);
+                    conexion.createAnswers(userName, auth, answer, branch);
                     conexion.cerrar();
                     mProgressDialog.dismiss();
                     finish();
@@ -1368,6 +1375,7 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
             public Map getHeaders() throws AuthFailureError {
                 HashMap headers = new HashMap();
                 headers.put("Authorization", auth); //authentication
+                headers.put("Branch", branch); //rama
                 return headers;
             }
 
@@ -2398,6 +2406,7 @@ public class parFormFielsPre extends AppCompatActivity implements View.OnClickLi
         ir.putExtra("auth", auth);
         ir.putExtra("userName", userName);
         ir.putExtra("fullName", fullName);
+        ir.putExtra("branch", branch);
         startActivity(ir);
         finish();
     }

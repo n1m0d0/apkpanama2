@@ -59,7 +59,7 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 public class MainActivity extends AppCompatActivity implements OnClickListener, Response.Listener<JSONObject>, Response.ErrorListener {
 
-    EditText etUser, etPassword;
+    EditText etUser, etPassword, etPort;
     TextView btnLogin, btnForgotPassword;
     Toast msj;
     Intent ir;
@@ -76,6 +76,9 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
     String certificado = "";
     String idOffline;
 
+    String branch;
+    String branchOffline;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -88,6 +91,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
 
         etUser = findViewById(R.id.etUser);
         etPassword = findViewById(R.id.etPassword);
+        etPort = findViewById(R.id.etPort);
         logo = findViewById(R.id.img);
         btnLogin = findViewById(R.id.btnLogin);
         btnLogin.setOnClickListener(this);
@@ -125,10 +129,11 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
         switch (v.getId()) {
             case R.id.btnLogin:
 
-                if (etUser.getText().toString().trim().equalsIgnoreCase("") || etPassword.getText().toString().trim().equalsIgnoreCase("")) {
+                if (etUser.getText().toString().trim().equalsIgnoreCase("") || etPassword.getText().toString().trim().equalsIgnoreCase("") || etPort.getText().toString().trim().equalsIgnoreCase("")) {
 
                     msj = Toast.makeText(this, "debe coompletar los datos", Toast.LENGTH_LONG);
                     msj.show();
+
                 } else {
 
                     if (!validarEmail(etUser.getText().toString())) {
@@ -138,54 +143,65 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
 
                     } else {
 
-                        //llamar la funcion de login
+                        //validar campo puerto
+                        if (etPort.getText().toString().trim().equals("PAHRC1") || etPort.getText().toString().trim().equals("PAPCC1")) {
 
-                        String password = encryptPassword(etPassword.getText().toString().trim());
+                            branch = etPort.getText().toString().trim();
 
-                        credentials = etUser.getText().toString().trim() + ":" + password;
-                        auth = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
+                            //llamar la funcion de login
+                            String password = encryptPassword(etPassword.getText().toString().trim());
 
-                        if (compruebaConexion(this)) {
+                            credentials = etUser.getText().toString().trim() + ":" + password;
+                            auth = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
 
-                            cargarLogin();
+                            if (compruebaConexion(this)) {
 
-                        } else {
+                                cargarLogin();
 
-                            msj = Toast.makeText(this, "Sin conexion a Internet", Toast.LENGTH_LONG);
-                            msj.setGravity(Gravity.CENTER, 0, 0);
-                            msj.show();
+                            } else {
 
-                            try {
+                                msj = Toast.makeText(this, "Sin conexion a Internet", Toast.LENGTH_LONG);
+                                msj.setGravity(Gravity.CENTER, 0, 0);
+                                msj.show();
 
-                                bd conexion = new bd(this);
-                                conexion.abrir();
-                                Cursor usuario = conexion.login(etUser.getText().toString().trim(), auth);
-                                if (usuario.moveToFirst() == false) {
+                                try {
 
-                                    msj = Toast.makeText(this, "Usuario o Clave incorrecto!!", Toast.LENGTH_LONG);
-                                    msj.setGravity(Gravity.CENTER, 0, 0);
-                                    msj.show();
+                                    bd conexion = new bd(this);
+                                    conexion.abrir();
+                                    Cursor usuario = conexion.login(etUser.getText().toString().trim(), auth);
+                                    if (usuario.moveToFirst() == false) {
 
-                                } else {
+                                        msj = Toast.makeText(this, "Usuario o Clave incorrecto!!", Toast.LENGTH_LONG);
+                                        msj.setGravity(Gravity.CENTER, 0, 0);
+                                        msj.show();
 
-                                    conexion.createSession(etUser.getText().toString().trim());
-                                    ir = new Intent(this, events.class);
-                                    ir.putExtra("auth", auth);
-                                    ir.putExtra("userName", etUser.getText().toString().trim());
-                                    ir.putExtra("fullName", usuario.getString(3));
-                                    startActivity(ir);
+                                    } else {
+
+                                        conexion.createSession(etUser.getText().toString().trim(), etPort.getText().toString().trim());
+                                        ir = new Intent(this, events.class);
+                                        ir.putExtra("auth", auth);
+                                        ir.putExtra("userName", etUser.getText().toString().trim());
+                                        ir.putExtra("fullName", usuario.getString(3));
+                                        ir.putExtra("branch", branch);
+                                        startActivity(ir);
+
+                                    }
+                                    conexion.cerrar();
+
+                                } catch (Exception e) {
+
+                                    e.printStackTrace();
 
                                 }
-                                conexion.cerrar();
-
-                            } catch (Exception e) {
-
-                                e.printStackTrace();
 
                             }
 
-                        }
+                        } else {
 
+                            msj = Toast.makeText(this, "El puerto no es valida", Toast.LENGTH_LONG);
+                            msj.show();
+
+                        }
 
                     }
 
@@ -224,6 +240,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
             public Map getHeaders() throws AuthFailureError {
                 HashMap headers = new HashMap();
                 headers.put("Authorization", auth); //authentication
+                headers.put("Branch", branch); //rama
                 return headers;
             }
 
@@ -268,12 +285,12 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
                 if (usuario.moveToFirst() == false) {
 
                     conexion.createUser(etUser.getText().toString().trim(), auth, fullName);
-                    conexion.createSession(etUser.getText().toString().trim());
+                    conexion.createSession(etUser.getText().toString().trim(), etPort.getText().toString().trim());
 
                 } else {
 
                     conexion.updateUser(etUser.getText().toString().trim(), auth);
-                    conexion.createSession(etUser.getText().toString().trim());
+                    conexion.createSession(etUser.getText().toString().trim(), etPort.getText().toString().trim());
 
                 }
 
@@ -289,6 +306,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
             ir.putExtra("auth", auth);
             ir.putExtra("userName", etUser.getText().toString().trim());
             ir.putExtra("fullName", fullName);
+            ir.putExtra("branch", branch);
             startActivity(ir);
 
         } else {
@@ -465,6 +483,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
                     String jsonAnswers = offline.getString(1);
                     String user = offline.getString(2);
                     certificado = offline.getString(3);
+                    branchOffline = offline.getString(5);
 
                     Log.w("data", certificado + " " + idOffline);
 
@@ -505,6 +524,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
                         public Map getHeaders() throws AuthFailureError {
                             HashMap headers = new HashMap();
                             headers.put("Authorization", certificado); //authentication
+                            headers.put("Branch", branchOffline); //rama
                             return headers;
                         }
 
@@ -564,6 +584,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
             ir.putExtra("auth", cursor2.getString(2));
             ir.putExtra("userName", cursor2.getString(1));
             ir.putExtra("fullName", cursor2.getString(3));
+            ir.putExtra("branch", cursor.getString(3));
             startActivity(ir);
             finish();
 

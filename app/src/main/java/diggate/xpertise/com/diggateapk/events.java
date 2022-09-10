@@ -119,6 +119,9 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
     ArrayList<String> strings = new ArrayList<String>();
     ArrayList<obj_form> obj_forms = new ArrayList<obj_form>();
 
+    String branch;
+    String branchOffline;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -141,6 +144,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
         auth = parametros.getString("auth");
         userName = parametros.getString("userName");
         fullName = parametros.getString("fullName");
+        branch = parametros.getString("branch");
 
         //funcionn para llenar el array de itemEvents y mostrarlo en el ListView
 
@@ -185,6 +189,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
                 ir.putExtra("userName", userName);
                 ir.putExtra("idEvent", id_events);
                 ir.putExtra("fullName", fullName);
+                ir.putExtra("branch", branch);
                 startActivity(ir);
                 finish();
 
@@ -200,6 +205,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
                 ir.putExtra("auth", auth);
                 ir.putExtra("userName", userName);
                 ir.putExtra("fullName", fullName);
+                ir.putExtra("branch", branch);
                 startActivity(ir);
                 finish();
 
@@ -303,6 +309,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
                 ir.putExtra("auth", auth);
                 ir.putExtra("userName", userName);
                 ir.putExtra("fullName", fullName);
+                ir.putExtra("branch", branch);
                 startActivity(ir);
                 finish();
 
@@ -314,6 +321,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
                 ir.putExtra("auth", auth);
                 ir.putExtra("userName", userName);
                 ir.putExtra("fullName", fullName);
+                ir.putExtra("branch", branch);
                 startActivity(ir);
                 finish();
                 return true;
@@ -337,6 +345,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
             public Map getHeaders() throws AuthFailureError {
                 HashMap headers = new HashMap();
                 headers.put("Authorization", auth); //authentication
+                headers.put("Branch", branch); //rama
                 return headers;
             }
 
@@ -809,6 +818,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
                     String jsonAnswers = offline.getString(1);
                     String user = offline.getString(2);
                     certificado = offline.getString(3);
+                    branchOffline = offline.getString(5);
 
                     Log.w("data", certificado + " " + idOffline);
 
@@ -818,7 +828,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
 
                     Log.w("data", " " + respuesta);
 
-                    probar(respuesta, idOffline);
+                    probar(respuesta, idOffline, branchOffline);
 
                     offline.moveToNext();
                 }
@@ -834,7 +844,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
     }
 
     /***********/
-    public void probar(JSONObject respuesta, final String idBD) {
+    public void probar(JSONObject respuesta, final String idBD, String branch) {
         mJsonObjectRequest = new JsonObjectRequest(Request.Method.POST, direccion, respuesta, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -881,6 +891,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
             public Map getHeaders() throws AuthFailureError {
                 HashMap headers = new HashMap();
                 headers.put("Authorization", certificado); //authentication
+                headers.put("Branch", branch); //rama
                 return headers;
             }
 
@@ -1210,6 +1221,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
             public Map getHeaders() throws AuthFailureError {
                 HashMap headers = new HashMap();
                 headers.put("Authorization", auth); //authentication
+                headers.put("Branch", branch); //rama
                 return headers;
             }
 

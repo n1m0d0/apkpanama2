@@ -171,6 +171,8 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
 
     String currentPhotoPath;
 
+    String branch;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -201,7 +203,10 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
         idForm = parametros.getString("idForm");
         idEvent = parametros.getString("idEvent");
         fullName = parametros.getString("fullName");
+        branch = parametros.getString("branch");
 
+        Log.w("fullname", fullName);
+        Log.w("branch", branch);
 
         hand.removeCallbacks(actualizar);
         hand.postDelayed(actualizar, 100);
@@ -883,12 +888,13 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
                             bd conexion = new bd(checkout.this);
                             conexion.abrir();
                             String answer = createAnswerJson(jsonenvio);
-                            conexion.createAnswers(userName, auth, answer);
+                            conexion.createAnswers(userName, auth, answer, branch);
                             conexion.cerrar();
                             ir = new Intent(checkout.this, events.class);
                             ir.putExtra("auth", auth);
                             ir.putExtra("userName", userName);
                             ir.putExtra("fullName", fullName);
+                            ir.putExtra("branch", branch);
                             startActivity(ir);
                             finish();
                         } catch (Exception e) {
@@ -1193,6 +1199,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
 
                 HashMap headers = new HashMap();
                 headers.put("Authorization", auth); //authentication
+                headers.put("Branch", branch); //rama
                 return headers;
 
             }
@@ -1515,6 +1522,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
                         ir.putExtra("auth", auth);
                         ir.putExtra("userName", userName);
                         ir.putExtra("fullName", fullName);
+                        ir.putExtra("branch", branch);
                         startActivity(ir);
                         Uri uri = Uri.parse(response.getString("urlReceipt"));
                         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
@@ -1525,6 +1533,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
                         ir.putExtra("auth", auth);
                         ir.putExtra("userName", userName);
                         ir.putExtra("fullName", fullName);
+                        ir.putExtra("branch", branch);
                         startActivity(ir);
                         finish();
                     }
@@ -1551,13 +1560,14 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
                     bd conexion = new bd(checkout.this);
                     conexion.abrir();
                     String answer = createAnswerJson(jsonenvio);
-                    conexion.createAnswers(userName, auth, answer);
+                    conexion.createAnswers(userName, auth, answer, branch);
                     conexion.cerrar();
                     mProgressDialog.dismiss();
                     ir = new Intent(checkout.this, events.class);
                     ir.putExtra("auth", auth);
                     ir.putExtra("userName", userName);
                     ir.putExtra("fullName", fullName);
+                    ir.putExtra("branch", branch);
                     startActivity(ir);
                     finish();
                 } catch (Exception e) {
@@ -1572,6 +1582,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
             public Map getHeaders() throws AuthFailureError {
                 HashMap headers = new HashMap();
                 headers.put("Authorization", auth); //authentication
+                headers.put("Branch", branch); //rama
                 return headers;
             }
 
@@ -2153,6 +2164,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
         ir.putExtra("auth", auth);
         ir.putExtra("userName", userName);
         ir.putExtra("fullName", fullName);
+        ir.putExtra("branch", branch);
         startActivity(ir);
         finish();
 

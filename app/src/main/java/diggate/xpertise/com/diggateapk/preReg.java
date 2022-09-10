@@ -74,6 +74,8 @@ public class preReg extends AppCompatActivity {
 
     private JSGFPLib sgfplib;
 
+    String branch;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,6 +88,7 @@ public class preReg extends AppCompatActivity {
         auth = parametros.getString("auth");
         userName = parametros.getString("userName");
         fullName = parametros.getString("fullName");
+        branch = parametros.getString("branch");
 
         if (compruebaConexion(this)) {
             registered();
@@ -107,6 +110,7 @@ public class preReg extends AppCompatActivity {
                 ir.putExtra("userName", userName);
                 ir.putExtra("idFromPreReg", elegido.getId());
                 ir.putExtra("fullName", fullName);
+                ir.putExtra("branch", branch);
                 startActivity(ir);
                 finish();
             }
@@ -166,6 +170,7 @@ public class preReg extends AppCompatActivity {
             public Map getHeaders() throws AuthFailureError {
                 HashMap headers = new HashMap();
                 headers.put("Authorization", auth); //authentication
+                headers.put("Branch", branch); //rama
                 return headers;
             }
 
@@ -297,6 +302,7 @@ public class preReg extends AppCompatActivity {
         ir.putExtra("auth", auth);
         ir.putExtra("userName", userName);
         ir.putExtra("fullName", fullName);
+        ir.putExtra("branch", branch);
         startActivity(ir);
         finish();
     }

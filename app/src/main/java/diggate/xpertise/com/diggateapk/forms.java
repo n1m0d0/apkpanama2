@@ -88,6 +88,8 @@ public class forms extends AppCompatActivity implements Response.Listener<JSONAr
 
     private JSGFPLib sgfplib;
 
+    String branch;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -104,6 +106,7 @@ public class forms extends AppCompatActivity implements Response.Listener<JSONAr
         auth = parametros.getString("auth");
         userName = parametros.getString("userName");
         fullName = parametros.getString("fullName");
+        branch = parametros.getString("branch");
 
         if (compruebaConexion(this)) {
 
@@ -151,6 +154,7 @@ public class forms extends AppCompatActivity implements Response.Listener<JSONAr
                 ir.putExtra("userName", userName);
                 ir.putExtra("idForm", id_form);
                 ir.putExtra("fullName", fullName);
+                ir.putExtra("branch", branch);
                 startActivity(ir);
 
 
@@ -173,6 +177,7 @@ public class forms extends AppCompatActivity implements Response.Listener<JSONAr
             public Map getHeaders() throws AuthFailureError {
                 HashMap headers = new HashMap();
                 headers.put("Authorization", auth); //authentication
+                headers.put("Branch", branch); //rama
                 return headers;
             }
 
@@ -246,6 +251,7 @@ public class forms extends AppCompatActivity implements Response.Listener<JSONAr
         ir.putExtra("auth", auth);
         ir.putExtra("userName", userName);
         ir.putExtra("fullName", fullName);
+        ir.putExtra("branch", branch);
         startActivity(ir);
         finish();
 

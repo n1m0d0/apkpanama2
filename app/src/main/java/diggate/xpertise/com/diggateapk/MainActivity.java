@@ -13,8 +13,10 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
@@ -143,63 +145,53 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
 
                     } else {
 
-                        //validar campo puerto
-                        if (etPort.getText().toString().trim().equals("PAHRC1") || etPort.getText().toString().trim().equals("PAPCC1")) {
+                        branch = etPort.getText().toString().trim();
 
-                            branch = etPort.getText().toString().trim();
+                        //llamar la funcion de login
+                        String password = encryptPassword(etPassword.getText().toString().trim());
 
-                            //llamar la funcion de login
-                            String password = encryptPassword(etPassword.getText().toString().trim());
+                        credentials = etUser.getText().toString().trim() + ":" + password;
+                        auth = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
 
-                            credentials = etUser.getText().toString().trim() + ":" + password;
-                            auth = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
+                        if (compruebaConexion(this)) {
 
-                            if (compruebaConexion(this)) {
-
-                                cargarLogin();
-
-                            } else {
-
-                                msj = Toast.makeText(this, "Sin conexion a Internet", Toast.LENGTH_LONG);
-                                msj.setGravity(Gravity.CENTER, 0, 0);
-                                msj.show();
-
-                                try {
-
-                                    bd conexion = new bd(this);
-                                    conexion.abrir();
-                                    Cursor usuario = conexion.login(etUser.getText().toString().trim(), auth);
-                                    if (usuario.moveToFirst() == false) {
-
-                                        msj = Toast.makeText(this, "Usuario o Clave incorrecto!!", Toast.LENGTH_LONG);
-                                        msj.setGravity(Gravity.CENTER, 0, 0);
-                                        msj.show();
-
-                                    } else {
-
-                                        conexion.createSession(etUser.getText().toString().trim(), etPort.getText().toString().trim());
-                                        ir = new Intent(this, events.class);
-                                        ir.putExtra("auth", auth);
-                                        ir.putExtra("userName", etUser.getText().toString().trim());
-                                        ir.putExtra("fullName", usuario.getString(3));
-                                        ir.putExtra("branch", branch);
-                                        startActivity(ir);
-
-                                    }
-                                    conexion.cerrar();
-
-                                } catch (Exception e) {
-
-                                    e.printStackTrace();
-
-                                }
-
-                            }
+                            cargarLogin();
 
                         } else {
 
-                            msj = Toast.makeText(this, "El puerto no es valida", Toast.LENGTH_LONG);
+                            msj = Toast.makeText(this, "Sin conexion a Internet", Toast.LENGTH_LONG);
+                            msj.setGravity(Gravity.CENTER, 0, 0);
                             msj.show();
+
+                            try {
+
+                                bd conexion = new bd(this);
+                                conexion.abrir();
+                                Cursor usuario = conexion.login(etUser.getText().toString().trim(), auth);
+                                if (usuario.moveToFirst() == false) {
+
+                                    msj = Toast.makeText(this, "Usuario o Clave incorrecto!!", Toast.LENGTH_LONG);
+                                    msj.setGravity(Gravity.CENTER, 0, 0);
+                                    msj.show();
+
+                                } else {
+
+                                    conexion.createSession(etUser.getText().toString().trim(), etPort.getText().toString().trim());
+                                    ir = new Intent(this, events.class);
+                                    ir.putExtra("auth", auth);
+                                    ir.putExtra("userName", etUser.getText().toString().trim());
+                                    ir.putExtra("fullName", usuario.getString(3));
+                                    ir.putExtra("branch", branch);
+                                    startActivity(ir);
+
+                                }
+                                conexion.cerrar();
+
+                            } catch (Exception e) {
+
+                                e.printStackTrace();
+
+                            }
 
                         }
 

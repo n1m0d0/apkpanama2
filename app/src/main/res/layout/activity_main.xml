@@ -101,7 +101,7 @@
                     android:foregroundTint="#2F3887"
                     android:focusable="true"
                     android:focusableInTouchMode="true"
-                    android:hint="Codigo del Puerto"
+                    android:hint="Empresa"
                     android:inputType="textCapCharacters"
                     android:textColor="#2F3887"
                     android:textColorHighlight="#2F3887"

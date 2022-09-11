@@ -7,11 +7,13 @@
         android:title="Default"
         app:showAsAction="ifRoom" />
 
+    <!--
     <item
         android:id="@+id/iconoUser"
         android:icon="@drawable/user"
         android:title="Default"
         app:showAsAction="ifRoom" />
+    -->
 
     <item
         android:id="@+id/search"

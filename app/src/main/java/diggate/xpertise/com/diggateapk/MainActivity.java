@@ -183,6 +183,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
                                     ir.putExtra("fullName", usuario.getString(3));
                                     ir.putExtra("branch", branch);
                                     startActivity(ir);
+                                    finish();
 
                                 }
                                 conexion.cerrar();
@@ -300,6 +301,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
             ir.putExtra("fullName", fullName);
             ir.putExtra("branch", branch);
             startActivity(ir);
+            finish();
 
         } else {
 

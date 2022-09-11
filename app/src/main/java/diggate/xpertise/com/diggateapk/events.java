@@ -239,7 +239,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menusesion, menu);
         MenuItem User = menu.findItem(R.id.nameUser);
-        User.setTitle(fullName);
+        User.setTitle(branch);
         return true;
     }
 

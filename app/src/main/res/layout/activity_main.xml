@@ -101,7 +101,7 @@
                     android:foregroundTint="#2F3887"
                     android:focusable="true"
                     android:focusableInTouchMode="true"
-                    android:hint="Empresa"
+                    android:hint="empresa"
                     android:inputType="textCapCharacters"
                     android:textColor="#2F3887"
                     android:textColorHighlight="#2F3887"

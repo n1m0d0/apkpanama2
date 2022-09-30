@@ -25,24 +25,48 @@
         android:roundIcon="@drawable/diggate"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="diggate.xpertise.com.diggateapk.detailPre"></activity>
-        <activity android:name="diggate.xpertise.com.diggateapk.parFormFielsPre" />
-        <activity android:name="diggate.xpertise.com.diggateapk.listPreReg" />
-        <activity android:name="diggate.xpertise.com.diggateapk.preReg" />
-        <activity android:name="diggate.xpertise.com.diggateapk.MainActivity">
+        <activity android:name="diggate.xpertise.com.diggateapk.detailPre"
+            android:screenOrientation="portrait"
+            android:configChanges="keyboardHidden|orientation|screenSize" />
+        <activity android:name="diggate.xpertise.com.diggateapk.parFormFielsPre"
+            android:screenOrientation="portrait"
+            android:configChanges="keyboardHidden|orientation|screenSize" />
+        <activity android:name="diggate.xpertise.com.diggateapk.listPreReg"
+            android:screenOrientation="portrait"
+            android:configChanges="keyboardHidden|orientation|screenSize" />
+        <activity android:name="diggate.xpertise.com.diggateapk.preReg"
+            android:screenOrientation="portrait"
+            android:configChanges="keyboardHidden|orientation|screenSize" />
+        <activity android:name="diggate.xpertise.com.diggateapk.MainActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="keyboardHidden|orientation|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="diggate.xpertise.com.diggateapk.forgotPassword" />
-        <activity android:name="diggate.xpertise.com.diggateapk.events" />
-        <activity android:name="diggate.xpertise.com.diggateapk.form_event" />
-        <activity android:name="diggate.xpertise.com.diggateapk.view_event" />
-        <activity android:name="diggate.xpertise.com.diggateapk.checkout" />
-        <activity android:name="diggate.xpertise.com.diggateapk.forms" />
-        <activity android:name="diggate.xpertise.com.diggateapk.Info" />
+        <activity android:name="diggate.xpertise.com.diggateapk.forgotPassword"
+            android:screenOrientation="portrait"
+            android:configChanges="keyboardHidden|orientation|screenSize" />
+        <activity android:name="diggate.xpertise.com.diggateapk.events"
+            android:screenOrientation="portrait"
+            android:configChanges="keyboardHidden|orientation|screenSize" />
+        <activity android:name="diggate.xpertise.com.diggateapk.form_event"
+            android:screenOrientation="portrait"
+            android:configChanges="keyboardHidden|orientation|screenSize" />
+        <activity android:name="diggate.xpertise.com.diggateapk.view_event"
+            android:screenOrientation="portrait"
+            android:configChanges="keyboardHidden|orientation|screenSize" />
+        <activity android:name="diggate.xpertise.com.diggateapk.checkout"
+            android:screenOrientation="portrait"
+            android:configChanges="keyboardHidden|orientation|screenSize" />
+        <activity android:name="diggate.xpertise.com.diggateapk.forms"
+            android:screenOrientation="portrait"
+            android:configChanges="keyboardHidden|orientation|screenSize" />
+        <activity android:name="diggate.xpertise.com.diggateapk.Info"
+            android:screenOrientation="portrait"
+            android:configChanges="keyboardHidden|orientation|screenSize"/>
 
         <provider
             android:name="androidx.core.content.FileProvider"

@@ -135,6 +135,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
         tvPending = findViewById(R.id.tvPending);
         lvEvents = findViewById(R.id.lvEvents);
         fbAdd = findViewById(R.id.fbAdd);
+        fbAdd.setVisibility(View.GONE);
         etSearch = findViewById(R.id.etSearch);
         etSearch.setBackgroundResource(R.drawable.customedittext);
         etSearch.setPadding(30, 20, 30, 20);
@@ -413,6 +414,18 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
             formularios = formulario;
             Log.w("filtros", filtros.toString());
             Log.w("formulario", formularios.toString());
+
+            /***/
+            JSONArray roles = response.getJSONArray("roles");
+            for (int z = 0; z < roles.length(); z++) {
+                JSONObject rol = roles.getJSONObject(z);
+                if(rol.getInt("canCreate") == 1);
+                {
+                    fbAdd.setVisibility(View.VISIBLE);
+                }
+                Log.w("rol", "" + rol.getInt("canCreate"));
+            }
+            /***/
 
             bd conexion = new bd(events.this);
             conexion.abrir();

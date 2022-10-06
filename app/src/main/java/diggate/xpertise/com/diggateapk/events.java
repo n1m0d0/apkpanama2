@@ -580,6 +580,18 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
                     JSONArray formulario = response.getJSONArray("forms");
                     JSONArray eventitos = response.optJSONArray("events");
 
+                    /***/
+                    JSONArray roles = response.getJSONArray("roles");
+                    for (int z = 0; z < roles.length(); z++) {
+                        JSONObject rol = roles.getJSONObject(z);
+                        if(rol.getInt("canCreate") == 1);
+                        {
+                            fbAdd.setVisibility(View.VISIBLE);
+                        }
+                        Log.w("rol", "" + rol.getInt("canCreate"));
+                    }
+                    /***/
+
                     bd conexion = new bd(events.this);
                     conexion.abrir();
                     conexion.deleteForm();

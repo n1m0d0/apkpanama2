@@ -419,7 +419,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
             JSONArray roles = response.getJSONArray("roles");
             for (int z = 0; z < roles.length(); z++) {
                 JSONObject rol = roles.getJSONObject(z);
-                if(rol.getInt("canCreate") == 1);
+                if(rol.getInt("canCreate") == 1)
                 {
                     fbAdd.setVisibility(View.VISIBLE);
                 }
@@ -584,7 +584,7 @@ public class events extends AppCompatActivity implements Response.Listener<JSONO
                     JSONArray roles = response.getJSONArray("roles");
                     for (int z = 0; z < roles.length(); z++) {
                         JSONObject rol = roles.getJSONObject(z);
-                        if(rol.getInt("canCreate") == 1);
+                        if(rol.getInt("canCreate") == 1)
                         {
                             fbAdd.setVisibility(View.VISIBLE);
                         }

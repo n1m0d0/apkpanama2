@@ -35,8 +35,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.InputFilter;
 import android.text.InputType;
+import android.text.TextWatcher;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Base64;
 import android.util.Log;
@@ -53,6 +55,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -139,6 +142,8 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
     ArrayList<ImageView> signatures = new ArrayList<ImageView>();
     ArrayList<Spinner> spinners2 = new ArrayList<Spinner>();
     ArrayList<TextView> textViewsLocation = new ArrayList<TextView>();
+    ArrayList<TextView> spinnersSearch = new ArrayList<TextView>();
+    ArrayList<TextView> spinnersSearch2 = new ArrayList<TextView>();
 
     Bitmap bit;
     Uri output;
@@ -860,6 +865,91 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
                 }
                 /****************************************/
 
+                /**************/
+                //spinner search
+                for (Iterator iterator = spinnersSearch.iterator(); iterator
+                        .hasNext(); ) {
+
+                    TextView textView = (TextView) iterator.next();
+
+                    String[] parts = textView.getHint().toString().trim().split("-");
+
+                    if (textView.getHint().equals("")) {
+
+                        validar++;
+                        Log.w("countSpinnerSearch", "" + validar);
+                        textView.setTextColor(Color.RED);
+
+                    } else {
+                        textView.setTextColor(getResources().getColor(R.color.colorTextVariable));
+
+                        int elegido = Integer.parseInt(parts[0]);
+                        int control = Integer.parseInt(parts[1]);
+
+                        Log.w("spinnerSearch", "id: " + textView.getId() + " optionId: " + elegido + " control: " + control);
+
+                        if (control == 0) {
+                            try {
+                                JSONObject parametros = new JSONObject();
+                                parametros.put("idField", textView.getId());
+                                parametros.put("valueInputField", "");
+                                parametros.put("valueInputDateField", "");
+                                parametros.put("valueListField", elegido);
+                                parametros.put("valueFile", "");
+                                respuesta.put(parametros);
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+                            try {
+                                JSONObject parametros = new JSONObject();
+                                parametros.put("idField", textView.getId());
+                                parametros.put("valueInputField", textView.getText());
+                                parametros.put("valueInputDateField", "");
+                                parametros.put("valueListField", -1);
+                                parametros.put("valueFile", "");
+                                respuesta.put(parametros);
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                }
+                //spinner search2
+                for (Iterator iterator = spinnersSearch2.iterator(); iterator
+                        .hasNext(); ) {
+
+                    TextView textView = (TextView) iterator.next();
+
+                    if (textView.getHint().equals("")) {
+
+                        validar++;
+                        Log.w("countSpinnerSearch2", "" + validar);
+                        textView.setTextColor(Color.RED);
+
+                    } else {
+                        textView.setTextColor(getResources().getColor(R.color.colorTextVariable));
+
+                        Log.w("spinnerSearch2", "id: " + textView.getId() + " optionId: " + textView.getHint());
+                        try {
+                            JSONObject parametros = new JSONObject();
+                            parametros.put("idField", textView.getId());
+                            parametros.put("valueInputField", textView.getHint());
+                            parametros.put("valueInputDateField", "");
+                            parametros.put("valueListField", -2);
+                            parametros.put("valueFile", "");
+                            respuesta.put(parametros);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }
+                /**************/
+
                 localizar();
 
                 //Log.w("json", "" + respuesta);
@@ -1166,6 +1256,27 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
 
                                 creartextview(description);
                                 createTextViewLocation(idField, is_mandatory);
+
+                                break;
+
+                            case 17:
+
+                                creartextview(description);
+                                createSpinnerSearch(idField, itemp, input_max);
+
+                                break;
+
+                            case 18:
+
+                                creartextview(description);
+                                createSpinnerSearch2(idField, itemp, input_max, idValue_other);
+
+                                break;
+
+                            case 19:
+
+                                creartextview(description);
+                                createSpinnerSearch3(idField, itemp);
 
                                 break;
 
@@ -2737,6 +2848,443 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
 
         alertDialog.show();
     }
+    
+    /*********/
+    // spinner con busuqeda
+    public void createSpinnerSearch(int idField, final ArrayList<obj_params> listOption, int idParam) {
+        LinearLayout llBody = new LinearLayout(this);
+        LinearLayout.LayoutParams paramsBody = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        llBody.setLayoutParams(paramsBody);
+        llBody.setOrientation(LinearLayout.HORIZONTAL);
+        llBody.setWeightSum(10);
+        llBody.setPadding(10, 10, 10, 10);
+        llContenedor.addView(llBody);
+
+        TextView textView = new TextView(this);
+        textView.setId(idField);
+        textView.setText("Selecione una opcion");
+        textView.setHint("");
+        textView.setTextSize(14);
+        textView.setTextColor(getResources().getColor(R.color.colorTextVariable));
+        textView.setBackgroundResource(R.color.colorSpinner);
+        textView.setPadding(30, 20, 30, 20);
+        LinearLayout.LayoutParams lastTxtParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
+        lastTxtParams.setMargins(0, 30, 0, 0);
+        textView.setLayoutParams(lastTxtParams);
+        llBody.addView(textView);
+
+        spinnersSearch.add(textView);
+
+        ImageView iv = new ImageView(this);
+        iv.setImageResource(R.drawable.ic_baseline_keyboard_arrow_down_24);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 9f);
+        lp.gravity = Gravity.CENTER;
+        iv.setLayoutParams(lp);
+        llBody.addView(iv);
+
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                LinearLayout llcrearDialogo = new LinearLayout(checkout.this);
+                LinearLayout.LayoutParams parametrosTextoEditor = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                parametrosTextoEditor.setMargins(20, 10, 20, 10);
+                llcrearDialogo.setLayoutParams(parametrosTextoEditor);
+                llcrearDialogo.setOrientation(LinearLayout.VERTICAL);
+                llcrearDialogo.setPadding(10, 10, 10, 10);
+
+                EditText et = new EditText(checkout.this);
+                et.setInputType(InputType.TYPE_CLASS_TEXT);
+                et.setTextSize(14);
+                et.setTextColor(getResources().getColor(R.color.colorTextVariable));
+                et.setHint("Buscar");
+                et.setBackgroundResource(R.drawable.customedittext);
+                et.setPadding(30, 20, 30, 20);
+
+                ListView lv = new ListView(checkout.this);
+                LinearLayout.LayoutParams paramsList = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                paramsList.setMargins(0, 10, 0, 0);
+                lv.setLayoutParams(paramsList);
+
+                adapter_spinner_search adapter = new adapter_spinner_search(checkout.this, listOption);
+                lv.setAdapter(adapter);
+
+                for (int i = 0; i < lv.getCount(); i++) {
+                    obj_params elegido = (obj_params) lv.getItemAtPosition(i);
+                    if (elegido.getId() == idParam) {
+                        textView.setText(elegido.getDescription());
+                        textView.setHint(elegido.getId() + "-" + elegido.getControl());
+                    }
+                }
+
+                llcrearDialogo.addView(et);
+                llcrearDialogo.addView(lv);
+
+                final AlertDialog optionDialog = new AlertDialog.Builder(checkout.this, android.R.style.Theme_DeviceDefault_Light_Dialog_Alert).create();
+                optionDialog.setTitle("Seleccione una opcion");
+                optionDialog.setView(llcrearDialogo);
+                optionDialog.show();
+
+                et.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        String text = s.toString();
+                        Log.w("textSearch", text);
+                        Log.w("countList", "" + listOption.size());
+                        ArrayList<obj_params> searchItems = new ArrayList<obj_params>();
+                        for (int i = 0; i < listOption.size(); i++) {
+                            if (listOption.get(i).getDescription().toLowerCase().contains(text.toLowerCase())) {
+                                Log.w("description", listOption.get(i).getDescription());
+                                searchItems.add(new obj_params(listOption.get(i).getId(), listOption.get(i).getDescription(), listOption.get(i).getControl()));
+                            }
+                        }
+                        adapter_spinner_search adapter = new adapter_spinner_search(checkout.this, searchItems);
+                        lv.setAdapter(adapter);
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+
+                    }
+                });
+
+                lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                        obj_params elegido = (obj_params) lv.getItemAtPosition(i);
+
+                        textView.setText(elegido.getDescription());
+                        textView.setHint(elegido.getId() + "-" + elegido.getControl());
+
+                        optionDialog.dismiss();
+                    }
+                });
+            }
+        });
+    }
+
+    // spinner con busqueda y adicion de un nuevo elemento
+    public void createSpinnerSearch2(int idField, final ArrayList<obj_params> listOption, int idParam, int idValue) {
+        Log.w("idValue", "" + idValue);
+        int aux = listOption.size() - 1;
+        LinearLayout llBody = new LinearLayout(this);
+        LinearLayout.LayoutParams paramsBody = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        llBody.setLayoutParams(paramsBody);
+        llBody.setOrientation(LinearLayout.HORIZONTAL);
+        llBody.setWeightSum(10);
+        llBody.setPadding(10, 10, 10, 10);
+        llContenedor.addView(llBody);
+
+        TextView textView = new TextView(this);
+        textView.setId(idField);
+        textView.setText("Selecione una opcion");
+        textView.setHint("");
+        textView.setTextSize(14);
+        textView.setTextColor(getResources().getColor(R.color.colorTextVariable));
+        textView.setBackgroundResource(R.color.colorSpinner);
+        textView.setPadding(30, 20, 30, 20);
+        LinearLayout.LayoutParams lastTxtParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
+        lastTxtParams.setMargins(0, 30, 0, 0);
+        textView.setLayoutParams(lastTxtParams);
+        llBody.addView(textView);
+
+        spinnersSearch.add(textView);
+
+        ImageView iv = new ImageView(this);
+        iv.setImageResource(R.drawable.ic_baseline_keyboard_arrow_down_24);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 9f);
+        lp.gravity = Gravity.CENTER;
+        iv.setLayoutParams(lp);
+        llBody.addView(iv);
+
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                LinearLayout llcrearDialogo = new LinearLayout(checkout.this);
+                LinearLayout.LayoutParams parametrosTextoEditor = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                parametrosTextoEditor.setMargins(20, 10, 20, 10);
+                llcrearDialogo.setLayoutParams(parametrosTextoEditor);
+                llcrearDialogo.setOrientation(LinearLayout.VERTICAL);
+                llcrearDialogo.setPadding(10, 10, 10, 10);
+
+                EditText et = new EditText(checkout.this);
+                et.setInputType(InputType.TYPE_CLASS_TEXT);
+                et.setTextSize(14);
+                et.setTextColor(getResources().getColor(R.color.colorTextVariable));
+                et.setHint("Buscar");
+                et.setBackgroundResource(R.drawable.customedittext);
+                et.setPadding(30, 20, 30, 20);
+
+                ListView lv = new ListView(checkout.this);
+                LinearLayout.LayoutParams paramsList = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                paramsList.setMargins(0, 10, 0, 0);
+                lv.setLayoutParams(paramsList);
+
+                adapter_spinner_search adapter = new adapter_spinner_search(checkout.this, listOption);
+                lv.setAdapter(adapter);
+
+                for (int i = 0; i < lv.getCount(); i++) {
+                    obj_params elegido = (obj_params) lv.getItemAtPosition(i);
+                    if (elegido.getId() == idParam) {
+                        textView.setText(elegido.getDescription());
+                        textView.setHint(elegido.getId() + "-" + elegido.getControl());
+                    }
+                }
+
+                llcrearDialogo.addView(et);
+                llcrearDialogo.addView(lv);
+
+                final AlertDialog optionDialog = new AlertDialog.Builder(checkout.this, android.R.style.Theme_DeviceDefault_Light_Dialog_Alert).create();
+                optionDialog.setTitle("Seleccione una opcion");
+                optionDialog.setView(llcrearDialogo);
+                optionDialog.show();
+
+                et.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        String text = s.toString();
+                        Log.w("textSearch", text);
+                        Log.w("countList", "" + listOption.size());
+                        ArrayList<obj_params> searchItems = new ArrayList<obj_params>();
+                        for (int i = 0; i < listOption.size(); i++) {
+                            if (listOption.get(i).getDescription().toLowerCase().contains(text.toLowerCase())) {
+                                Log.w("description", listOption.get(i).getDescription());
+                                searchItems.add(new obj_params(listOption.get(i).getId(), listOption.get(i).getDescription(), listOption.get(i).getControl()));
+                            }
+                        }
+                        adapter_spinner_search adapter = new adapter_spinner_search(checkout.this, searchItems);
+                        lv.setAdapter(adapter);
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+
+                    }
+                });
+
+                lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                        obj_params elegido = (obj_params) lv.getItemAtPosition(i);
+
+                        textView.setText(elegido.getDescription());
+                        textView.setHint(elegido.getId() + "-" + elegido.getControl());
+
+                        optionDialog.dismiss();
+
+                        Log.w("position", i + "");
+                        if (idValue > 0 && i == aux) {
+                            dialogInsertOptionsSearch(textView, lv, listOption, idValue);
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    private void dialogInsertOptionsSearch(final TextView textView, ListView listView, final ArrayList<obj_params> options, final int idValue) {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(checkout.this);
+
+        builder.setCancelable(false);
+
+        LayoutInflater inflater = checkout.this.getLayoutInflater();
+
+        View v = inflater.inflate(R.layout.spinner_options, null);
+
+        builder.setView(v);
+
+        final EditText etName = (EditText) v.findViewById(R.id.etName);
+        TextView btnSave = (TextView) v.findViewById(R.id.btnSave);
+        TextView btnExit = (TextView) v.findViewById(R.id.btnExit);
+
+        final AlertDialog alertDialog = builder.create();
+
+
+        btnSave.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (etName.getText().toString().trim().equals("")) {
+                            Toast.makeText(checkout.this, "Debe ingresar un nombre", Toast.LENGTH_SHORT).show();
+                        } else {
+                            options.add(new obj_params(idValue, etName.getText().toString().trim(), 1));
+                            adapter_params adapter = new adapter_params(checkout.this, options);
+                            listView.setAdapter(adapter);
+                            textView.setText(etName.getText().toString());
+                            textView.setHint(idValue + "-" + 1);
+                            alertDialog.cancel();
+                        }
+                    }
+                }
+
+        );
+
+        btnExit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                textView.setText("Selecione una opcion");
+                textView.setHint("");
+                alertDialog.cancel();
+            }
+        });
+
+        alertDialog.show();
+    }
+
+    // spiner con busqueda y seleccion multiple
+    public void createSpinnerSearch3(int idField, final ArrayList<obj_params> listOption) {
+        LinearLayout llBody = new LinearLayout(this);
+        LinearLayout.LayoutParams paramsBody = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        llBody.setLayoutParams(paramsBody);
+        llBody.setOrientation(LinearLayout.HORIZONTAL);
+        llBody.setWeightSum(10);
+        llBody.setPadding(10, 10, 10, 10);
+        llContenedor.addView(llBody);
+
+        TextView textView = new TextView(this);
+        textView.setId(idField);
+        textView.setText("Selecione una opcion");
+        textView.setHint("");
+        textView.setTextSize(14);
+        textView.setTextColor(getResources().getColor(R.color.colorTextVariable));
+        textView.setBackgroundResource(R.color.colorSpinner);
+        textView.setPadding(30, 20, 30, 20);
+        LinearLayout.LayoutParams lastTxtParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
+        lastTxtParams.setMargins(0, 30, 0, 0);
+        textView.setLayoutParams(lastTxtParams);
+        llBody.addView(textView);
+
+        spinnersSearch2.add(textView);
+
+        ImageView iv = new ImageView(this);
+        iv.setImageResource(R.drawable.ic_baseline_keyboard_arrow_down_24);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 9f);
+        lp.gravity = Gravity.CENTER;
+        iv.setLayoutParams(lp);
+        llBody.addView(iv);
+
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                LinearLayout llcrearDialogo = new LinearLayout(checkout.this);
+                LinearLayout.LayoutParams parametrosTextoEditor = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                parametrosTextoEditor.setMargins(20, 10, 20, 10);
+                llcrearDialogo.setLayoutParams(parametrosTextoEditor);
+                llcrearDialogo.setOrientation(LinearLayout.VERTICAL);
+                llcrearDialogo.setPadding(10, 10, 10, 10);
+
+                EditText et = new EditText(checkout.this);
+                et.setInputType(InputType.TYPE_CLASS_TEXT);
+                et.setTextSize(14);
+                et.setTextColor(getResources().getColor(R.color.colorTextVariable));
+                et.setHint("Buscar");
+                et.setBackgroundResource(R.drawable.customedittext);
+                et.setPadding(30, 20, 30, 20);
+
+                ListView lv = new ListView(checkout.this);
+                LinearLayout.LayoutParams paramsList = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                paramsList.setMargins(0, 10, 0, 0);
+                lv.setLayoutParams(paramsList);
+
+                adapter_spinner_search2 adapter = new adapter_spinner_search2(checkout.this, listOption);
+                lv.setAdapter(adapter);
+
+                llcrearDialogo.addView(et);
+                llcrearDialogo.addView(lv);
+
+                final AlertDialog optionDialog = new AlertDialog.Builder(checkout.this, android.R.style.Theme_DeviceDefault_Light_Dialog_Alert).create();
+                optionDialog.setTitle("Seleccione una opcion");
+                optionDialog.setView(llcrearDialogo);
+                optionDialog.show();
+
+                et.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        String text = s.toString();
+                        Log.w("textSearch", text);
+                        Log.w("countList", "" + listOption.size());
+                        ArrayList<obj_params> searchItems = new ArrayList<obj_params>();
+                        for (int i = 0; i < listOption.size(); i++) {
+                            if (listOption.get(i).getDescription().toLowerCase().contains(text.toLowerCase())) {
+                                Log.w("description", listOption.get(i).getDescription());
+                                searchItems.add(new obj_params(listOption.get(i).getId(), listOption.get(i).getDescription(), listOption.get(i).getControl(), listOption.get(i).isActive()));
+                            }
+                        }
+                        adapter_spinner_search2 adapter = new adapter_spinner_search2(checkout.this, searchItems);
+                        lv.setAdapter(adapter);
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+
+                    }
+                });
+
+                lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                        obj_params elegido = (obj_params) lv.getItemAtPosition(i);
+                        for (int j = 0; j < listOption.size(); j++) {
+                            if (listOption.get(j).getId() == elegido.getId()) {
+                                if (listOption.get(j).isActive()) {
+                                    listOption.get(j).setActive(false);
+                                } else {
+                                    listOption.get(j).setActive(true);
+                                }
+                            }
+                        }
+
+                        String selectedItem = "";
+                        String selectedId = "";
+                        int count = 0;
+                        for (int k = 0; k < listOption.size(); k++) {
+                            if (listOption.get(k).isActive()) {
+                                if (selectedItem.equals("")) {
+                                    selectedItem = listOption.get(k).getDescription();
+                                    selectedId = "" + listOption.get(k).getId();
+                                } else {
+                                    selectedItem = selectedItem + ", " + listOption.get(k).getDescription();
+                                    selectedId = selectedId + "|" + listOption.get(k).getId();
+                                }
+                                count++;
+                            }
+                        }
+
+                        if (count == 0)
+                        {
+                            textView.setText("Seleccione una opcion");
+                            textView.setHint("");
+                        } else {
+                            textView.setText(selectedItem);
+                            textView.setHint(selectedId);
+                        }
+
+                        optionDialog.dismiss();
+                    }
+                });
+            }
+        });
+    }
+
+    /*********/
 
     private boolean validarEmail(String email) {
 

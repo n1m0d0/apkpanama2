@@ -4,13 +4,20 @@ public class obj_params {
     protected int id;
     protected String description;
     protected int control;
+    protected boolean active;
 
     public obj_params(int id, String description, int control) {
-
         this.id = id;
         this.description = description;
         this.control = control;
+        this.active = false;
+    }
 
+    public obj_params(int id, String description, int control, boolean active) {
+        this.id = id;
+        this.description = description;
+        this.control = control;
+        this.active = active;
     }
 
     public int getId() {
@@ -43,5 +50,13 @@ public class obj_params {
 
     public void setControl(int control) {
         this.control = control;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }

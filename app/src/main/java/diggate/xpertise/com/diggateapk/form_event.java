@@ -302,7 +302,14 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
                     EditText editText = (EditText) iterator.next();
                     String obs_respuesta = editText.getText().toString().trim();
-                    String control = editText.getHint().toString().trim();
+                    String text = editText.getHint().toString().trim();
+                    String control = "";
+                    if (text.contains("-")) {
+                        String[] parts = text.split("-");
+                        control = parts[1];
+                    } else {
+                        control = text;
+                    }
                     editText.setTextColor(Color.BLACK);
                     String regEx = stringsRegEx.get(counterEditText);
 
@@ -1071,6 +1078,8 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                         int is_keybaule = form.getInt("IS_KEYVALUE");
                         int idValue_other = form.getInt("IDVALUE_OTHER");
 
+                        String hint = form.getString("HINT");
+
                         JSONArray opciones = form.getJSONArray("P");
 
                         String[] listopcion = new String[opciones.length()];
@@ -1097,7 +1106,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                             case 1:
 
                                 creartextview(description);
-                                crearedittext(idField, is_mandatory, input_max, input_regx);
+                                crearedittext(idField, is_mandatory, input_max, input_regx, hint);
 
                                 break;
 
@@ -1290,14 +1299,14 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
     // crear edittext en el contenedor
 
-    public void crearedittext(int id_opcion, String opcion, int descripcion, String regEx) {
+    public void crearedittext(int id_opcion, String opcion, int descripcion, String regEx, String hint) {
 
 
         EditText et = new EditText(this);
         et.setInputType(InputType.TYPE_CLASS_TEXT);
         et.setTextSize(14);
         et.setTextColor(getResources().getColor(R.color.colorTextVariable));
-        et.setHint(opcion);
+        et.setHint("ej: " + hint + "-" + opcion);
         et.setId(id_opcion);
         /***************/
         et.setBackgroundResource(R.drawable.customedittext);
@@ -2215,6 +2224,8 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                         int is_keybaule = form.getInt("IS_KEYVALUE");
                         int idValue_other = form.getInt("IDVALUE_OTHER");
 
+                        String hint = form.getString("HINT");
+
                         JSONArray opciones = form.getJSONArray("P");
 
                         String[] listopcion = new String[opciones.length()];
@@ -2241,7 +2252,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                             case 1:
 
                                 creartextview(description);
-                                crearedittext(idField, is_mandatory, input_max, input_regx);
+                                crearedittext(idField, is_mandatory, input_max, input_regx, hint);
 
                                 break;
 

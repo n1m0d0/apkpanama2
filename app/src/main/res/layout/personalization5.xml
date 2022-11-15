@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:weightSum="20"
+    android:orientation="horizontal"
+    android:padding="3dp"
+    android:gravity="center"
+    android:background="@color/colorSpinner">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_weight="9"
+        android:src="@drawable/flecha"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="4"
+        android:orientation="vertical">
+
+        <TextView
+            style="@style/colorTitle"
+            android:id="@+id/tvTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/separation"
+            android:gravity="center_vertical" />
+
+        <TextView
+            android:id="@+id/tvDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/separation"
+            android:gravity="center_vertical"
+            android:textColor="@color/colorBlack"
+            android:textSize="15sp" />
+
+    </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/tvText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="7"
+        android:layout_margin="@dimen/separation"
+        android:gravity="center_vertical"
+        android:textColor="@color/colorTextVariable"
+        android:textSize="15sp" />
+
+</LinearLayout>

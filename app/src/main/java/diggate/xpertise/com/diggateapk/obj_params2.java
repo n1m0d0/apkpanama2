@@ -7,6 +7,7 @@ public class obj_params2 {
     protected String description;
     protected int control;
     protected boolean active;
+    protected int idValueP;
 
     public obj_params2(int id, String title, String text, String description, int control) {
         this.id = id;
@@ -15,6 +16,17 @@ public class obj_params2 {
         this.description = description;
         this.control = control;
         this.active = false;
+        this.idValueP = 0;
+    }
+
+    public obj_params2(int id, String title, String text, String description, int control, int idValueP) {
+        this.id = id;
+        this.title = title;
+        this.text = text;
+        this.description = description;
+        this.control = control;
+        this.active = false;
+        this.idValueP = idValueP;
     }
 
     public obj_params2(int id, String title, String text, String description, int control, boolean active) {
@@ -24,6 +36,7 @@ public class obj_params2 {
         this.description = description;
         this.control = control;
         this.active = active;
+        this.idValueP = 0;
     }
 
     public int getId() {
@@ -80,5 +93,13 @@ public class obj_params2 {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public int getIdValueP() {
+        return idValueP;
+    }
+
+    public void setIdValueP(int idValueP) {
+        this.idValueP = idValueP;
     }
 }

@@ -87,6 +87,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+import com.google.zxing.qrcode.encoder.QRCode;
 import com.nbsp.materialfilepicker.MaterialFilePicker;
 import com.nbsp.materialfilepicker.ui.FilePickerActivity;
 
@@ -169,6 +170,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
     ArrayList<TextView> textViewsLocation = new ArrayList<TextView>();
     ArrayList<TextView> spinnersSearch = new ArrayList<TextView>();
     ArrayList<TextView> spinnersSearch2 = new ArrayList<TextView>();
+    ArrayList<ImageView> qrs = new ArrayList<ImageView>();
 
     Bitmap bmp;
     JSONObject jsonenvio = new JSONObject();
@@ -229,6 +231,10 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
     String part2 = null;
 
     String branch;
+
+    int selectedQR = 0;
+    ArrayList<obj_itemsQR> itemsQRS = new ArrayList<obj_itemsQR>();
+
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
@@ -1116,6 +1122,11 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                         }
                         /*****/
 
+                        /*****/
+                        // llenado de las opciones de lista compuesta
+                        JSONArray optionsPAUTH = form.getJSONArray("PAUTH");
+                        /*****/
+
                         switch (type) {
 
                             case 1:
@@ -1262,6 +1273,19 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
                                 creartextview(description);
                                 createSpinnerMatrix2(idField, itemp, input_max, itemPSEC);
+
+                                break;
+
+                            case 24:
+
+                                creartextview(description);
+
+                                break;
+
+                            case 25:
+
+                                creartextview(description);
+                                createQR(idField, is_mandatory, 0, 0, optionsPAUTH);
 
                                 break;
 
@@ -1904,54 +1928,78 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
             IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
             if (result != null) {
                 if (result.getContents() != null) {
-                    try {
-                        String[] parts = result.getContents().split("[|]");
-                        part1 = parts[0];
-                        part2 = parts[1];
-                        Log.w("parts", part1 + " " + part2);
-                        myQR = part1;
-                        Log.w("myqr", myQR);
-                        Log.w("part1", part1);
-                        Log.w("part2", part2);
-                    } catch (Exception e) {
-                        myQR = result.getContents();
-                        Log.w("myqr", result.getContents());
-                    }
-                    obj_auth respuesta = null;
-                    int statusOK = 0;
-                    if (myQR != null) {
-                        for (Iterator iterator = auths.iterator(); iterator
-                                .hasNext(); ) {
-                            obj_auth auth = (obj_auth) iterator.next();
-                            Log.w("llave", auth.getBinaryfp());
-                            if (myQR.equals(auth.getBinaryfp())) {
-                                Log.w("estadoQR", "SI");
-                                statusOK = 1;
-                                respuesta = auth;
-                            } else {
-                                Log.w("estadoQR", "NO");
-                            }
-                        }
-                        Log.w("statusOK", "" + statusOK);
-                        if (statusOK == 0) {
-                            Toast.makeText(form_event.this, "No se encontró ninguna coincidencia.", Toast.LENGTH_LONG).show();
-                            finish();
-                        } else {
-                            idAuht = respuesta.getIdauth();
-                            llData.setVisibility(View.VISIBLE);
-                            creartextviewLink("" + respuesta.getDescfp(), "" + respuesta.getUrlData());
-                        }
-                    }
-                    if (statusOK == 1) {
-                        if (part2 != null) {
-                            String codeBinaryFp = respuesta.getBinaryfp();
-                            String codeQR = encryptSeed(codeBinaryFp + getDateQR());
-                            Log.w("keys", codeQR + " - " + part2);
-                            if (part2.equals(codeQR)) {
+                    if (selectedQR == 0) {
 
-                            } else {
+                        try {
+                            String[] parts = result.getContents().split("[|]");
+                            part1 = parts[0];
+                            part2 = parts[1];
+                            Log.w("parts", part1 + " " + part2);
+                            myQR = part1;
+                            Log.w("myqr", myQR);
+                            Log.w("part1", part1);
+                            Log.w("part2", part2);
+                        } catch (Exception e) {
+                            myQR = result.getContents();
+                            Log.w("myqr", result.getContents());
+                        }
+                        obj_auth respuesta = null;
+                        int statusOK = 0;
+                        if (myQR != null) {
+                            for (Iterator iterator = auths.iterator(); iterator
+                                    .hasNext(); ) {
+                                obj_auth auth = (obj_auth) iterator.next();
+                                Log.w("llave", auth.getBinaryfp());
+                                if (myQR.equals(auth.getBinaryfp())) {
+                                    Log.w("estadoQR", "SI");
+                                    statusOK = 1;
+                                    respuesta = auth;
+                                } else {
+                                    Log.w("estadoQR", "NO");
+                                }
+                            }
+                            Log.w("statusOK", "" + statusOK);
+                            if (statusOK == 0) {
                                 Toast.makeText(form_event.this, "No se encontró ninguna coincidencia.", Toast.LENGTH_LONG).show();
                                 finish();
+                            } else {
+                                idAuht = respuesta.getIdauth();
+                                llData.setVisibility(View.VISIBLE);
+                                creartextviewLink("" + respuesta.getDescfp(), "" + respuesta.getUrlData());
+                            }
+                        }
+                        if (statusOK == 1) {
+                            if (part2 != null) {
+                                String codeBinaryFp = respuesta.getBinaryfp();
+                                String codeQR = encryptSeed(codeBinaryFp + getDateQR());
+                                Log.w("keys", codeQR + " - " + part2);
+                                if (part2.equals(codeQR)) {
+
+                                } else {
+                                    Toast.makeText(form_event.this, "No se encontró ninguna coincidencia.", Toast.LENGTH_LONG).show();
+                                    finish();
+                                }
+                            }
+                        }
+
+                    } else {
+                        String inputQR = result.getContents();
+                        Log.w("inputQR", inputQR);
+                        for (Iterator iterator = itemsQRS.iterator(); iterator
+                                .hasNext(); ) {
+                            obj_itemsQR item = (obj_itemsQR) iterator.next();
+                            Log.w("llave", item.getBinaryFP());
+                            Log.w("getDescFP", item.getDescFP());
+                            Log.w("getDescFP1", item.getDescFP1());
+                            Log.w("getDescFP2", item.getDescFP2());
+                            if (inputQR.equals(item.getBinaryFP())) {
+                                Log.w("estadoQR", "SI");
+                                createViewDataQR(item.getDescFP(), item.getDescFP1(), item.getDescFP2());
+                                ImageView imageView = findViewById(selectedQR);
+                                imageView.setVisibility(View.GONE);
+                                selectedQR = 0;
+                            } else {
+                                Log.w("estadoQR", "NO");
                             }
                         }
                     }
@@ -2438,6 +2486,20 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
 
                                 creartextview(description);
                                 createSpinnerlistSearch2(idField, itemPSEC);
+
+                                break;
+
+                            case 22:
+
+                                creartextview(description);
+                                createSpinnerMatrix(idField, itemp, input_max, itemPSEC);
+
+                                break;
+
+                            case 23:
+
+                                creartextview(description);
+                                createSpinnerMatrix2(idField, itemp, input_max, itemPSEC);
 
                                 break;
 
@@ -3759,8 +3821,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                             }
                         }
 
-                        if (count == 0)
-                        {
+                        if (count == 0) {
                             textView.setText("Seleccione una opcion");
                             textView.setHint("");
                         } else {
@@ -3868,7 +3929,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                         for (int i = 0; i < listOption.size(); i++) {
                             if (listOption.get(i).getTitle().toLowerCase().contains(text.toLowerCase())) {
                                 Log.w("description", listOption.get(i).getTitle());
-                                searchItems.add(new obj_params2(listOption.get(i).getId(), listOption.get(i).getTitle(), listOption.get(i).getText(), listOption.get(i).getDescription() , listOption.get(i).getControl(), listOption.get(i).getIdValueP()));
+                                searchItems.add(new obj_params2(listOption.get(i).getId(), listOption.get(i).getTitle(), listOption.get(i).getText(), listOption.get(i).getDescription(), listOption.get(i).getControl(), listOption.get(i).getIdValueP()));
                             }
                         }
                         adapter_list adapter = new adapter_list(form_event.this, searchItems);
@@ -4021,8 +4082,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                             }
                         }
 
-                        if (count == 0)
-                        {
+                        if (count == 0) {
                             textView.setText("Seleccione una opcion");
                             textView.setHint("");
                         } else {
@@ -4094,10 +4154,8 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                 listOption.clear();
                 textView.setText("Selecione una opcion");
                 textView.setHint("");
-                for (int j = 0; j < list.size(); j++)
-                {
-                    if (elegido.getId() == list.get(j).idValueP)
-                    {
+                for (int j = 0; j < list.size(); j++) {
+                    if (elegido.getId() == list.get(j).idValueP) {
                         listOption.add(new obj_params2(list.get(j).getId(), list.get(j).getTitle(), list.get(j).getText(), list.get(j).getDescription(), list.get(j).getControl(), list.get(j).getIdValueP()));
                     }
                 }
@@ -4160,7 +4218,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                         for (int i = 0; i < listOption.size(); i++) {
                             if (listOption.get(i).getTitle().toLowerCase().contains(text.toLowerCase())) {
                                 Log.w("description", listOption.get(i).getTitle());
-                                searchItems.add(new obj_params2(listOption.get(i).getId(), listOption.get(i).getTitle(), listOption.get(i).getText(), listOption.get(i).getDescription() , listOption.get(i).getControl(), listOption.get(i).getIdValueP()));
+                                searchItems.add(new obj_params2(listOption.get(i).getId(), listOption.get(i).getTitle(), listOption.get(i).getText(), listOption.get(i).getDescription(), listOption.get(i).getControl(), listOption.get(i).getIdValueP()));
                             }
                         }
                         adapter_list adapter = new adapter_list(form_event.this, searchItems);
@@ -4245,10 +4303,8 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                 listOption.clear();
                 textView.setText("Selecione una opcion");
                 textView.setHint("");
-                for (int j = 0; j < list.size(); j++)
-                {
-                    if (elegido.getId() == list.get(j).idValueP)
-                    {
+                for (int j = 0; j < list.size(); j++) {
+                    if (elegido.getId() == list.get(j).idValueP) {
                         listOption.add(new obj_params2(list.get(j).getId(), list.get(j).getTitle(), list.get(j).getText(), list.get(j).getDescription(), list.get(j).getControl(), list.get(j).getIdValueP()));
                     }
                 }
@@ -4353,8 +4409,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                             }
                         }
 
-                        if (count == 0)
-                        {
+                        if (count == 0) {
                             textView.setText("Seleccione una opcion");
                             textView.setHint("");
                         } else {
@@ -4368,6 +4423,124 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
             }
         });
     }
+    /*********/
+
+    /*********/
+    // QR componente
+    public void createQR(int idField, String option, int w, int h, JSONArray optionsPAUTH) {
+
+        ArrayList<obj_itemsQR> items = new ArrayList<obj_itemsQR>();
+        try {
+            for (int k = 0; k < optionsPAUTH.length(); k++) {
+                JSONObject op = null;
+
+                op = optionsPAUTH.getJSONObject(k);
+
+                int idAuth = op.getInt("IDAUTH");
+                String binaryFP = op.getString("BINARYFP");
+                int used = op.getInt("USED");
+                String urlData = op.getString("URLDATA");
+                String descriptionDESCFP = op.getString("DESCFP");
+                String descriptionDESCFP1 = op.getString("DESCFP1");
+                String descriptionDESCFP2 = op.getString("DESCFP2");
+
+                items.add(new obj_itemsQR(idAuth, binaryFP, used, urlData, descriptionDESCFP, descriptionDESCFP1, descriptionDESCFP2));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        LinearLayout llImg = new LinearLayout(this);
+        LinearLayout.LayoutParams paramsImg = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        llImg.setLayoutParams(paramsImg);
+        llImg.setOrientation(LinearLayout.HORIZONTAL);
+        llImg.setWeightSum(12);
+        llContenedor.addView(llImg);
+
+        ImageView iv = new ImageView(this);
+        iv.setId(idField);
+        iv.setImageResource(R.drawable.candado);
+        iv.setContentDescription(textImage + "-" + option);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 150, 5f);
+        iv.setLayoutParams(lp);
+        llImg.addView(iv);
+
+        LinearLayout llImg2 = new LinearLayout(this);
+        LinearLayout.LayoutParams paramsImg2 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 5f);
+        llImg2.setLayoutParams(paramsImg2);
+        llImg.addView(llImg2);
+
+        LinearLayout llImg3 = new LinearLayout(this);
+        LinearLayout.LayoutParams paramsImg3 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 2f);
+        llImg3.setLayoutParams(paramsImg3);
+        llImg.addView(llImg3);
+
+        qrs.add(iv);
+
+        iv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new IntentIntegrator(form_event.this).setDesiredBarcodeFormats(IntentIntegrator.QR_CODE_TYPES).setPrompt(" Scan QR").initiateScan();
+                selectedQR = idField;
+                itemsQRS.clear();
+                itemsQRS = items;
+            }
+        });
+
+    }
+
+    // vista de los datos del QR
+    public void createViewDataQR(String title, String description, String text) {
+        LinearLayout linearLayout = new LinearLayout(this);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        linearLayout.setLayoutParams(layoutParams);
+        linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+        linearLayout.setGravity(Gravity.CENTER);
+        linearLayout.setWeightSum(20);
+        llContenedor.addView(linearLayout);
+
+        ImageView imageView = new ImageView(this);
+        imageView.setImageResource(R.drawable.flecha);
+        LinearLayout.LayoutParams imageViewParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 30, 9);
+        imageView.setLayoutParams(imageViewParams);
+        linearLayout.addView(imageView);
+
+        LinearLayout body = new LinearLayout(this);
+        LinearLayout.LayoutParams bodyParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 4);
+        body.setLayoutParams(bodyParams);
+        body.setOrientation(LinearLayout.VERTICAL);
+        linearLayout.addView(body);
+
+        TextView tvTitle = new TextView(this);
+        LinearLayout.LayoutParams titleParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        titleParams.setMargins(10, 10, 10, 10);
+        tvTitle.setLayoutParams(titleParams);
+        tvTitle.setTextAppearance(this, R.style.colorTitle);
+        tvTitle.setGravity(Gravity.CENTER_VERTICAL);
+        tvTitle.setText(title);
+        body.addView(tvTitle);
+
+        TextView tvDescription = new TextView(this);
+        LinearLayout.LayoutParams DescriptionParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        DescriptionParams.setMargins(10, 10, 10, 10);
+        tvDescription.setLayoutParams(DescriptionParams);
+        tvDescription.setTextColor(getResources().getColor(R.color.colorBlack));
+        tvDescription.setGravity(Gravity.CENTER_VERTICAL);
+        tvDescription.setTextSize(15);
+        tvDescription.setText(description);
+        body.addView(tvDescription);
+
+        TextView tvText = new TextView(this);
+        LinearLayout.LayoutParams TextParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 7);
+        TextParams.setMargins(10, 10, 10, 10);
+        tvText.setLayoutParams(TextParams);
+        tvText.setTextColor(getResources().getColor(R.color.colorTextVariable));
+        tvText.setGravity(Gravity.CENTER_VERTICAL);
+        tvText.setTextSize(15);
+        tvText.setText(text);
+        linearLayout.addView(tvText);
+    }
+
     /*********/
 
     private boolean validarEmail(String email) {

@@ -295,7 +295,7 @@ public class view_event extends AppCompatActivity implements View.OnClickListene
                                 case 9:
 
                                     createTextView(description);
-                                    createSwitch("SI    /    NO", valueInputField);
+                                    createSwitch("NO    /    SI", valueInputField);
 
                                     break;
 

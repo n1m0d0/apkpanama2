@@ -1219,7 +1219,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
                             case 9:
 
                                 creartextview(description);
-                                createSwitch(idField, "SI    /    NO");
+                                createSwitch(idField, "NO    /    SI");
 
                                 break;
 
@@ -1550,11 +1550,11 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
         s.setText(description);
         s.setTextSize(14);
         s.setTextColor(getResources().getColor(R.color.colorBlack));
-        s.getThumbDrawable().setColorFilter(Color.parseColor("#2F3887"), PorterDuff.Mode.MULTIPLY);
-        s.getTrackDrawable().setColorFilter(Color.parseColor("#2F3887"), PorterDuff.Mode.MULTIPLY);
+        s.getThumbDrawable().setColorFilter(Color.parseColor("#3f8155"), PorterDuff.Mode.MULTIPLY);
+        s.getTrackDrawable().setColorFilter(Color.parseColor("#3f8155"), PorterDuff.Mode.MULTIPLY);
         s.setTextOn("Si");
         s.setTextOff("No");
-        s.setChecked(true);
+        s.setChecked(false);
         s.setOnClickListener(this);
         Log.w("Switch", "su id es  " + s.getId());
 

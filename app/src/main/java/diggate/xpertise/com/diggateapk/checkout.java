@@ -1405,13 +1405,15 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
     // crear edittext en el contenedor
 
     public void crearedittext(int id_opcion, String opcion, int descripcion, String regEx, String hint) {
-
-
         EditText et = new EditText(this);
         et.setInputType(InputType.TYPE_CLASS_TEXT);
         et.setTextSize(14);
         et.setTextColor(getResources().getColor(R.color.colorTextVariable));
-        et.setHint("ej: " + hint + "-" + opcion);
+        if (opcion.equals("")){
+            et.setHint("ej: " + hint);
+        } else {
+            et.setHint("ej: " + hint + "-" + opcion);
+        }
         et.setId(id_opcion);
         /***************/
         et.setBackgroundResource(R.drawable.customedittext);

@@ -3408,12 +3408,32 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
     // spinner con busuqeda
     public void createSpinnerSearch(int idField, final ArrayList<obj_params> listOption, int idParam) {
         LinearLayout llBody = new LinearLayout(this);
-        LinearLayout.LayoutParams paramsBody = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams paramsBody = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 100);
         llBody.setLayoutParams(paramsBody);
         llBody.setOrientation(LinearLayout.HORIZONTAL);
-        llBody.setWeightSum(10);
-        llBody.setPadding(10, 10, 10, 10);
+        llBody.setWeightSum(30);
         llContenedor.addView(llBody);
+
+        LinearLayout llContentLeft = new LinearLayout(this);
+        LinearLayout.LayoutParams paramsContentLeft = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 13f);
+        llContentLeft.setLayoutParams(paramsContentLeft);
+        llContentLeft.setOrientation(LinearLayout.HORIZONTAL);
+        llContentLeft.setBackgroundResource(R.color.colorSpinner);
+        llBody.addView(llContentLeft);
+
+        ImageView iv0 = new ImageView(this);
+        iv0.setImageResource(R.drawable.flecha);
+        LinearLayout.LayoutParams lp0 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 50);
+        lp0.gravity = Gravity.CENTER;
+        iv0.setLayoutParams(lp0);
+        llContentLeft.addView(iv0);
+
+        LinearLayout llContentCenter = new LinearLayout(this);
+        LinearLayout.LayoutParams paramsContentCenter = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 4f);
+        llContentCenter.setLayoutParams(paramsContentCenter);
+        llContentCenter.setOrientation(LinearLayout.HORIZONTAL);
+        llContentCenter.setBackgroundResource(R.color.colorSpinner);
+        llBody.addView(llContentCenter);
 
         TextView textView = new TextView(this);
         textView.setId(idField);
@@ -3422,22 +3442,21 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         textView.setTextSize(14);
         textView.setTextColor(getResources().getColor(R.color.colorTextVariable));
         textView.setBackgroundResource(R.color.colorSpinner);
-        textView.setPadding(30, 20, 30, 20);
-        LinearLayout.LayoutParams lastTxtParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
-        lastTxtParams.setMargins(0, 30, 0, 0);
+        LinearLayout.LayoutParams lastTxtParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        lastTxtParams.gravity = Gravity.CENTER;
         textView.setLayoutParams(lastTxtParams);
-        llBody.addView(textView);
+        llContentCenter.addView(textView);
 
         spinnersSearch.add(textView);
 
         ImageView iv = new ImageView(this);
-        iv.setImageResource(R.drawable.ic_baseline_keyboard_arrow_down_24);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 9f);
+        iv.setImageResource(R.drawable.ic_baseline_arrow_drop_down_24);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 13f);
         lp.gravity = Gravity.CENTER;
         iv.setLayoutParams(lp);
         llBody.addView(iv);
 
-        textView.setOnClickListener(new View.OnClickListener() {
+        llBody.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -3528,12 +3547,32 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         Log.w("idValue", "" + idValue);
         int aux = listOption.size() - 1;
         LinearLayout llBody = new LinearLayout(this);
-        LinearLayout.LayoutParams paramsBody = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams paramsBody = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 100);
         llBody.setLayoutParams(paramsBody);
         llBody.setOrientation(LinearLayout.HORIZONTAL);
-        llBody.setWeightSum(10);
-        llBody.setPadding(10, 10, 10, 10);
+        llBody.setWeightSum(30);
         llContenedor.addView(llBody);
+
+        LinearLayout llContentLeft = new LinearLayout(this);
+        LinearLayout.LayoutParams paramsContentLeft = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 13f);
+        llContentLeft.setLayoutParams(paramsContentLeft);
+        llContentLeft.setOrientation(LinearLayout.HORIZONTAL);
+        llContentLeft.setBackgroundResource(R.color.colorSpinner);
+        llBody.addView(llContentLeft);
+
+        ImageView iv0 = new ImageView(this);
+        iv0.setImageResource(R.drawable.flecha);
+        LinearLayout.LayoutParams lp0 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 50);
+        lp0.gravity = Gravity.CENTER;
+        iv0.setLayoutParams(lp0);
+        llContentLeft.addView(iv0);
+
+        LinearLayout llContentCenter = new LinearLayout(this);
+        LinearLayout.LayoutParams paramsContentCenter = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 4f);
+        llContentCenter.setLayoutParams(paramsContentCenter);
+        llContentCenter.setOrientation(LinearLayout.HORIZONTAL);
+        llContentCenter.setBackgroundResource(R.color.colorSpinner);
+        llBody.addView(llContentCenter);
 
         TextView textView = new TextView(this);
         textView.setId(idField);
@@ -3542,22 +3581,21 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         textView.setTextSize(14);
         textView.setTextColor(getResources().getColor(R.color.colorTextVariable));
         textView.setBackgroundResource(R.color.colorSpinner);
-        textView.setPadding(30, 20, 30, 20);
-        LinearLayout.LayoutParams lastTxtParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
-        lastTxtParams.setMargins(0, 30, 0, 0);
+        LinearLayout.LayoutParams lastTxtParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        lastTxtParams.gravity = Gravity.CENTER;
         textView.setLayoutParams(lastTxtParams);
-        llBody.addView(textView);
+        llContentCenter.addView(textView);
 
         spinnersSearch.add(textView);
 
         ImageView iv = new ImageView(this);
-        iv.setImageResource(R.drawable.ic_baseline_keyboard_arrow_down_24);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 9f);
+        iv.setImageResource(R.drawable.ic_baseline_arrow_drop_down_24);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 13f);
         lp.gravity = Gravity.CENTER;
         iv.setLayoutParams(lp);
         llBody.addView(iv);
 
-        textView.setOnClickListener(new View.OnClickListener() {
+        llBody.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -3701,12 +3739,32 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
     // spiner con busqueda y seleccion multiple
     public void createSpinnerSearch3(int idField, final ArrayList<obj_params> listOption) {
         LinearLayout llBody = new LinearLayout(this);
-        LinearLayout.LayoutParams paramsBody = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams paramsBody = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 100);
         llBody.setLayoutParams(paramsBody);
         llBody.setOrientation(LinearLayout.HORIZONTAL);
-        llBody.setWeightSum(10);
-        llBody.setPadding(10, 10, 10, 10);
+        llBody.setWeightSum(30);
         llContenedor.addView(llBody);
+
+        LinearLayout llContentLeft = new LinearLayout(this);
+        LinearLayout.LayoutParams paramsContentLeft = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 13f);
+        llContentLeft.setLayoutParams(paramsContentLeft);
+        llContentLeft.setOrientation(LinearLayout.HORIZONTAL);
+        llContentLeft.setBackgroundResource(R.color.colorSpinner);
+        llBody.addView(llContentLeft);
+
+        ImageView iv0 = new ImageView(this);
+        iv0.setImageResource(R.drawable.flecha);
+        LinearLayout.LayoutParams lp0 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 50);
+        lp0.gravity = Gravity.CENTER;
+        iv0.setLayoutParams(lp0);
+        llContentLeft.addView(iv0);
+
+        LinearLayout llContentCenter = new LinearLayout(this);
+        LinearLayout.LayoutParams paramsContentCenter = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 4f);
+        llContentCenter.setLayoutParams(paramsContentCenter);
+        llContentCenter.setOrientation(LinearLayout.HORIZONTAL);
+        llContentCenter.setBackgroundResource(R.color.colorSpinner);
+        llBody.addView(llContentCenter);
 
         TextView textView = new TextView(this);
         textView.setId(idField);
@@ -3715,22 +3773,21 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         textView.setTextSize(14);
         textView.setTextColor(getResources().getColor(R.color.colorTextVariable));
         textView.setBackgroundResource(R.color.colorSpinner);
-        textView.setPadding(30, 20, 30, 20);
-        LinearLayout.LayoutParams lastTxtParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
-        lastTxtParams.setMargins(0, 30, 0, 0);
+        LinearLayout.LayoutParams lastTxtParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        lastTxtParams.gravity = Gravity.CENTER;
         textView.setLayoutParams(lastTxtParams);
-        llBody.addView(textView);
+        llContentCenter.addView(textView);
 
         spinnersSearch2.add(textView);
 
         ImageView iv = new ImageView(this);
-        iv.setImageResource(R.drawable.ic_baseline_keyboard_arrow_down_24);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 9f);
+        iv.setImageResource(R.drawable.ic_baseline_arrow_drop_down_24);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 13f);
         lp.gravity = Gravity.CENTER;
         iv.setLayoutParams(lp);
         llBody.addView(iv);
 
-        textView.setOnClickListener(new View.OnClickListener() {
+        llBody.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -3844,12 +3901,32 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
     // spinner lista compuesta con busqueda y solo una seleccion
     public void createSpinnerListSearch(int idField, final ArrayList<obj_params2> listOption, int idParam) {
         LinearLayout llBody = new LinearLayout(this);
-        LinearLayout.LayoutParams paramsBody = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams paramsBody = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 100);
         llBody.setLayoutParams(paramsBody);
         llBody.setOrientation(LinearLayout.HORIZONTAL);
-        llBody.setWeightSum(10);
-        llBody.setPadding(10, 10, 10, 10);
+        llBody.setWeightSum(30);
         llContenedor.addView(llBody);
+
+        LinearLayout llContentLeft = new LinearLayout(this);
+        LinearLayout.LayoutParams paramsContentLeft = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 13f);
+        llContentLeft.setLayoutParams(paramsContentLeft);
+        llContentLeft.setOrientation(LinearLayout.HORIZONTAL);
+        llContentLeft.setBackgroundResource(R.color.colorSpinner);
+        llBody.addView(llContentLeft);
+
+        ImageView iv0 = new ImageView(this);
+        iv0.setImageResource(R.drawable.flecha);
+        LinearLayout.LayoutParams lp0 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 50);
+        lp0.gravity = Gravity.CENTER;
+        iv0.setLayoutParams(lp0);
+        llContentLeft.addView(iv0);
+
+        LinearLayout llContentCenter = new LinearLayout(this);
+        LinearLayout.LayoutParams paramsContentCenter = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 4f);
+        llContentCenter.setLayoutParams(paramsContentCenter);
+        llContentCenter.setOrientation(LinearLayout.HORIZONTAL);
+        llContentCenter.setBackgroundResource(R.color.colorSpinner);
+        llBody.addView(llContentCenter);
 
         TextView textView = new TextView(this);
         textView.setId(idField);
@@ -3858,22 +3935,21 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         textView.setTextSize(14);
         textView.setTextColor(getResources().getColor(R.color.colorTextVariable));
         textView.setBackgroundResource(R.color.colorSpinner);
-        textView.setPadding(30, 20, 30, 20);
-        LinearLayout.LayoutParams lastTxtParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
-        lastTxtParams.setMargins(0, 30, 0, 0);
+        LinearLayout.LayoutParams lastTxtParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        lastTxtParams.gravity = Gravity.CENTER;
         textView.setLayoutParams(lastTxtParams);
-        llBody.addView(textView);
+        llContentCenter.addView(textView);
 
         spinnersSearch.add(textView);
 
         ImageView iv = new ImageView(this);
-        iv.setImageResource(R.drawable.ic_baseline_keyboard_arrow_down_24);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 9f);
+        iv.setImageResource(R.drawable.ic_baseline_arrow_drop_down_24);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 13f);
         lp.gravity = Gravity.CENTER;
         iv.setLayoutParams(lp);
         llBody.addView(iv);
 
-        textView.setOnClickListener(new View.OnClickListener() {
+        llBody.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -3962,12 +4038,32 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
     // spiner lista compuesta con busqueda y seleccion multiple
     public void createSpinnerlistSearch2(int idField, final ArrayList<obj_params2> listOption) {
         LinearLayout llBody = new LinearLayout(this);
-        LinearLayout.LayoutParams paramsBody = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams paramsBody = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 100);
         llBody.setLayoutParams(paramsBody);
         llBody.setOrientation(LinearLayout.HORIZONTAL);
-        llBody.setWeightSum(10);
-        llBody.setPadding(10, 10, 10, 10);
+        llBody.setWeightSum(30);
         llContenedor.addView(llBody);
+
+        LinearLayout llContentLeft = new LinearLayout(this);
+        LinearLayout.LayoutParams paramsContentLeft = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 13f);
+        llContentLeft.setLayoutParams(paramsContentLeft);
+        llContentLeft.setOrientation(LinearLayout.HORIZONTAL);
+        llContentLeft.setBackgroundResource(R.color.colorSpinner);
+        llBody.addView(llContentLeft);
+
+        ImageView iv0 = new ImageView(this);
+        iv0.setImageResource(R.drawable.flecha);
+        LinearLayout.LayoutParams lp0 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 50);
+        lp0.gravity = Gravity.CENTER;
+        iv0.setLayoutParams(lp0);
+        llContentLeft.addView(iv0);
+
+        LinearLayout llContentCenter = new LinearLayout(this);
+        LinearLayout.LayoutParams paramsContentCenter = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 4f);
+        llContentCenter.setLayoutParams(paramsContentCenter);
+        llContentCenter.setOrientation(LinearLayout.HORIZONTAL);
+        llContentCenter.setBackgroundResource(R.color.colorSpinner);
+        llBody.addView(llContentCenter);
 
         TextView textView = new TextView(this);
         textView.setId(idField);
@@ -3976,22 +4072,21 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         textView.setTextSize(14);
         textView.setTextColor(getResources().getColor(R.color.colorTextVariable));
         textView.setBackgroundResource(R.color.colorSpinner);
-        textView.setPadding(30, 20, 30, 20);
-        LinearLayout.LayoutParams lastTxtParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
-        lastTxtParams.setMargins(0, 30, 0, 0);
+        LinearLayout.LayoutParams lastTxtParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        lastTxtParams.gravity = Gravity.CENTER;
         textView.setLayoutParams(lastTxtParams);
-        llBody.addView(textView);
+        llContentCenter.addView(textView);
 
         spinnersSearch2.add(textView);
 
         ImageView iv = new ImageView(this);
-        iv.setImageResource(R.drawable.ic_baseline_keyboard_arrow_down_24);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 9f);
+        iv.setImageResource(R.drawable.ic_baseline_arrow_drop_down_24);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 13f);
         lp.gravity = Gravity.CENTER;
         iv.setLayoutParams(lp);
         llBody.addView(iv);
 
-        textView.setOnClickListener(new View.OnClickListener() {
+        llBody.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -4109,12 +4204,33 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         llContenedor.addView(sp);
 
         LinearLayout llBody = new LinearLayout(this);
-        LinearLayout.LayoutParams paramsBody = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams paramsBody = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 100);
+        paramsBody.setMargins(0, 30, 0, 0);
         llBody.setLayoutParams(paramsBody);
         llBody.setOrientation(LinearLayout.HORIZONTAL);
-        llBody.setWeightSum(10);
-        llBody.setPadding(10, 10, 10, 10);
+        llBody.setWeightSum(30);
         llContenedor.addView(llBody);
+
+        LinearLayout llContentLeft = new LinearLayout(this);
+        LinearLayout.LayoutParams paramsContentLeft = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 13f);
+        llContentLeft.setLayoutParams(paramsContentLeft);
+        llContentLeft.setOrientation(LinearLayout.HORIZONTAL);
+        llContentLeft.setBackgroundResource(R.color.colorSpinner);
+        llBody.addView(llContentLeft);
+
+        ImageView iv0 = new ImageView(this);
+        iv0.setImageResource(R.drawable.flecha);
+        LinearLayout.LayoutParams lp0 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 50);
+        lp0.gravity = Gravity.CENTER;
+        iv0.setLayoutParams(lp0);
+        llContentLeft.addView(iv0);
+
+        LinearLayout llContentCenter = new LinearLayout(this);
+        LinearLayout.LayoutParams paramsContentCenter = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 4f);
+        llContentCenter.setLayoutParams(paramsContentCenter);
+        llContentCenter.setOrientation(LinearLayout.HORIZONTAL);
+        llContentCenter.setBackgroundResource(R.color.colorSpinner);
+        llBody.addView(llContentCenter);
 
         TextView textView = new TextView(this);
         textView.setId(idField);
@@ -4123,17 +4239,16 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         textView.setTextSize(14);
         textView.setTextColor(getResources().getColor(R.color.colorTextVariable));
         textView.setBackgroundResource(R.color.colorSpinner);
-        textView.setPadding(30, 20, 30, 20);
-        LinearLayout.LayoutParams lastTxtParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
-        lastTxtParams.setMargins(0, 30, 0, 0);
+        LinearLayout.LayoutParams lastTxtParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        lastTxtParams.gravity = Gravity.CENTER;
         textView.setLayoutParams(lastTxtParams);
-        llBody.addView(textView);
+        llContentCenter.addView(textView);
 
         spinnersSearch.add(textView);
 
         ImageView iv = new ImageView(this);
-        iv.setImageResource(R.drawable.ic_baseline_keyboard_arrow_down_24);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 9f);
+        iv.setImageResource(R.drawable.ic_baseline_arrow_drop_down_24);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 13f);
         lp.gravity = Gravity.CENTER;
         iv.setLayoutParams(lp);
         llBody.addView(iv);
@@ -4169,7 +4284,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
             }
         });
 
-        textView.setOnClickListener(new View.OnClickListener() {
+        llBody.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -4258,12 +4373,33 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         llContenedor.addView(sp);
 
         LinearLayout llBody = new LinearLayout(this);
-        LinearLayout.LayoutParams paramsBody = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams paramsBody = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 100);
+        paramsBody.setMargins(0, 30, 0, 0);
         llBody.setLayoutParams(paramsBody);
         llBody.setOrientation(LinearLayout.HORIZONTAL);
-        llBody.setWeightSum(10);
-        llBody.setPadding(10, 10, 10, 10);
+        llBody.setWeightSum(30);
         llContenedor.addView(llBody);
+
+        LinearLayout llContentLeft = new LinearLayout(this);
+        LinearLayout.LayoutParams paramsContentLeft = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 13f);
+        llContentLeft.setLayoutParams(paramsContentLeft);
+        llContentLeft.setOrientation(LinearLayout.HORIZONTAL);
+        llContentLeft.setBackgroundResource(R.color.colorSpinner);
+        llBody.addView(llContentLeft);
+
+        ImageView iv0 = new ImageView(this);
+        iv0.setImageResource(R.drawable.flecha);
+        LinearLayout.LayoutParams lp0 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 50);
+        lp0.gravity = Gravity.CENTER;
+        iv0.setLayoutParams(lp0);
+        llContentLeft.addView(iv0);
+
+        LinearLayout llContentCenter = new LinearLayout(this);
+        LinearLayout.LayoutParams paramsContentCenter = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 4f);
+        llContentCenter.setLayoutParams(paramsContentCenter);
+        llContentCenter.setOrientation(LinearLayout.HORIZONTAL);
+        llContentCenter.setBackgroundResource(R.color.colorSpinner);
+        llBody.addView(llContentCenter);
 
         TextView textView = new TextView(this);
         textView.setId(idField);
@@ -4272,17 +4408,16 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         textView.setTextSize(14);
         textView.setTextColor(getResources().getColor(R.color.colorTextVariable));
         textView.setBackgroundResource(R.color.colorSpinner);
-        textView.setPadding(30, 20, 30, 20);
-        LinearLayout.LayoutParams lastTxtParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
-        lastTxtParams.setMargins(0, 30, 0, 0);
+        LinearLayout.LayoutParams lastTxtParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        lastTxtParams.gravity = Gravity.CENTER;
         textView.setLayoutParams(lastTxtParams);
-        llBody.addView(textView);
+        llContentCenter.addView(textView);
 
-        spinnersSearch.add(textView);
+        spinnersSearch2.add(textView);
 
         ImageView iv = new ImageView(this);
-        iv.setImageResource(R.drawable.ic_baseline_keyboard_arrow_down_24);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 9f);
+        iv.setImageResource(R.drawable.ic_baseline_arrow_drop_down_24);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 13f);
         lp.gravity = Gravity.CENTER;
         iv.setLayoutParams(lp);
         llBody.addView(iv);
@@ -4318,7 +4453,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
             }
         });
 
-        textView.setOnClickListener(new View.OnClickListener() {
+        llBody.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 

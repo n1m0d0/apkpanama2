@@ -10,7 +10,11 @@ import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
@@ -526,11 +530,12 @@ public class view_event extends AppCompatActivity implements View.OnClickListene
     }
 
     /*************************/
+    @RequiresApi(api = Build.VERSION_CODES.M)
     public void createAudio(String descripcion, final String audio) {
         TextView textViewOption = new TextView(this);
         textViewOption.setText(descripcion);
         textViewOption.setTextSize(14);
-        textViewOption.setTextColor(getResources().getColor(R.color.colorBlack));
+        textViewOption.setTextAppearance(R.style.colorText);
         llContenedor.addView(textViewOption);
         LinearLayout linearLayout = new LinearLayout(this);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);

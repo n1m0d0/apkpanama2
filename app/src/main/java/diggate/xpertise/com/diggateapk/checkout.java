@@ -3238,7 +3238,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
     // spiner con busqueda y seleccion multiple
     public void createSpinnerSearch3(int idField, final ArrayList<obj_params> listOption) {
         LinearLayout llBody = new LinearLayout(this);
-        LinearLayout.LayoutParams paramsBody = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 100);
+        LinearLayout.LayoutParams paramsBody = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         llBody.setLayoutParams(paramsBody);
         llBody.setOrientation(LinearLayout.HORIZONTAL);
         llBody.setWeightSum(30);
@@ -3259,7 +3259,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
         llContentLeft.addView(iv0);
 
         LinearLayout llContentCenter = new LinearLayout(this);
-        LinearLayout.LayoutParams paramsContentCenter = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 4f);
+        LinearLayout.LayoutParams paramsContentCenter = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 4f);
         llContentCenter.setLayoutParams(paramsContentCenter);
         llContentCenter.setOrientation(LinearLayout.HORIZONTAL);
         llContentCenter.setBackgroundResource(R.color.colorSpinner);
@@ -3274,6 +3274,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
         textView.setBackgroundResource(R.color.colorSpinner);
         LinearLayout.LayoutParams lastTxtParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         lastTxtParams.gravity = Gravity.CENTER;
+        textView.setPadding(0, 25, 0, 25);
         textView.setLayoutParams(lastTxtParams);
         llContentCenter.addView(textView);
 
@@ -3310,8 +3311,8 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
                 paramsList.setMargins(0, 10, 0, 0);
                 lv.setLayoutParams(paramsList);
 
-                adapter_spinner_search2 adapter = new adapter_spinner_search2(checkout.this, listOption);
-                lv.setAdapter(adapter);
+                final adapter_spinner_search2[] adapter = {new adapter_spinner_search2(checkout.this, listOption)};
+                lv.setAdapter(adapter[0]);
 
                 llcrearDialogo.addView(et);
                 llcrearDialogo.addView(lv);
@@ -3387,7 +3388,10 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
                             textView.setHint(selectedId);
                         }
 
-                        optionDialog.dismiss();
+                        //optionDialog.dismiss();
+
+                        adapter[0] = new adapter_spinner_search2(checkout.this, listOption);
+                        lv.setAdapter(adapter[0]);
                     }
                 });
             }
@@ -3537,7 +3541,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
     // spiner lista compuesta con busqueda y seleccion multiple
     public void createSpinnerlistSearch2(int idField, final ArrayList<obj_params2> listOption) {
         LinearLayout llBody = new LinearLayout(this);
-        LinearLayout.LayoutParams paramsBody = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 100);
+        LinearLayout.LayoutParams paramsBody = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         llBody.setLayoutParams(paramsBody);
         llBody.setOrientation(LinearLayout.HORIZONTAL);
         llBody.setWeightSum(30);
@@ -3558,7 +3562,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
         llContentLeft.addView(iv0);
 
         LinearLayout llContentCenter = new LinearLayout(this);
-        LinearLayout.LayoutParams paramsContentCenter = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 4f);
+        LinearLayout.LayoutParams paramsContentCenter = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 4f);
         llContentCenter.setLayoutParams(paramsContentCenter);
         llContentCenter.setOrientation(LinearLayout.HORIZONTAL);
         llContentCenter.setBackgroundResource(R.color.colorSpinner);
@@ -3573,6 +3577,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
         textView.setBackgroundResource(R.color.colorSpinner);
         LinearLayout.LayoutParams lastTxtParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         lastTxtParams.gravity = Gravity.CENTER;
+        textView.setPadding(0, 25, 0, 25);
         textView.setLayoutParams(lastTxtParams);
         llContentCenter.addView(textView);
 
@@ -3609,8 +3614,8 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
                 paramsList.setMargins(0, 10, 0, 0);
                 lv.setLayoutParams(paramsList);
 
-                adapter_list2 adapter = new adapter_list2(checkout.this, listOption);
-                lv.setAdapter(adapter);
+                final adapter_list2[] adapter = {new adapter_list2(checkout.this, listOption)};
+                lv.setAdapter(adapter[0]);
 
                 llcrearDialogo.addView(et);
                 llcrearDialogo.addView(lv);
@@ -3686,7 +3691,9 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
                             textView.setHint(selectedId);
                         }
 
-                        optionDialog.dismiss();
+                        //optionDialog.dismiss();
+                        adapter[0] = new adapter_list2(checkout.this, listOption);
+                        lv.setAdapter(adapter[0]);
                     }
                 });
             }
@@ -3872,7 +3879,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
         llContenedor.addView(sp);
 
         LinearLayout llBody = new LinearLayout(this);
-        LinearLayout.LayoutParams paramsBody = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 100);
+        LinearLayout.LayoutParams paramsBody = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         paramsBody.setMargins(0, 30, 0, 0);
         llBody.setLayoutParams(paramsBody);
         llBody.setOrientation(LinearLayout.HORIZONTAL);
@@ -3894,7 +3901,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
         llContentLeft.addView(iv0);
 
         LinearLayout llContentCenter = new LinearLayout(this);
-        LinearLayout.LayoutParams paramsContentCenter = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 4f);
+        LinearLayout.LayoutParams paramsContentCenter = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 4f);
         llContentCenter.setLayoutParams(paramsContentCenter);
         llContentCenter.setOrientation(LinearLayout.HORIZONTAL);
         llContentCenter.setBackgroundResource(R.color.colorSpinner);
@@ -3909,6 +3916,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
         textView.setBackgroundResource(R.color.colorSpinner);
         LinearLayout.LayoutParams lastTxtParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         lastTxtParams.gravity = Gravity.CENTER;
+        textView.setPadding(0, 25, 0, 25);
         textView.setLayoutParams(lastTxtParams);
         llContentCenter.addView(textView);
 
@@ -3935,7 +3943,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 obj_params elegido = (obj_params) sp.getItemAtPosition(position);
-                //Toast.makeText(checkout.this, "" + elegido.getDescription(), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(form_event.this, "" + elegido.getDescription(), Toast.LENGTH_SHORT).show();
                 listOption.clear();
                 textView.setText("Selecione una opcion");
                 textView.setHint("");
@@ -3976,8 +3984,8 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
                 paramsList.setMargins(0, 10, 0, 0);
                 lv.setLayoutParams(paramsList);
 
-                adapter_list2 adapter = new adapter_list2(checkout.this, listOption);
-                lv.setAdapter(adapter);
+                final adapter_list2[] adapter = {new adapter_list2(checkout.this, listOption)};
+                lv.setAdapter(adapter[0]);
 
                 llcrearDialogo.addView(et);
                 llcrearDialogo.addView(lv);
@@ -4053,7 +4061,9 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
                             textView.setHint(selectedId);
                         }
 
-                        optionDialog.dismiss();
+                        //optionDialog.dismiss();
+                        adapter[0] = new adapter_list2(checkout.this, listOption);
+                        lv.setAdapter(adapter[0]);
                     }
                 });
             }

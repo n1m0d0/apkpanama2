@@ -3739,7 +3739,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
     // spiner con busqueda y seleccion multiple
     public void createSpinnerSearch3(int idField, final ArrayList<obj_params> listOption) {
         LinearLayout llBody = new LinearLayout(this);
-        LinearLayout.LayoutParams paramsBody = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 100);
+        LinearLayout.LayoutParams paramsBody = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         llBody.setLayoutParams(paramsBody);
         llBody.setOrientation(LinearLayout.HORIZONTAL);
         llBody.setWeightSum(30);
@@ -3760,7 +3760,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         llContentLeft.addView(iv0);
 
         LinearLayout llContentCenter = new LinearLayout(this);
-        LinearLayout.LayoutParams paramsContentCenter = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 4f);
+        LinearLayout.LayoutParams paramsContentCenter = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 4f);
         llContentCenter.setLayoutParams(paramsContentCenter);
         llContentCenter.setOrientation(LinearLayout.HORIZONTAL);
         llContentCenter.setBackgroundResource(R.color.colorSpinner);
@@ -3775,6 +3775,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         textView.setBackgroundResource(R.color.colorSpinner);
         LinearLayout.LayoutParams lastTxtParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         lastTxtParams.gravity = Gravity.CENTER;
+        textView.setPadding(0, 25, 0, 25);
         textView.setLayoutParams(lastTxtParams);
         llContentCenter.addView(textView);
 
@@ -3811,8 +3812,8 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                 paramsList.setMargins(0, 10, 0, 0);
                 lv.setLayoutParams(paramsList);
 
-                adapter_spinner_search2 adapter = new adapter_spinner_search2(form_event.this, listOption);
-                lv.setAdapter(adapter);
+                final adapter_spinner_search2[] adapter = {new adapter_spinner_search2(form_event.this, listOption)};
+                lv.setAdapter(adapter[0]);
 
                 llcrearDialogo.addView(et);
                 llcrearDialogo.addView(lv);
@@ -3888,7 +3889,10 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                             textView.setHint(selectedId);
                         }
 
-                        optionDialog.dismiss();
+                        //optionDialog.dismiss();
+
+                        adapter[0] = new adapter_spinner_search2(form_event.this, listOption);
+                        lv.setAdapter(adapter[0]);
                     }
                 });
             }
@@ -4038,7 +4042,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
     // spiner lista compuesta con busqueda y seleccion multiple
     public void createSpinnerlistSearch2(int idField, final ArrayList<obj_params2> listOption) {
         LinearLayout llBody = new LinearLayout(this);
-        LinearLayout.LayoutParams paramsBody = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 100);
+        LinearLayout.LayoutParams paramsBody = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         llBody.setLayoutParams(paramsBody);
         llBody.setOrientation(LinearLayout.HORIZONTAL);
         llBody.setWeightSum(30);
@@ -4059,7 +4063,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         llContentLeft.addView(iv0);
 
         LinearLayout llContentCenter = new LinearLayout(this);
-        LinearLayout.LayoutParams paramsContentCenter = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 4f);
+        LinearLayout.LayoutParams paramsContentCenter = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 4f);
         llContentCenter.setLayoutParams(paramsContentCenter);
         llContentCenter.setOrientation(LinearLayout.HORIZONTAL);
         llContentCenter.setBackgroundResource(R.color.colorSpinner);
@@ -4074,6 +4078,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         textView.setBackgroundResource(R.color.colorSpinner);
         LinearLayout.LayoutParams lastTxtParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         lastTxtParams.gravity = Gravity.CENTER;
+        textView.setPadding(0, 25, 0, 25);
         textView.setLayoutParams(lastTxtParams);
         llContentCenter.addView(textView);
 
@@ -4110,8 +4115,8 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                 paramsList.setMargins(0, 10, 0, 0);
                 lv.setLayoutParams(paramsList);
 
-                adapter_list2 adapter = new adapter_list2(form_event.this, listOption);
-                lv.setAdapter(adapter);
+                final adapter_list2[] adapter = {new adapter_list2(form_event.this, listOption)};
+                lv.setAdapter(adapter[0]);
 
                 llcrearDialogo.addView(et);
                 llcrearDialogo.addView(lv);
@@ -4187,7 +4192,9 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                             textView.setHint(selectedId);
                         }
 
-                        optionDialog.dismiss();
+                        //optionDialog.dismiss();
+                        adapter[0] = new adapter_list2(form_event.this, listOption);
+                        lv.setAdapter(adapter[0]);
                     }
                 });
             }
@@ -4373,7 +4380,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         llContenedor.addView(sp);
 
         LinearLayout llBody = new LinearLayout(this);
-        LinearLayout.LayoutParams paramsBody = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 100);
+        LinearLayout.LayoutParams paramsBody = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         paramsBody.setMargins(0, 30, 0, 0);
         llBody.setLayoutParams(paramsBody);
         llBody.setOrientation(LinearLayout.HORIZONTAL);
@@ -4395,7 +4402,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         llContentLeft.addView(iv0);
 
         LinearLayout llContentCenter = new LinearLayout(this);
-        LinearLayout.LayoutParams paramsContentCenter = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 4f);
+        LinearLayout.LayoutParams paramsContentCenter = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 4f);
         llContentCenter.setLayoutParams(paramsContentCenter);
         llContentCenter.setOrientation(LinearLayout.HORIZONTAL);
         llContentCenter.setBackgroundResource(R.color.colorSpinner);
@@ -4410,6 +4417,7 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
         textView.setBackgroundResource(R.color.colorSpinner);
         LinearLayout.LayoutParams lastTxtParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         lastTxtParams.gravity = Gravity.CENTER;
+        textView.setPadding(0, 25, 0, 25);
         textView.setLayoutParams(lastTxtParams);
         llContentCenter.addView(textView);
 
@@ -4477,8 +4485,8 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                 paramsList.setMargins(0, 10, 0, 0);
                 lv.setLayoutParams(paramsList);
 
-                adapter_list2 adapter = new adapter_list2(form_event.this, listOption);
-                lv.setAdapter(adapter);
+                final adapter_list2[] adapter = {new adapter_list2(form_event.this, listOption)};
+                lv.setAdapter(adapter[0]);
 
                 llcrearDialogo.addView(et);
                 llcrearDialogo.addView(lv);
@@ -4554,7 +4562,9 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                             textView.setHint(selectedId);
                         }
 
-                        optionDialog.dismiss();
+                        //optionDialog.dismiss();
+                        adapter[0] = new adapter_list2(form_event.this, listOption);
+                        lv.setAdapter(adapter[0]);
                     }
                 });
             }

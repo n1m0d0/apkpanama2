@@ -3908,7 +3908,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
         llBody.addView(llContentCenter);
 
         TextView textView = new TextView(this);
-        textView.setId(idField);
+        //textView.setId(idField);
         textView.setText("Selecione una opcion");
         textView.setHint("");
         textView.setTextSize(14);
@@ -3920,7 +3920,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
         textView.setLayoutParams(lastTxtParams);
         llContentCenter.addView(textView);
 
-        spinnersSearch2.add(textView);
+        //spinnersSearch2.add(textView);
 
         ImageView iv = new ImageView(this);
         iv.setImageResource(R.drawable.ic_baseline_arrow_drop_down_24);
@@ -3928,6 +3928,22 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
         lp.gravity = Gravity.CENTER;
         iv.setLayoutParams(lp);
         llBody.addView(iv);
+
+        TextView textViewOptions = new TextView(this);
+        textViewOptions.setId(idField);
+        textViewOptions.setText("");
+        textViewOptions.setHint("");
+        textViewOptions.setTextSize(14);
+        textViewOptions.setTextColor(getResources().getColor(R.color.colorTextVariable));
+        textViewOptions.setBackgroundResource(R.color.colorSpinner);
+        LinearLayout.LayoutParams lastTxtParamsOp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        lastTxtParamsOp.gravity = Gravity.CENTER;
+        lastTxtParamsOp.setMargins(0, 20, 0, 0);
+        textViewOptions.setLayoutParams(lastTxtParamsOp);
+        textViewOptions.setPadding(25, 25, 25, 25);
+        llContenedor.addView(textViewOptions);
+
+        spinnersSearch2.add(textViewOptions);
 
         int posicion = 0;
         for (int i = 0; i < sp.getCount(); i++) {
@@ -3949,7 +3965,8 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
                 textView.setHint("");
                 for (int j = 0; j < list.size(); j++) {
                     if (elegido.getId() == list.get(j).idValueP) {
-                        listOption.add(new obj_params2(list.get(j).getId(), list.get(j).getTitle(), list.get(j).getText(), list.get(j).getDescription(), list.get(j).getControl(), list.get(j).getIdValueP()));
+                        //listOption.add(new obj_params2(list.get(j).getId(), list.get(j).getTitle(), list.get(j).getText(), list.get(j).getDescription(), list.get(j).getControl(), list.get(j).getIdValueP()));
+                        listOption.add(new obj_params2(list.get(j).getId(), list.get(j).getTitle(), list.get(j).getText(), list.get(j).getDescription(), list.get(j).getControl(), list.get(j).isActive()));
                     }
                 }
             }
@@ -4037,6 +4054,16 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
                             }
                         }
 
+                        for (int j = 0; j < list.size(); j++) {
+                            if (list.get(j).getId() == elegido.getId()) {
+                                if (list.get(j).isActive()) {
+                                    list.get(j).setActive(false);
+                                } else {
+                                    list.get(j).setActive(true);
+                                }
+                            }
+                        }
+
                         String selectedItem = "";
                         String selectedId = "";
                         int count = 0;
@@ -4059,6 +4086,30 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
                         } else {
                             textView.setText(selectedItem);
                             textView.setHint(selectedId);
+                        }
+
+                        String selectedItemMain = "";
+                        String selectedIdMain = "";
+                        int validador = 0;
+                        for (int k = 0; k < list.size(); k++) {
+                            if (list.get(k).isActive()) {
+                                if (selectedItemMain.equals("")) {
+                                    selectedItemMain = list.get(k).getTitle();
+                                    selectedIdMain = "" + list.get(k).getId();
+                                } else {
+                                    selectedItemMain = selectedItemMain + ", " + list.get(k).getTitle();
+                                    selectedIdMain = selectedIdMain + "|" + list.get(k).getId();
+                                }
+                                validador++;
+                            }
+                        }
+
+                        if (validador == 0) {
+                            textViewOptions.setText("");
+                            textViewOptions.setHint("");
+                        } else {
+                            textViewOptions.setText(selectedItemMain);
+                            textViewOptions.setHint(selectedIdMain);
                         }
 
                         //optionDialog.dismiss();

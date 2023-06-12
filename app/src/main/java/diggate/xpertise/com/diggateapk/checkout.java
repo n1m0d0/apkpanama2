@@ -2936,7 +2936,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
 
         TextView textView = new TextView(this);
         textView.setId(idField);
-        textView.setText("Selecione una opcion");
+        textView.setText("Selecione una opción");
         textView.setHint("");
         textView.setTextSize(14);
         textView.setTextColor(getResources().getColor(R.color.colorTextVariable));
@@ -2994,7 +2994,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
                 llcrearDialogo.addView(lv);
 
                 final AlertDialog optionDialog = new AlertDialog.Builder(checkout.this, android.R.style.Theme_DeviceDefault_Light_Dialog_Alert).create();
-                optionDialog.setTitle("Seleccione una opcion");
+                optionDialog.setTitle("Seleccione una opción");
                 optionDialog.setView(llcrearDialogo);
                 optionDialog.show();
 
@@ -3075,7 +3075,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
 
         TextView textView = new TextView(this);
         textView.setId(idField);
-        textView.setText("Selecione una opcion");
+        textView.setText("Selecione una opción");
         textView.setHint("");
         textView.setTextSize(14);
         textView.setTextColor(getResources().getColor(R.color.colorTextVariable));
@@ -3133,7 +3133,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
                 llcrearDialogo.addView(lv);
 
                 final AlertDialog optionDialog = new AlertDialog.Builder(checkout.this, android.R.style.Theme_DeviceDefault_Light_Dialog_Alert).create();
-                optionDialog.setTitle("Seleccione una opcion");
+                optionDialog.setTitle("Seleccione una opción");
                 optionDialog.setView(llcrearDialogo);
                 optionDialog.show();
 
@@ -3267,7 +3267,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
 
         TextView textView = new TextView(this);
         textView.setId(idField);
-        textView.setText("Selecione una opcion");
+        textView.setText("Selección múltiple");
         textView.setHint("");
         textView.setTextSize(14);
         textView.setTextColor(getResources().getColor(R.color.colorTextVariable));
@@ -3307,18 +3307,27 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
                 et.setPadding(30, 20, 30, 20);
 
                 ListView lv = new ListView(checkout.this);
-                LinearLayout.LayoutParams paramsList = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                LinearLayout.LayoutParams paramsList = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1);
                 paramsList.setMargins(0, 10, 0, 0);
                 lv.setLayoutParams(paramsList);
 
                 final adapter_spinner_search2[] adapter = {new adapter_spinner_search2(checkout.this, listOption)};
                 lv.setAdapter(adapter[0]);
 
+                Button btnAceptar = new Button(checkout.this);
+                LinearLayout.LayoutParams parametrosAceptar = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                parametrosAceptar.setMargins(0, 30, 0, 0);
+                btnAceptar.setLayoutParams(parametrosAceptar);
+                btnAceptar.setText("Aceptar");
+                btnAceptar.setTextAppearance(checkout.this, R.style.bold);
+                btnAceptar.setBackgroundResource(R.drawable.custonbutton);
+
                 llcrearDialogo.addView(et);
                 llcrearDialogo.addView(lv);
+                llcrearDialogo.addView(btnAceptar);
 
                 final AlertDialog optionDialog = new AlertDialog.Builder(checkout.this, android.R.style.Theme_DeviceDefault_Light_Dialog_Alert).create();
-                optionDialog.setTitle("Seleccione una opcion");
+                optionDialog.setTitle("Selección múltiple");
                 optionDialog.setView(llcrearDialogo);
                 optionDialog.show();
 
@@ -3381,7 +3390,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
                         }
 
                         if (count == 0) {
-                            textView.setText("Seleccione una opcion");
+                            textView.setText("Selección múltiple");
                             textView.setHint("");
                         } else {
                             textView.setText(selectedItem);
@@ -3392,6 +3401,13 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
 
                         adapter[0] = new adapter_spinner_search2(checkout.this, listOption);
                         lv.setAdapter(adapter[0]);
+                    }
+                });
+
+                btnAceptar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        optionDialog.dismiss();
                     }
                 });
             }
@@ -3433,7 +3449,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
 
         TextView textView = new TextView(this);
         textView.setId(idField);
-        textView.setText("Selecione una opcion");
+        textView.setText("Selecione una opción");
         textView.setHint("");
         textView.setTextSize(14);
         textView.setTextColor(getResources().getColor(R.color.colorTextVariable));
@@ -3491,7 +3507,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
                 llcrearDialogo.addView(lv);
 
                 final AlertDialog optionDialog = new AlertDialog.Builder(checkout.this, android.R.style.Theme_DeviceDefault_Light_Dialog_Alert).create();
-                optionDialog.setTitle("Seleccione una opcion");
+                optionDialog.setTitle("Seleccione una opción");
                 optionDialog.setView(llcrearDialogo);
                 optionDialog.show();
 
@@ -3570,7 +3586,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
 
         TextView textView = new TextView(this);
         textView.setId(idField);
-        textView.setText("Selecione una opcion");
+        textView.setText("Selección múltiple");
         textView.setHint("");
         textView.setTextSize(14);
         textView.setTextColor(getResources().getColor(R.color.colorTextVariable));
@@ -3610,18 +3626,27 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
                 et.setPadding(30, 20, 30, 20);
 
                 ListView lv = new ListView(checkout.this);
-                LinearLayout.LayoutParams paramsList = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                LinearLayout.LayoutParams paramsList = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1);
                 paramsList.setMargins(0, 10, 0, 0);
                 lv.setLayoutParams(paramsList);
 
                 final adapter_list2[] adapter = {new adapter_list2(checkout.this, listOption)};
                 lv.setAdapter(adapter[0]);
 
+                Button btnAceptar = new Button(checkout.this);
+                LinearLayout.LayoutParams parametrosAceptar = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                parametrosAceptar.setMargins(0, 30, 0, 0);
+                btnAceptar.setLayoutParams(parametrosAceptar);
+                btnAceptar.setText("Aceptar");
+                btnAceptar.setTextAppearance(checkout.this, R.style.bold);
+                btnAceptar.setBackgroundResource(R.drawable.custonbutton);
+
                 llcrearDialogo.addView(et);
                 llcrearDialogo.addView(lv);
+                llcrearDialogo.addView(btnAceptar);
 
                 final AlertDialog optionDialog = new AlertDialog.Builder(checkout.this, android.R.style.Theme_DeviceDefault_Light_Dialog_Alert).create();
-                optionDialog.setTitle("Seleccione una opcion");
+                optionDialog.setTitle("Selección múltiple");
                 optionDialog.setView(llcrearDialogo);
                 optionDialog.show();
 
@@ -3684,7 +3709,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
                         }
 
                         if (count == 0) {
-                            textView.setText("Seleccione una opcion");
+                            textView.setText("Selección múltiple");
                             textView.setHint("");
                         } else {
                             textView.setText(selectedItem);
@@ -3694,6 +3719,13 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
                         //optionDialog.dismiss();
                         adapter[0] = new adapter_list2(checkout.this, listOption);
                         lv.setAdapter(adapter[0]);
+                    }
+                });
+
+                btnAceptar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        optionDialog.dismiss();
                     }
                 });
             }
@@ -3740,7 +3772,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
 
         TextView textView = new TextView(this);
         textView.setId(idField);
-        textView.setText("Selecione una opcion");
+        textView.setText("Selecione una opción");
         textView.setHint("");
         textView.setTextSize(14);
         textView.setTextColor(getResources().getColor(R.color.colorTextVariable));
@@ -3775,7 +3807,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
                 obj_params elegido = (obj_params) sp.getItemAtPosition(position);
                 //Toast.makeText(form_event.this, "" + elegido.getDescription(), Toast.LENGTH_SHORT).show();
                 listOption.clear();
-                textView.setText("Selecione una opcion");
+                textView.setText("Selecione una opción");
                 textView.setHint("");
                 for (int j = 0; j < list.size(); j++) {
                     if (elegido.getId() == list.get(j).idValueP) {
@@ -3822,7 +3854,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
                 llcrearDialogo.addView(lv);
 
                 final AlertDialog optionDialog = new AlertDialog.Builder(checkout.this, android.R.style.Theme_DeviceDefault_Light_Dialog_Alert).create();
-                optionDialog.setTitle("Seleccione una opcion");
+                optionDialog.setTitle("Seleccione una opción");
                 optionDialog.setView(llcrearDialogo);
                 optionDialog.show();
 
@@ -3909,7 +3941,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
 
         TextView textView = new TextView(this);
         //textView.setId(idField);
-        textView.setText("Selecione una opcion");
+        textView.setText("Selección múltiple");
         textView.setHint("");
         textView.setTextSize(14);
         textView.setTextColor(getResources().getColor(R.color.colorTextVariable));
@@ -3961,7 +3993,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
                 obj_params elegido = (obj_params) sp.getItemAtPosition(position);
                 //Toast.makeText(form_event.this, "" + elegido.getDescription(), Toast.LENGTH_SHORT).show();
                 listOption.clear();
-                textView.setText("Selecione una opcion");
+                textView.setText("Selección múltiple");
                 textView.setHint("");
                 for (int j = 0; j < list.size(); j++) {
                     if (elegido.getId() == list.get(j).idValueP) {
@@ -3997,18 +4029,27 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
                 et.setPadding(30, 20, 30, 20);
 
                 ListView lv = new ListView(checkout.this);
-                LinearLayout.LayoutParams paramsList = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                LinearLayout.LayoutParams paramsList = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1);
                 paramsList.setMargins(0, 10, 0, 0);
                 lv.setLayoutParams(paramsList);
 
                 final adapter_list2[] adapter = {new adapter_list2(checkout.this, listOption)};
                 lv.setAdapter(adapter[0]);
 
+                Button btnAceptar = new Button(checkout.this);
+                LinearLayout.LayoutParams parametrosAceptar = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                parametrosAceptar.setMargins(0, 30, 0, 0);
+                btnAceptar.setLayoutParams(parametrosAceptar);
+                btnAceptar.setText("Aceptar");
+                btnAceptar.setTextAppearance(checkout.this, R.style.bold);
+                btnAceptar.setBackgroundResource(R.drawable.custonbutton);
+
                 llcrearDialogo.addView(et);
                 llcrearDialogo.addView(lv);
+                llcrearDialogo.addView(btnAceptar);
 
                 final AlertDialog optionDialog = new AlertDialog.Builder(checkout.this, android.R.style.Theme_DeviceDefault_Light_Dialog_Alert).create();
-                optionDialog.setTitle("Seleccione una opcion");
+                optionDialog.setTitle("Selección múltiple");
                 optionDialog.setView(llcrearDialogo);
                 optionDialog.show();
 
@@ -4081,7 +4122,7 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
                         }
 
                         if (count == 0) {
-                            textView.setText("Seleccione una opcion");
+                            textView.setText("Selección múltiple");
                             textView.setHint("");
                         } else {
                             textView.setText(selectedItem);
@@ -4115,6 +4156,13 @@ public class checkout extends AppCompatActivity implements View.OnClickListener,
                         //optionDialog.dismiss();
                         adapter[0] = new adapter_list2(checkout.this, listOption);
                         lv.setAdapter(adapter[0]);
+                    }
+                });
+
+                btnAceptar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        optionDialog.dismiss();
                     }
                 });
             }

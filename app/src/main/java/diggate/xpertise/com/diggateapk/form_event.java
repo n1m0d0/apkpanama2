@@ -907,6 +907,41 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                 }
                 /**************/
 
+                /**********/
+                //QR
+                for (Iterator iterator = qrs.iterator(); iterator
+                        .hasNext(); ) {
+
+                    ImageView imageView = (ImageView) iterator.next();
+
+
+                    String[] parts = imageView.getContentDescription().toString().trim().split("-");
+                    String description = parts[0];
+                    String control = parts[parts.length - 1];
+
+                    if (description.equals(textImage) && control.equals(obligatorio)) {
+
+                        validar++;
+                        Log.w("sumaQR", "" + validar);
+
+                    }
+
+                    Log.w("QR", "imageView" + " " + imageView.getId() + " " + description);
+                    try {
+                        JSONObject parametros = new JSONObject();
+                        parametros.put("idField", imageView.getId());
+                        parametros.put("valueInputField", description);
+                        parametros.put("valueInputDateField", "");
+                        parametros.put("valueListField", "");
+                        parametros.put("valueFile", "");
+                        respuesta.put(parametros);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+                /**********/
+
                 localizar();
 
                 //Log.w("json", "" + respuesta);
@@ -1999,9 +2034,16 @@ public class form_event extends AppCompatActivity implements View.OnClickListene
                                 createViewDataQR(item.getDescFP(), item.getDescFP1(), item.getDescFP2());
                                 ImageView imageView = findViewById(selectedQR);
                                 imageView.setVisibility(View.GONE);
+
+                                String[] parts = imageView.getContentDescription().toString().trim().split("-");
+                                String description = "" + item.getIdAuth();
+                                String control = parts[parts.length - 1];
+
+                                imageView.setContentDescription(description + "-" + control);
                                 selectedQR = 0;
                             } else {
                                 Log.w("estadoQR", "NO");
+                                Toast.makeText(form_event.this, "No se encontró ninguna coincidencia.", Toast.LENGTH_LONG).show();
                             }
                         }
                     }
